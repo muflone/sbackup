@@ -332,7 +332,7 @@ class FileCollector(object):
             self.__fstats = self.__stat_func(path)
             self.__fisdir = local_file_utils.is_dir(path)
             self.__fislink = local_file_utils.is_link(path)
-        except Exception, _exc:    #IGNORE:W0703
+        except Exception as _exc:    #IGNORE:W0703
             self.__logger.warning(_("File '%(file)s' is not accessable with error '%(error)s'.")\
                                     % {'file' : path, 'error' : str(_exc)})
             self.__fstats = None
@@ -348,11 +348,11 @@ class FileCollector(object):
             util.set_timeout_alarm(timeout = 5)
             fdscr = os.open(path, os.R_OK)
             os.close(fdscr)
-        except exceptions.TimeoutError, _exc:
+        except exceptions.TimeoutError as _exc:
             self.__logger.warning(_("File '%(file)s' cannot be opened for read access. Operation timed out.")\
                                     % {'file' : path})
             _res = True
-        except Exception, _exc:    #IGNORE:W0703
+        except Exception as _exc:    #IGNORE:W0703
             self.__logger.warning(_("File '%(file)s' cannot be opened for read access with error '%(error)s'.")\
                                     % {'file': path, 'error' : str(_exc)})
             _res = True
@@ -494,7 +494,7 @@ class FileCollector(object):
                             _dir_item = local_file_utils.joinpath(path, _dir_item)
                             self._check_for_excludes(path = _dir_item)
                         self.__collect_stats.count_dir()    # the directory `path`
-                    except OSError, _exc:
+                    except OSError as _exc:
                         self.__logger.warning(_("Error while checking directory '%(dir)s': %(error)s.")\
                                               % {'dir' : path, 'error' : str(_exc)})
                         self.__snapshot.addToExcludeFlist(path)    # problems with `path` -> exclude it

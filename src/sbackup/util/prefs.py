@@ -70,7 +70,7 @@ class Preferences(object):
             try:
                 _value = self._client.get_string(key)
                 _value = _value.lower()
-            except glib.GError, error:
+            except glib.GError as error:
                 print "Error while getting gconf setting: %s\nDefault value is used." % error
             except AttributeError:
                 pass
@@ -83,5 +83,5 @@ class Preferences(object):
             try:
                 if self._client.key_is_writable(key):
                     self._client.set_string(key, value)
-            except glib.GError, error:
+            except glib.GError as error:
                 print "Error while setting gconf value: %s\nError can be safely ignored: setting is not being changed." % error

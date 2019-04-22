@@ -117,7 +117,7 @@ class PyNotifyMixin(INotifyMixin):
                 self.__pynotif_avail = False    # yes, this is insane!
                 self.__logger.warning(_("there was a problem initializing the "\
                                         "pynotify module"))
-        except ImportError, exc:
+        except ImportError as exc:
             self.__pynotif_avail = False
             self.__logger.warning(str(exc))
 
@@ -144,7 +144,7 @@ class PyNotifyMixin(INotifyMixin):
                         except AttributeError: pass
                     self.__notif.set_urgency(self.__pynotif_mod.URGENCY_LOW)
                     self.__notif.show()
-                except gobject.GError, exc:
+                except gobject.GError as exc:
                     # Connection to notification-daemon failed
                     self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
 
@@ -193,7 +193,7 @@ class PyNotifyMixin(INotifyMixin):
                     else:
                         notif.set_urgency(self.__pynotif_mod.URGENCY_NORMAL)
                     notif.show()
-                except gobject.GError, exc:
+                except gobject.GError as exc:
                     # Connection to notification-daemon failed
                     self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
 
@@ -221,7 +221,7 @@ class PyNotifyMixin(INotifyMixin):
 
             try:
                 notif = self.__pynotif_mod.Notification(title, message, self.__iconfile)
-            except gobject.GError, exc:
+            except gobject.GError as exc:
                 # Connection to notification-daemon failed
                 self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
                 notif = None
@@ -243,7 +243,7 @@ class PyNotifyMixin(INotifyMixin):
 
             try:
                 self.__notif.update(title, message, self.__iconfile)
-            except gobject.GError, exc:
+            except gobject.GError as exc:
                 # Connection to notification-daemon failed
                 self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
                 self.__notif = None
@@ -658,7 +658,7 @@ class SBackupdIndicatorBase(INotifyMixin):
                 dialog.set_keep_above(True)
                 dialog.present()
                 dialog.set_keep_above(False)
-            except AttributeError, error:
+            except AttributeError as error:
                 self.logger.warning(_("Unable to present window: %s") % error)
 
     def on_about_clicked(self, *args): #IGNORE:W0613
@@ -1013,7 +1013,7 @@ class SBackupdIndicatorApp(object):
             exitcode = constants.EXCODE_INSTANCE_ALREADY_RUNNING
             print _("Another `Simple Backup Indicator` is already running.")
 
-        except SystemExit, error:
+        except SystemExit as error:
             exitcode = error.code
 
         except KeyboardInterrupt:
@@ -1033,7 +1033,7 @@ def main(options, indicator_class):
     gtk_avail = True
     try:
         gtk.init_check()
-    except RuntimeError, error:
+    except RuntimeError as error:
         gtk_avail = False
         print _("Initialization of GTK+ failed: %s") % error
 

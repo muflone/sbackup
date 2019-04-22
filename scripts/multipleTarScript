@@ -74,7 +74,7 @@ if __name__ == '__main__':
             _blockfac = int(os.getenv("TAR_BLOCKING_FACTOR"))
             _chkpt = ((_vol - 1) * _splitsize) / (_blockfac * TAR_BLOCKSIZE)
             publish_progress(_chkpt)
-    except Exception, error:
+    except Exception as error:
         output.write("Error while publishing progress: %s" % error)
 
 

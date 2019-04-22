@@ -336,7 +336,7 @@ def is_running():
                                      '/org/freedesktop/DBus')
         dbus_iface = dbus.Interface(dbus_object, 'org.freedesktop.DBus')
         services = dbus_iface.ListNames()
-    except dbus.DBusException, error:
+    except dbus.DBusException as error:
         raise exceptions.DBusException(str(error))
     else:
         services.sort()
@@ -412,7 +412,7 @@ def run(args):
 
         exitcode = constants.EXCODE_SUCCESS
 
-    except dbus.DBusException, error:
+    except dbus.DBusException as error:
         print "Error in Simple Backup DBus service:\n%s" % str(error)
         exitcode = constants.EXCODE_GENERAL_ERROR
     return exitcode

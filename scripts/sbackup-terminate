@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     try:
         os.kill(pid, BACKUP_CANCEL_SIG)
-    except OSError, error:
+    except OSError as error:
         print "Unable to send signal to process %s: %s" % (pid, error)
         _excode = 1
 

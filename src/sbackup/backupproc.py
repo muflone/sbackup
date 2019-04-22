@@ -289,7 +289,7 @@ class SBackupProc(object):
             except exceptions.BackupCanceledError:
                 self.__on_backup_canceled()
 
-            except (SystemExit, KeyboardInterrupt, Exception), error:
+            except (SystemExit, KeyboardInterrupt, Exception) as error:
                 self.__on_backup_error(error)
 
             self.__on_proc_finish()
@@ -304,7 +304,7 @@ class SBackupProc(object):
             self.__state.set_state('backup-canceled')
             if self.__bprofilehdl is not None:
                 self.__exitcode = self.__bprofilehdl.cancel()
-        except Exception, error:
+        except Exception as error:
             self.__notify_error(error, _("An error occurred during the cancellation of backup:"))
             self.__exitcode = constants.EXCODE_GENERAL_ERROR
 
@@ -327,7 +327,7 @@ class SBackupProc(object):
                 # send the mail
                 if self.__bprofilehdl.config.has_section("report") and self.__bprofilehdl.config.has_option("report", "to") :
                     self.__sendEmail()
-        except Exception, error:
+        except Exception as error:
             self.__notify_error(error, _("Error when sending email:"))
             self.__exitcode = constants.EXCODE_MAIL_ERROR
 
@@ -563,9 +563,9 @@ class SBackupApp(object):
                                               self.__options_given.full_snapshot)
             self.__exitcode = self.__backupproc.run()
 
-        except exceptions.InstanceRunningError, error:
+        except exceptions.InstanceRunningError as error:
             self.__on_already_running(error)
-        except SystemExit, exc:
+        except SystemExit as exc:
             self.__exitcode = exc.code
         except KeyboardInterrupt:
             self.__exitcode = constants.EXCODE_KEYBOARD_INTERRUPT

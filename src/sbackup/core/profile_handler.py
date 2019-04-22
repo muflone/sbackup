@@ -166,7 +166,7 @@ class BackupProfileHandler(object):
                 pkg = s.read()
                 s.close()
                 self.__snapshot.setPackages(pkg)
-            except Exception, _exc:
+            except Exception as _exc:
                 self.logger.warning(_("Problem when setting the packages list: ") + str(_exc))
 
         # set Excludes
@@ -217,7 +217,7 @@ class BackupProfileHandler(object):
         if purge is not None:
             try:
                 self.__snpman.purge(purge, self.__snapshot.getName()) # do not purge created snapshot
-            except exceptions.SBException, sberror:
+            except exceptions.SBException as sberror:
                 self.logger.error(_("Error while purging old snapshots: %s") % sberror)
 
         self.logger.info(_("Backup process finished."))
@@ -292,7 +292,7 @@ class BackupProfileHandler(object):
                         except exceptions.CopyFileAttributesError:
                             self.logger.warning(_("Unable to change permissions for file '%s'.")\
                                             % logf_target)
-                        except (OSError, IOError), error:
+                        except (OSError, IOError) as error:
                             self.logger.warning(_("Unable to copy log file: %s") % error)
                     else :
                         self.logger.warning(_("Unable to find logfile to copy into snapshot."))
@@ -374,7 +374,7 @@ class BackupProfileHandler(object):
 
         try:
             self.__fam_target_hdl.test_destination()
-        except exceptions.FileAccessException, error:
+        except exceptions.FileAccessException as error:
             self.logger.error(_("Unable to access destination: %s") % (error))
             raise error
 

@@ -358,7 +358,7 @@ def __remove_tempfiles(tmp_files):
     for _tmpf in tmp_files:
         try:
             _FOP.delete(_tmpf)
-        except (OSError, IOError), error:
+        except (OSError, IOError) as error:
             LogFactory.getLogger().warning(_("Unable to remove temporary file `%(file)s`: %(error)s")\
                                             % { 'file' : _tmpf, 'error': error })
 
@@ -661,7 +661,7 @@ class TarBackendLauncherSingleton(object):
             else:
                 self._proc.communicate(input = None)
 
-        except (exceptions.BackupCanceledError, exceptions.SigTerminatedError), error:
+        except (exceptions.BackupCanceledError, exceptions.SigTerminatedError) as error:
             self.terminate()
 
             if (self._stdin_f is not None) or (self._stdout_f is not None):
@@ -723,7 +723,7 @@ class TarBackendLauncherSingleton(object):
         if self.is_running():
             try:
                 self._proc.terminate()
-            except OSError, error:
+            except OSError as error:
                 log.LogFactory.getLogger().warning(_("Unable to terminate backend process: %s") % error)
 
 
@@ -1057,7 +1057,7 @@ class SnapshotFile(object):
             header += c
         try:
             _FOP.close_stream(fd)
-        except exceptions.FileAlreadyClosedError, error:
+        except exceptions.FileAlreadyClosedError as error:
             log.LogFactory.getLogger().warn(_("File was already closed (ignored): %s") % error)
 
         return header

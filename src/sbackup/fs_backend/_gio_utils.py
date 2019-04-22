@@ -187,7 +187,7 @@ class GioMountHandler(object):
         _mount = None
         try:
             _mount = gfileobj.find_enclosing_mount(None)
-        except gio.Error, error:
+        except gio.Error as error:
             _mount = None
             if error.code == gio.ERROR_NOT_MOUNTED:
                 self.__logger.info(_("Unable to get mount: path is not mounted"))
@@ -195,7 +195,7 @@ class GioMountHandler(object):
                 self.__logger.info(_("Unable to get mount: path not found when mounting (is probably local)"))
             else:
                 self.__logger.info(_("Unable to get mount: %s") % error)
-        except glib.GError, error:
+        except glib.GError as error:
             _mount = None
             self.__logger.info(_("Unable to get mount: %s") % error)
 
@@ -304,10 +304,10 @@ class GioMountHandler(object):
             gfileobj.mount_enclosing_volume(op, self._mount_done_cb)
             if self.__mainloop is not None:
                 self.__mainloop.run()
-        except gio.Error, error:
+        except gio.Error as error:
             self.__logger.error(get_gio_errmsg(error, "Error in `_do_mount`"))
             raise exceptions.RemoteMountFailedError(str(error))
-        except glib.GError, error:
+        except glib.GError as error:
             self.__logger.error(str(error))
             raise exceptions.RemoteMountFailedError(str(error))
 
@@ -334,10 +334,10 @@ class GioMountHandler(object):
                 if self.__mainloop is not None:
                     self.__logger.debug("run loop")
                     self.__mainloop.run()
-            except gio.Error, error:
+            except gio.Error as error:
                 self.__logger.error(get_gio_errmsg(error, "Error in `umount`"))
                 raise exceptions.RemoteUmountFailedError(str(error))
-            except glib.GError, error:
+            except glib.GError as error:
                 self.__logger.error(str(error))
                 raise exceptions.RemoteUmountFailedError(str(error))
 
@@ -346,7 +346,7 @@ class GioMountHandler(object):
         try:
             obj.mount_enclosing_volume_finish(res)
             self._set_mount_flag(obj = obj, required = True)
-        except gio.Error, error:
+        except gio.Error as error:
             self._set_mount_flag(obj = obj, required = False)
             if error.code == gio.ERROR_ALREADY_MOUNTED:
                 self.__logger.info(_("Path is already mounted."))
@@ -358,7 +358,7 @@ class GioMountHandler(object):
                     error = self._error
             else:
                 self.__logger.error(get_gio_errmsg(error, "Error in `_do_mount`"))
-        except glib.GError, error:
+        except glib.GError as error:
             self._set_mount_flag(obj = obj, required = False)
             self.__logger.error(str(error))
         finally:
@@ -375,13 +375,13 @@ class GioMountHandler(object):
         error = None
         try:
             obj.unmount_finish(res)
-        except gio.Error, error:
+        except gio.Error as error:
             if error.code == gio.ERROR_NOT_MOUNTED:
                 self.__logger.info(_("Path is not mounted."))
                 error = None
             else:
                 self.__logger.error(get_gio_errmsg(error, "Error in `_umount_done_cb`"))
-        except glib.GError, error:
+        except glib.GError as error:
             self.__logger.error(str(error))
         finally:
             if self.__mainloop is not None:
@@ -405,7 +405,7 @@ class GioMountHandler(object):
         try:
             _gmpath = gio.File(_mpath)
             _effpath = _gmpath.get_path()
-        except (gio.Error, glib.GError), error:
+        except (gio.Error, glib.GError) as error:
             raise exceptions.RemoteMountTestFailedError(str(error))
 
         dname = "%s-%s-%s.tmp" % ("sbackup-dir", time.time(), uuid.uuid4())
@@ -424,7 +424,7 @@ class GioMountHandler(object):
         _gfo = gio.File(_mpath)
         try:
             _gfoinfo = _gfo.query_filesystem_info("filesystem::*")
-        except gio.Error, error:
+        except gio.Error as error:
             self.__logger.warning(get_gio_errmsg(error, "Error in `query_fs_info`"))
         else:
             _size = _gfoinfo.get_attribute_uint64(gio.FILE_ATTRIBUTE_FILESYSTEM_SIZE)
@@ -551,7 +551,7 @@ class GioOperations(interfaces.IOperations):
         try:
             _gfile = gio.File(path)
             _gfile.delete()
-        except gio.Error, error:
+        except gio.Error as error:
             raise IOError(str(error))
 
     @classmethod
@@ -576,7 +576,7 @@ class GioOperations(interfaces.IOperations):
             _new_mode = _fmode | system.UNIX_PERM_ALL_WRITE
             _ginfo.set_attribute_uint32(gio.FILE_ATTRIBUTE_UNIX_MODE, _new_mode)
             _gfileobj.set_attributes_from_info(_ginfo) # setting attributes directly seems broken
-        except gio.Error, error:
+        except gio.Error as error:
             _msg = get_gio_errmsg(error, "Unable to set permissions")
             _logger = log.LogFactory.getLogger()
             _logger.warning(_msg)
@@ -601,7 +601,7 @@ class GioOperations(interfaces.IOperations):
             _new_mode = _fmode & system.UNIX_PERM_GRPOTH_NORWX
             _ginfo.set_attribute_uint32(gio.FILE_ATTRIBUTE_UNIX_MODE, _new_mode)
             _gfileobj.set_attributes_from_info(_ginfo) # setting attributes directly seems broken
-        except gio.Error, error:
+        except gio.Error as error:
             _msg = get_gio_errmsg(error, "Unable to set permissions")
             _logger = log.LogFactory.getLogger()
             _logger.warning(_msg)
@@ -650,18 +650,18 @@ class GioOperations(interfaces.IOperations):
                 cls._copytree(srcname, dstname)
             else:
                 cls.copyfile(srcname, dstname)
-#            except gio.Error, why:
+#            except gio.Error as why:
 #                errors.append((srcname, dstname, str(why)))
 #            # catch the Error from the recursive copytree so that we can
 #            # continue with other files
-#            except shutil.Error, err:
+#            except shutil.Error as err:
 #                errors.extend(err.args[0])
 #        try:
 #            shutil.copystat(src, dst)
-#        except OSError, why:
+#        except OSError as why:
 #            errors.extend((src, dst, str(why)))
 #        if len(errors) > 0:
-#            raise shutil.Error, errors
+#            raise shutil.Error from errors
         cls._copy_metadata(src, dst)
 
 
@@ -701,7 +701,7 @@ class GioOperations(interfaces.IOperations):
             _info = gfile.query_info(attributes = "standard::type", flags = gio.FILE_QUERY_INFO_NONE,
                                        cancellable = None)
             _ftype = _info.get_file_type()
-        except gio.Error, error:
+        except gio.Error as error:
             if error.code == gio.ERROR_NOT_FOUND:
                 _ftype = None
             else:
@@ -713,7 +713,7 @@ class GioOperations(interfaces.IOperations):
         _gfileobj = gio.File(path)
         try:
             _gfileobj.enumerate_children('standard::name')
-        except gio.Error, error:
+        except gio.Error as error:
             raise exceptions.FileAccessException(get_gio_errmsg(error,
                                         "Unable to list directory content"))
 
@@ -731,7 +731,7 @@ class GioOperations(interfaces.IOperations):
         _gfileobj = gio.File(path)
         try:
             _infos = _gfileobj.enumerate_children('standard::name')
-        except gio.Error, error:
+        except gio.Error as error:
             if error.code == gio.ERROR_NOT_DIRECTORY:
                 _msg = get_gio_errmsg(error, "Unable to list directory content")
                 _logger = log.LogFactory.getLogger()
@@ -860,7 +860,7 @@ class GioOperations(interfaces.IOperations):
     def close_stream(cls, file_desc):
         try:
             file_desc.close()
-        except gio.Error, error:
+        except gio.Error as error:
             if error.code == gio.ERROR_CLOSED:
                 raise exceptions.FileAlreadyClosedError(_("Error while closing stream: %s") % error)
             else:
@@ -935,7 +935,7 @@ def _test_path(path, testdir_name, testfile_name):
         __logger.debug(_("Remove dir"))
         _gtdir.delete()
 
-    except (gio.Error, glib.GError), error:
+    except (gio.Error, glib.GError) as error:
         raise exceptions.RemoteMountTestFailedError(str(error))
 
 

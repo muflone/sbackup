@@ -168,7 +168,7 @@ class FuseOperations(interfaces.IOperations):
     def test_dir_access(cls, path):
         try:
             local_file_utils.listdir(path)
-        except Exception, error:
+        except Exception as error:
             raise exceptions.FileAccessException(\
                     "Unable to list directory content: %s" % error)
 
@@ -180,7 +180,7 @@ class FuseOperations(interfaces.IOperations):
     def close_stream(cls, file_desc):
         try:
             file_desc.close()
-        except IOError, error:
+        except IOError as error:
             raise exceptions.FileAlreadyClosedError(_("Error while closing stream: %s") % error)
 
 def get_scheme_from_service(service):

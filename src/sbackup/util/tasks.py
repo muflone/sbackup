@@ -106,7 +106,7 @@ class WorkerThread(object):
         """
         try:
             result = self.__task(*args, **kwargs)
-        except Exception, exc:
+        except Exception as exc:
             # if an exception was raised, use it as the result
             log.LogFactory.getLogger().exception(exc)
             result = exc

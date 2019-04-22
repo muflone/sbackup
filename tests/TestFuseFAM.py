@@ -64,7 +64,7 @@ class TestFuseFAM(unittest.TestCase):
         try:
             sshPlugin.mount("ssh://wattazoum@192.168.0.1:22/etc/", "test-tmp")
             self.fail("should fail")
-        except SBException, e:
+        except SBException as e:
             self.assertEqual("sshfs is requesting a password and none has been passed.", str(e))
 
         #sshPlugin.mount("ssh://wattazoum@192.168.0.1:21/etc/", "test-tmp")

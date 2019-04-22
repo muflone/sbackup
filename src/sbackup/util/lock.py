@@ -59,7 +59,7 @@ class ApplicationLock(object):
             try:
                 os.mkdir(_dir)
                 os.chmod(_dir, 0777)
-            except (OSError, IOError), error:
+            except (OSError, IOError) as error:
                 self.__logger.error("Unable to make lock directory: %s" % error)
                 raise exceptions.ApplicationLockError
 
@@ -81,7 +81,7 @@ class ApplicationLock(object):
         try:
             local_file_utils.writetofile(self.__lockfile, str(self.__pid))
             self.__logger.debug("Created lockfile `%s` with info `%s`." % (self.__lockfile, str(self.__pid)))
-        except (OSError, IOError), error:
+        except (OSError, IOError) as error:
             self.__logger.error("Unable to create lock: %s" % error)
             raise exceptions.ApplicationLockError
 
@@ -92,7 +92,7 @@ class ApplicationLock(object):
             try:
                 last_pid = local_file_utils.readfile(self.__lockfile)
                 last_pid = int(last_pid)
-            except (OSError, IOError, ValueError), error:
+            except (OSError, IOError, ValueError) as error:
                 self.__logger.error("Error while reading lockfile: %s" % str(error))
                 last_pid = None
 
@@ -108,7 +108,7 @@ class ApplicationLock(object):
             try:
                 last_sb_pid = local_file_utils.readfile(self.__lockfile)
                 last_sb_pid = int(last_sb_pid)
-            except (OSError, IOError, ValueError), error:
+            except (OSError, IOError, ValueError) as error:
                 self.__logger.error("Error while reading lockfile: %s" % str(error))
                 last_sb_pid = None
 
@@ -125,7 +125,7 @@ class ApplicationLock(object):
                 try:
                     local_file_utils.delete(self.__lockfile)
                     self.__logger.debug("Lock file '%s' removed." % self.__lockfile)
-                except  (OSError, IOError), _exc:
+                except  (OSError, IOError) as _exc:
                     self.__logger.error(_("Unable to remove lock file: %s") % str(_exc))
             else:
                 self.__logger.debug("Unable to remove lock: not owned by this process.")
@@ -139,7 +139,7 @@ class ApplicationLock(object):
             try:
                 local_file_utils.delete(self.__lockfile)
                 self.__logger.debug("Lock file '%s' removed." % self.__lockfile)
-            except (OSError, IOError), _exc:
+            except (OSError, IOError) as _exc:
                 self.__logger.error(_("Unable to remove lock file: %s") % str(_exc))
         else:
             self.__logger.info(_("Unable to remove lock file: File not found."))

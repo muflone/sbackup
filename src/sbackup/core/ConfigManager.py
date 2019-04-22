@@ -468,7 +468,7 @@ class ConfigManager(ConfigParser.ConfigParser):
                     else:
                         try:
                             _res.append((_item[0].replace("\\x3d", "="), int(_item[1])))
-                        except ValueError, error:
+                        except ValueError as error:
                             _msg = _("Error while processing configuration:\n\n"\
                                      "%(error)s in line `%(line)s`.\n\n"\
                                      "Please check your configuration file.") % {"error" : str(error),
@@ -702,7 +702,7 @@ class ConfigManager(ConfigParser.ConfigParser):
                     local_file_utils.rename_errors_ignored(logf_target, "%s.0" % logf_target)
                     local_file_utils.compress_rotated_files(logf_target, _max_num)
                     local_file_utils.rename_rotating(logf_src, logf_target, _max_num)
-                except OSError, error:
+                except OSError as error:
                     self.logger.exception(_("Unable to rename log file '%(src)s'->'%(dst)s': %(err)s")\
                                     % {'src': logf_src, 'dst': logf_target, 'err': str(error)})
         self.logger = None
@@ -741,7 +741,7 @@ class ConfigManager(ConfigParser.ConfigParser):
                     if (self.valid_options[section].has_key(key) or self.valid_options[section].has_key('*')):
                         continue
                     raise exceptions.NonValidOptionException ("key '%s' in section '%s' in file '%s' is not known, a typo possibly?" % (key, section, self.conffile))
-            except exceptions.SBException, e:
+            except exceptions.SBException as e:
                 self.logger.error(str(e))
                 raise e
         return True
@@ -1121,7 +1121,7 @@ class ConfigManager(ConfigParser.ConfigParser):
             server.helo()
             server.close()
             return True
-        except Exception, e:
+        except Exception as e:
             raise exceptions.SBException(e)
 
     def isConfigEquals(self, config):

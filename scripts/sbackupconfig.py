@@ -314,7 +314,7 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
                     _stats = os.stat(src)
                     os.chown(dst, _stats.st_uid, _stats.st_gid)
                     os.chmod(dst, _stats.st_mode)
-                except (OSError, IOError), error:
+                except (OSError, IOError) as error:
                     print "failed (%s)" % error
 
     def do_upgrade(self):
@@ -453,7 +453,7 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
 
             self._modify_default_profile()
             self._modify_other_profiles()
-        except Exception, error:
+        except Exception as error:
             print "Error while upgrading profiles: %s" % error
             traceback.print_exc()
 
@@ -483,7 +483,7 @@ class CronSetter(object):
                 if os.path.exists(_defconffile):
                     _conf = ConfigManager.ConfigManager(_defconffile)
                     _conf.write_schedule()
-            except Exception, error:
+            except Exception as error:
                 print "Error while writing CRON settings: %s" % error
                 traceback.print_exc()
 
@@ -582,7 +582,7 @@ class UpgradeSBackupConf_v010_011(object):
                     self._clean_opts()
                     self._update_compress_format()
                     self._update_schedule()
-            except Exception, error:
+            except Exception as error:
                 print "Error while upgrading configuration 0.10 to 0.11: %s" % error
                 traceback.print_exc()
 

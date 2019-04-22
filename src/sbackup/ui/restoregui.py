@@ -192,7 +192,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.__fam_target_hdl.set_destination(path)
             self.__fam_target_hdl.set_initialize_callback(self.__set_destination_done_cb)
             self.__fam_target_hdl.initialize()
-        except exceptions.FileAccessException, error:
+        except exceptions.FileAccessException as error:
             gobject.idle_add(self._make_topwin_busy, False)
             self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error
             self._show_destination_error(error)
@@ -791,7 +791,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                     try:
                         self.logger.debug("Trying to remove snapshot '%s'" % self.currentSnp.getName())
                         self.snpman.removeSnapshot(self.currentSnp)
-                    except exceptions.SBackupError, error:
+                    except exceptions.SBackupError as error:
                         self.logger.exception("Error while delete snapshot: %s" % error)
                         _message_str = _("While attempting to delete snapshot the following error occurred:\n%s")\
                                             % error

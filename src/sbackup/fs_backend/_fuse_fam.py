@@ -150,7 +150,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
                                 break
                         if not _umounted:
                             self._logger.warning("Unable to terminate FUSE `%s`" % dir)
-            except SBException, error:
+            except SBException as error:
                 self._logger.error("Error in terminate. Overwriting previous errors.")
                 if self._initialize_callback is None:
                     raise
@@ -194,7 +194,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
                         # The plugin used was localFuseFAM
                         return None
 
-            except Exception, error:
+            except Exception as error:
                 _msg = "Unable to mount target destination `%s` using plugin `%s`: %s" % (uri, p_name, error)
                 self._logger.error(_msg)
                 raise exceptions.FuseFAMException(_msg)
@@ -221,7 +221,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
             if not local_file_utils.path_exists(self._eff_path):
                 raise exceptions.FileAccessException("Unable to mount target: Path does not exist")
 
-        except SBException, error:
+        except SBException as error:
             self._logger.error("Error in mount callback function. Overwriting previous errors.")
             if self._initialize_callback is None:
                 raise
@@ -247,7 +247,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
                     try:
                         os.rmdir(mountpoint)
                         self._logger.debug("Mountpoint `%s` successfully removed." % mountpoint)
-                    except (IOError, OSError), error:
+                    except (IOError, OSError) as error:
                         self._logger.error("Unable to remove mountpoint `%s`: %s" % (mountpoint, error))
                 else:
                     self._logger.warning("Unable to remove mountpoint: directory is not empty.")
@@ -309,7 +309,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 #                    plugin.umount(mpoint)
 #                    self._remove_mountdir(mpoint)
 #
-#                except Exception, error:
+#                except Exception as error:
 #                    raise SBException("Test failed with following output:\n\n%s " % error)
 #
 #                return True

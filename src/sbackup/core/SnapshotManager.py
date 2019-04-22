@@ -197,7 +197,7 @@ class SnapshotManager(object):
             _snpname = self._fop.get_basename(_snppath)
             try:
                 self._fop.test_dir_access(_snppath)
-            except FileAccessException, error:
+            except FileAccessException as error:
                 self.logger.info("Unable to access `%s'. Skipped." % _snppath)
                 continue
 
@@ -206,7 +206,7 @@ class SnapshotManager(object):
                 continue
             try:
                 self.__snapshots.append(Snapshot(_snppath))
-            except NotValidSnapshotException, error :
+            except NotValidSnapshotException as error :
                 if isinstance(error, NotValidSnapshotNameException) :
                     self.logger.info(_("Invalid snapshot `%(name)s` found: Name of snapshot not valid.")\
                                         % { 'name': str(_snpname) })

@@ -104,7 +104,7 @@ class _DBusConnection(object):
 #                connecting = False
 #                if not silent:
 #                    self._logger.info("successfully connected to `%s` provided by `%s`" % (path, service))
-#            except dbus.DBusException, error:
+#            except dbus.DBusException as error:
 #                if not silent:
 #                    self._logger.error("Error while getting service:\n%s" % (str(error)))
 #                if trials == max_trials:
@@ -126,7 +126,7 @@ class _DBusConnection(object):
             remote_obj = self._system_bus.get_object(service, path)
             if not silent:
                 self._logger.info("successfully connected to `%s` provided by `%s`" % (path, service))
-        except dbus.DBusException, error:
+        except dbus.DBusException as error:
             if not silent:
                 self._logger.error("Error while getting service:\n%s" % (str(error)))
             remote_obj = None
@@ -163,7 +163,7 @@ class _DBusConnection(object):
                     _failure = True
                     error = "Unable to get remote object"
 
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 _failure = True
 
             if _failure is True:
@@ -192,7 +192,7 @@ class _DBusConnection(object):
         if self._connection_obj is not None:
             try:
                 dbus_id = self._connection_obj.get_id()
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Unable to get service while testing availibility: %s" % (str(error)))
                 dbus_id = None
                 failure = True
@@ -200,7 +200,7 @@ class _DBusConnection(object):
         if self._backup_obj is not None:
             try:
                 self._backup_obj.get_backup_pid()
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Unable to get service while testing availibility: %s" % (str(error)))
                 failure = True
 
@@ -220,7 +220,7 @@ class _DBusConnection(object):
                 if self._connection_obj is not None:
                     try:
                         res = bool(self._connection_obj.unregister_connection(self._id))
-                    except dbus.DBusException, error:
+                    except dbus.DBusException as error:
                         self._logger.warning("Unable to unregister connection: %s" % (str(error)))
                         res = False
 
@@ -299,7 +299,7 @@ class DBusProviderFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 res = func(*args, **kwargs)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while DBus operation in `__call_remote`: %s\n(%s(%s, %s))" % \
                                    (error, str(func), str(args), str(kwargs)))
                 res = False
@@ -388,7 +388,7 @@ class DBusProviderFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 retval = self._backup_obj.get_retry_target_check(dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while dbus operation in `get_retry_target_check`: %s" % error)
                 retval = constants.RETRY_UNKNOWN
         return retval
@@ -461,7 +461,7 @@ class DBusClientFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 retval = self._backup_obj.get_backup_pid(dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while dbus operation in `get_backup_pid`: %s" % error)
                 retval = constants.PID_UNKNOWN
         return retval
@@ -472,7 +472,7 @@ class DBusClientFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 retval = self._backup_obj.get_target(dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while dbus operation in `get_target`: %s" % error)
                 retval = constants.TARGET_UNKNOWN
         return retval
@@ -483,7 +483,7 @@ class DBusClientFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 retval = self._backup_obj.get_profilename(dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while dbus operation in `get_profilename`: %s" % error)
                 retval = constants.PROFILE_UNKNOWN
         return retval
@@ -494,7 +494,7 @@ class DBusClientFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 retval = self._backup_obj.get_space_required(dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while dbus operation in `get_space_required`: %s" % error)
                 retval = constants.SPACE_REQUIRED_UNKNOWN
         return retval
@@ -510,7 +510,7 @@ class DBusClientFacade(_DBusConnection):
             try:
                 res = self._backup_obj.set_retry_target_check(retry,
                                                               dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while setting value for `retry_target_check`: %s" % error)
                 res = False
         else:
@@ -524,7 +524,7 @@ class DBusClientFacade(_DBusConnection):
         if self.get_is_connected() is True:
             try:
                 res = self._backup_obj.emit_alreadyrunning_signal(dbus_interface = constants.DBUS_INTERFACE)
-            except dbus.DBusException, error:
+            except dbus.DBusException as error:
                 self._logger.error("Error while emitting `alreadyrunning_signal`: %s" % error)
                 res = False
         else:
@@ -638,7 +638,7 @@ def get_session_name():
         bus.get_object('org.kde.ksmserver', '/KSMServer')
         session = "kde"
         kde_found = True
-    except dbus.exceptions.DBusException, error:
+    except dbus.exceptions.DBusException as error:
         print "Unable to get KDE Session Manager: %s" % error
         kde_found = False
 
@@ -648,7 +648,7 @@ def get_session_name():
                                        '/org/gnome/SessionManager')
         session = "gnome"
         gnome_found = True
-    except dbus.exceptions.DBusException, error:
+    except dbus.exceptions.DBusException as error:
         print "Unable to get Gnome Session Manager: %s" % error
         gnome_found = False
 

@@ -122,7 +122,7 @@ class GioTargetHandler(interfaces.ITargetHandler):
             self._dest_mount_hdl.use_own_mainloop(self._use_mainloop)
             try:
                 self._dest_mount_hdl.umount()
-            except exceptions.RemoteUmountFailedError, error:
+            except exceptions.RemoteUmountFailedError as error:
                 self._logger.error("Unable to umount `%s`: %s" % (self._dest.query_display_name(), error))
 
         else:

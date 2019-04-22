@@ -173,17 +173,17 @@ def switch_user(uid_name):
     # Try setting the new uid/gid
     try:
         os.setgid(running_gid)
-    except OSError, e:
+    except OSError as e:
         print 'Could not set effective group id: %s' % e
 
     try:
         os.setgroups([running_gid])
-    except OSError, e:
+    except OSError as e:
         print 'Could not set associated groups: %s' % e
 
     try:
         os.setuid(running_uid)
-    except OSError, e:
+    except OSError as e:
         print 'Could not set effective user id: %s' % e
 
     # Ensure a very convervative umask
@@ -212,7 +212,7 @@ def set_grp(groupname):
         except KeyError:
             # LP #696183:
             print "Group not changed to `%s`: unknown group" % groupname
-        except OSError, error:
+        except OSError as error:
             print "Failed to set GID to `%s`: %s" % (groupname, error)
 
 
@@ -252,7 +252,7 @@ def get_process_environment(pid):
         fobj = open(_envfile, "rb")
         _envlst = [_var for _var in _readline_nullsep(fobj)]
         fobj.close()
-    except (OSError, IOError), error:
+    except (OSError, IOError) as error:
         print "Unable to open Gnome session environment: %s." % error
         _envlst = None
 
@@ -331,7 +331,7 @@ def launch_dbus_if_required():
                     try:
                         _pid = int(_var[1])
                         atexit.register(os.kill, _pid, signal.SIGTERM)
-                    except ValueError, error:
+                    except ValueError as error:
                         print "Unable to register dbus clean-up action: %s" % error
 
 

@@ -347,7 +347,7 @@ class SBconfigGTK(GladeGnomeApp):
             else:
                 try :
                     purge = int(self.configman.get("general", "purge"))
-                except Exception, e:
+                except Exception as e:
                     self.logger.error("Purge value '%s' is invalid: '%s'" \
                                 % (self.configman.get("general", "purge"), e))
                     purge = 30
@@ -596,7 +596,7 @@ class SBconfigGTK(GladeGnomeApp):
             self.__fill_report_widgets_from_config()
 
             self.__fill_statusbar_from_config()
-        except exceptions.NonValidOptionException, error:
+        except exceptions.NonValidOptionException as error:
             gobject.idle_add(self.__config_invalid_cb, error, probe_fs)
         else:
 #            self.__set_default_focus()
@@ -1243,7 +1243,7 @@ class SBconfigGTK(GladeGnomeApp):
         else:
             try :
                 testmail_res = self.configman.testMail()
-            except SBException, _exc:
+            except SBException as _exc:
                 misc.show_warndialog(parent = self.__get_application_widget(),
                     headline_str = _("Test mail settings"),
                     message_str = _("The test failed with following output:"),
@@ -1689,7 +1689,7 @@ class SBconfigGTK(GladeGnomeApp):
         dialog = self.widgets["dialog_connect_remote"]
         try:
             self.__destination_hdl.test_destination()
-        except exceptions.RemoteMountTestFailedError, error:
+        except exceptions.RemoteMountTestFailedError as error:
             misc.unset_cursor(dialog)
 
             _icon = self.widgets["dest_remote_light"]

@@ -157,7 +157,7 @@ class PluginManager(object):
                                 issubclass(symbol, pluginFAM):
                                 #symbol.enabled = symbol.name in plugin_names
                                 self.__pluginList[symbol_name] = symbol
-                    except Exception, error:
+                    except Exception as error:
                         self.logger.warning(_("Unable to import plugin `%(plugin_name)s`: %(error_cause)s ")\
                                             % { 'plugin_name' : module_name,
                                                 'error_cause' : str(error) })

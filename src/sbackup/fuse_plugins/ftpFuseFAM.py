@@ -113,7 +113,7 @@ class ftpFuseFAM (pluginFAM)  :
             # Call the subprocess using convenience method
             try:
                 retval = subprocess.call(curl_cmd, 0, None, None, outptr, errptr)
-            except OSError, _exc:
+            except OSError as _exc:
                 os.rmdir(mountpoint)
                 raise FuseFAMException(_("Couldn't found external application 'curlftpfs' needed for handling of ftp sites: %s") % _exc)
 

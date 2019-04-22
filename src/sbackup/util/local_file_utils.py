@@ -266,18 +266,18 @@ def _copytree(src, dst, symlinks = False):
             else:
                 shutil.copy2(srcname, dstname)
             # XXX What about devices, sockets etc.?
-        except (IOError, OSError), why:
+        except (IOError, OSError) as why:
             errors.append((srcname, dstname, str(why)))
         # catch the Error from the recursive copytree so that we can
         # continue with other files
-        except shutil.Error, err:
+        except shutil.Error as err:
             errors.extend(err.args[0])
     try:
         shutil.copystat(src, dst)
-    except OSError, why:
+    except OSError as why:
         errors.extend((src, dst, str(why)))
     if len(errors) > 0:
-        raise shutil.Error, errors
+        raise shutil.Error from errors
 
 def createfile(filepath):
     """
@@ -374,7 +374,7 @@ def chmod_no_rwx_grp_oth(path):
         fmode = fstats.st_mode
         fmode = fmode & system.UNIX_PERM_GRPOTH_NORWX
         os.chmod(path, fmode)
-    except Exception, error:
+    except Exception as error:
         _msg = "Unable to set permissions: %s" % str(error)
         _logger = log.LogFactory.getLogger()
         _logger.warning(_msg)
@@ -506,7 +506,7 @@ def test_path(path, testdir_name, testfile_name, test_read = True):
         delete(testfile)
         __logger.debug("Remove dir")
         delete(testdir)
-    except (OSError, IOError), error:
+    except (OSError, IOError) as error:
         raise exceptions.RemoteMountTestFailedError(str(error))
 
 
@@ -517,7 +517,7 @@ def query_fs_info(path):
 
     try:
         _vstat = os.statvfs(path)
-    except OSError, error:
+    except OSError as error:
         _logger.error("Error in `query_fs_info`: %s" % error)
     else:
         _size = _vstat.f_blocks * _vstat.f_bsize

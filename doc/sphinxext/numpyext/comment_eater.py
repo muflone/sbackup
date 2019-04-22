@@ -1,4 +1,4 @@
-from cStringIO import StringIO
+from io import StringIO
 import compiler
 import inspect
 import textwrap

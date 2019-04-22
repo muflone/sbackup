@@ -100,7 +100,7 @@ def label_set_autowrap(widget):
     """
     if isinstance(widget, gtk.Container):
         children = widget.get_children()
-        for i in xrange(len(children)):
+        for i in range(len(children)):
             label_set_autowrap(children[i])
     elif isinstance(widget, gtk.Label) and widget.get_line_wrap():
         widget.connect_after("size-allocate", _label_size_allocate)

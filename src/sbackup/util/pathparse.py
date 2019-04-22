@@ -29,7 +29,6 @@
 
 
 import urllib.parse
-import urllib
 import datetime
 import types
 
@@ -200,17 +199,17 @@ class UriParser(object):
             pass
 
         if splituri.username is not None:
-            self.__username = urllib.unquote(splituri.username)
+            self.__username = urllib.parse.unquote(splituri.username)
 
         if splituri.password is not None:
-            self.__password = urllib.unquote(splituri.password)
+            self.__password = urllib.parse.unquote(splituri.password)
 
         if splituri.hostname is None:
             self.__hostname = ""
         else:
             self.__hostname = splituri.hostname
 
-        self.__path = urllib.quote(splituri.path) #IGNORE:E1103
+        self.__path = urllib.parse.quote(splituri.path) #IGNORE:E1103
 #        self.__uri_scheme = splituri.scheme #IGNORE:E1103
         if splituri.scheme == "" and self.__uri.startswith("/"):    #IGNORE:E1103
             self.__uri_scheme = "file"
@@ -221,7 +220,7 @@ class UriParser(object):
         _logger.debug("UriParser:\n%s" % self)
 
     def __construct_display_name(self):
-        _path = urllib.unquote(self.__path)
+        _path = urllib.parse.unquote(self.__path)
         if self.is_local():
             _res = _path
         else:
@@ -245,7 +244,7 @@ class UriParser(object):
 
         _user = ""
         if self.__username is not None:
-            _user = "%s@" % urllib.quote(self.__username, "")
+            _user = "%s@" % urllib.parse.quote(self.__username, "")
 
         _path = self.__path.strip("/")
         if _path != "":
@@ -291,7 +290,7 @@ def construct_remote_uri_from_tupel(scheme, hostname, port, path, username, pass
 
     # Within the user and password field, any ":", "@", or "/" must be encoded.
     _host = hostname.rstrip("/")
-    _user = urllib.quote(username, "")
+    _user = urllib.parse.quote(username, "")
     _pass = ""
     _port = ""
     _path = path.strip("/")
@@ -300,7 +299,7 @@ def construct_remote_uri_from_tupel(scheme, hostname, port, path, username, pass
         _path = "/%s" % _path
 
     if password != "":
-        _pass = urllib.quote(password, "")
+        _pass = urllib.parse.quote(password, "")
         _pass = ":%s" % _pass
 
     if _user != "" or _pass != "":

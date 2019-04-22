@@ -132,7 +132,7 @@ class TestdataCreator(object):
         return txt
 
     def make_files(self, args, dirname, filenames):
-        print "MAKE_FILES - args: %s; dirname: %s" % (args, dirname)
+        print("MAKE_FILES - args: %s; dirname: %s" % (args, dirname))
         maxfilenum = random.randint(self.__options.get_min_number_of_files(),
                                     self.__options.get_max_number_of_files())
         for cnum in range(0, maxfilenum):
@@ -169,10 +169,10 @@ def calc_sums(arg, dirname, filenames):
         fpath = os.path.join(dirname, fname)
         cmd = ["md5sum", fpath]
         output = subprocess.Popen(cmd, stdout = subprocess.PIPE).communicate()[0]
-        print output
+        print(output)
         cmd = ["cksum", fpath]
         output = subprocess.Popen(cmd, stdout = subprocess.PIPE).communicate()[0]
-        print output
+        print(output)
 
 
 def main():
@@ -181,7 +181,7 @@ def main():
 
     wdir = options.get_working_dir()
     if os.path.exists(wdir):
-        print "Target directory '%s' already exists!" % wdir
+        print("Target directory '%s' already exists!" % wdir)
         sys.exit(1)
     else:
         os.mkdir(wdir)
@@ -189,8 +189,8 @@ def main():
     creator.make_dirs()
     creator.make_files_in_dirs()
 
-    print "created: %s files in %s directories" % (creator.cum_files,
-                                                   creator.cum_dirs)
+    print("created: %s files in %s directories" % (creator.cum_files,
+                                                   creator.cum_dirs))
 #    os.path.walk(wdir, calc_sums, None)
 
 

@@ -32,9 +32,9 @@ class TestPluginManager(unittest.TestCase):
     def testGetPlugins(self):
         " Get Plugins "
         for p_name, p_value in self.manager.getPlugins().items():
-            print p_name, p_value , type(p_value)
+            print(p_name, p_value , type(p_value))
             foo = p_value()
-            print foo.match_scheme_full("ssh://user:pass@example.com/home/user/backup/")
+            print(foo.match_scheme_full("ssh://user:pass@example.com/home/user/backup/"))
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPluginManager)
 unittest.TextTestRunner(verbosity = 2).run(suite)

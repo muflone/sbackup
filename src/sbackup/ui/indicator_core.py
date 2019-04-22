@@ -1011,7 +1011,7 @@ class SBackupdIndicatorApp(object):
 
         except exceptions.InstanceRunningError:
             exitcode = constants.EXCODE_INSTANCE_ALREADY_RUNNING
-            print _("Another `Simple Backup Indicator` is already running.")
+            print(_("Another `Simple Backup Indicator` is already running."))
 
         except SystemExit as error:
             exitcode = error.code
@@ -1035,7 +1035,7 @@ def main(options, indicator_class):
         gtk.init_check()
     except RuntimeError as error:
         gtk_avail = False
-        print _("Initialization of GTK+ failed: %s") % error
+        print(_("Initialization of GTK+ failed: %s") % error)
 
     if gtk_avail:
         sbdgui = SBackupdIndicatorApp(options)

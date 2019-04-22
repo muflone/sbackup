@@ -334,9 +334,9 @@ class _TestSnapshotManagerBase(unittest.TestCase):
             self.snppath.append(os.path.join(_dir, name))
         # debug output
         if LogFactory.getLogger().isEnabledFor(10):
-            print "Paths to snapshots to proceed:"
+            print("Paths to snapshots to proceed:")
             for _path in self.snppath:
-                print "   %s" % _path
+                print("   %s" % _path)
         # end of debug output
 
     def _setup_resultdir_paths(self):
@@ -360,9 +360,9 @@ class _TestSnapshotManagerBase(unittest.TestCase):
             self.res_snppath.append(os.path.join(_dir, name))
         # debug output
         if LogFactory.getLogger().isEnabledFor(10):
-            print "Paths to result snapshots (targeted):"
+            print("Paths to result snapshots (targeted):")
             for _path in self.res_snppath:
-                print "   %s" % _path
+                print("   %s" % _path)
         # end of debug output
 
     def _setup_snppaths(self):
@@ -484,8 +484,8 @@ class _TestSnapshotManagerBase(unittest.TestCase):
 
         # only for debugging
         if LogFactory.getLogger().isEnabledFor(10):
-            print "\nworking dir:"; print stdo_wd
-            print "\ntarget result:"; print stdo_res
+            print("\nworking dir:"); print(stdo_wd)
+            print("\ntarget result:"); print(stdo_res)
         # end of debug output
 
         self.assertEqual(stdo_wd, stdo_res)

@@ -41,7 +41,7 @@ try:
     import gtk
     import gtk.glade
 except ImportError:
-    print "Failed to load Python GTK/Gnome bindings. Please check your Gnome installation."
+    print("Failed to load Python GTK/Gnome bindings. Please check your Gnome installation.")
     sys.exit(1)
 try:
     import gnomevfs
@@ -88,14 +88,14 @@ class SRestore:
             if ver[:3] == "1.4":
                 self.childlist = [x[1:] for x in gnomevfs.read_entire_file( backup+"/flist" ).split( "\000" ) if x == "/"+spath or x[1:len(spath)+2]==spath+"/"]
             else:
-                print "Only snapshot version 1.4 is supported"
+                print("Only snapshot version 1.4 is supported")
                 return False
         except:
-            print "E: Error opening backup snapshot metadata"
+            print("E: Error opening backup snapshot metadata")
             return False
 
         if len(self.childlist) == 0:
-            print "E: File not found in the backup snapshot"
+            print("E: File not found in the backup snapshot")
             return False
 
         if os.path.exists(dpath):
@@ -122,7 +122,7 @@ class SRestore:
                         if not os.path.exists(dst):
                             shutil.move( src, dst )
                     else:
-                        print "W: Path '%s' is neither directory nor file! Skipped." % src
+                        print("W: Path '%s' is neither directory nor file! Skipped." % src)
                 shutil.rmtree( tdir )
             else:
                 tdir = tempfile.mkdtemp( dir=dparent )

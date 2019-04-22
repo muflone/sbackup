@@ -727,11 +727,11 @@ def debug_print_snarfile(filename):
     _fop = fam.get_file_operations_facade_instance()
     if _fop.path_exists(filename):
         _snar = SnapshotFile(filename, writeFlag = False)
-        print "\nSUMMARY of SNAR '%s':" % filename
+        print("\nSUMMARY of SNAR '%s':" % filename)
         for _record in _snar.parseFormat2():
-            print "%s" % _record
+            print("%s" % _record)
     else:
-        print "\nSUMMARY of SNAR '%s': file not found!" % filename
+        print("\nSUMMARY of SNAR '%s': file not found!" % filename)
 
 
 def debug_snarfile_to_list(filename):

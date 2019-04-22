@@ -425,7 +425,7 @@ class SBackupApp(object):
             self.__dbus_conn.set_backup_pid(pid = system.get_pid())
             self.__dbus_avail = True
         except exceptions.DBusException:
-            print "Unable to launch DBus service"
+            print("Unable to launch DBus service")
             self.__dbus_conn = None
             self.__dbus_avail = False
             self.__use_indicator = False
@@ -436,12 +436,12 @@ class SBackupApp(object):
                  user who owns the session.
         :note: import D-Bus related modules only if using D-Bus is enabled
         """
-        print "Attempt to launch indicator application (status icon)."
+        print("Attempt to launch indicator application (status icon).")
         _path_to_app = get_resource_file(constants.INDICATORAPP_FILE)
 
         session_env = system.get_session_environment()
         if session_env is None:
-            print "No desktop session found. Indicator application is not started."
+            print("No desktop session found. Indicator application is not started.")
         else:
             _cmd = [_path_to_app]
             if self.__options_given.legacy_appindicator is True:
@@ -450,14 +450,14 @@ class SBackupApp(object):
             if not system.is_superuser():
                 if system.get_user_from_uid() != session_env["USER"]:
                     _cmd = None
-                    print "Unable to launch indicator application as current user.\n"\
-                          "You must own current desktop session."
+                    print("Unable to launch indicator application as current user.\n"\
+                          "You must own current desktop session.")
 
             if _cmd is None:
-                print "Unable to launch indicator application"
+                print("Unable to launch indicator application")
             else:
                 pid = system.exec_command_async(args = _cmd, env = session_env)
-                print "Indicator application started (PID: %s)" % pid
+                print("Indicator application started (PID: %s)" % pid)
                 time.sleep(constants.INDICATOR_LAUNCH_PAUSE_SECONDS)
 
 
@@ -530,7 +530,7 @@ class SBackupApp(object):
         Fuse is not initialized yet.
         :note: import D-Bus related modules only if using D-Bus is enabled
         """
-        print _("Backup is not being started.\n%s") % (str(error))
+        print(_("Backup is not being started.\n%s") % (str(error)))
         if self.__options_given.use_dbus and self.__dbus_avail:
             from sbackup.util import dbus_support
             conn = dbus_support.DBusClientFacade("Simple Backup Process (another instance)")

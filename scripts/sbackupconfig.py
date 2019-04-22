@@ -72,7 +72,7 @@ class _Config(configparser.ConfigParser):
         try:
             fobj = file(self._configfile, "r")
         except IOError:
-            print "Unable to open `%s` for reading." % str(self._configfile)
+            print("Unable to open `%s` for reading." % str(self._configfile))
         else:
             self.readfp(fobj, self._configfile)
             fobj.close()
@@ -92,7 +92,7 @@ class _Config(configparser.ConfigParser):
         try:
             fobj = file(self._configfile, "wb")
         except IOError:
-            print "Unable to open `%s` for writing." % str(self._configfile)
+            print("Unable to open `%s` for writing." % str(self._configfile))
         else:
             configparser.ConfigParser.write(self, fobj)
             fobj.close()
@@ -191,13 +191,13 @@ class _UpgradeAllConffiles(object):
                         if match is not None:
                             self._max_uid = int(match.group(1))
             except IOError:
-                print "Error while reading definitions from '%s'. "\
-                      "Using defaults." % (defspath)
+                print("Error while reading definitions from '%s'. "\
+                      "Using defaults." % (defspath))
             else:
                 defsfile.close()
         else:
-            print "Unable to read definitions from '%s'. "\
-                  "Using defaults." % (defspath)
+            print("Unable to read definitions from '%s'. "\
+                  "Using defaults." % (defspath))
 
     def _retrieve_users(self):
         """Retrieves all users from the password database that are
@@ -251,7 +251,7 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
 
     def _mk_dir(self, dst, src):
         if not os.path.exists(dst):
-            print "`%s` is being created" % dst
+            print("`%s` is being created" % dst)
             os.mkdir(dst)
             _stats = os.stat(src)
             os.chown(dst, _stats.st_uid, _stats.st_gid)
@@ -301,13 +301,13 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
         """
         if os.path.isfile(src) and\
            os.access(src, os.F_OK and os.R_OK):
-            print "checking nssbackup config for copy: %s" % src
+            print("checking nssbackup config for copy: %s" % src)
             if os.path.exists(dst):
-                print "   `%s` already exists. Nothing to do." % dst
+                print("   `%s` already exists. Nothing to do." % dst)
             else:
-                print "   copy nssbackup configuration"
-                print "   from `%s`" % (src)
-                print "   to   `%s`" % (dst)
+                print("   copy nssbackup configuration")
+                print("   from `%s`" % (src))
+                print("   to   `%s`" % (dst))
 
                 try:
                     shutil.copy2(src, dst)
@@ -315,7 +315,7 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
                     os.chown(dst, _stats.st_uid, _stats.st_gid)
                     os.chmod(dst, _stats.st_mode)
                 except (OSError, IOError) as error:
-                    print "failed (%s)" % error
+                    print("failed (%s)" % error)
 
     def do_upgrade(self):
         """Public method that actually processes the upgrade
@@ -391,7 +391,7 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
         """
         if os.path.isfile(conffile) and\
            os.access(conffile, os.F_OK and os.R_OK and os.W_OK):
-            print "checking file: %s" % conffile
+            print("checking file: %s" % conffile)
             config = _Config(conffile)
             _default_config = ConfigManager.get_default_config_obj()
             if config.has_section("log"):
@@ -403,33 +403,33 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
                     new_log = os.path.join(logdir, new_logfn)
 
                     if logfile == new_log:
-                        print "   nothing to do. skipped"
+                        print("   nothing to do. skipped")
                     else:
-                        print "   changing log file option"
-                        print "   from `%s`" % (logfile)
-                        print "   to   `%s`" % (new_log)
+                        print("   changing log file option")
+                        print("   from `%s`" % (logfile))
+                        print("   to   `%s`" % (new_log))
                         config.set("log", "file", str(new_log))
                 else:
                     config.set("log", "file", os.path.join(_default_config.get_logdir(),
                                                            ConfigManager.get_logfile_name_template(conffile)))
-                    print "   no log file specified. Default value set"
+                    print("   no log file specified. Default value set")
 
                 if not config.has_option("log", "level"):
                     config.set("log", "level", _default_config.get_loglevel())
-                    print "   no log level specified. Default value set"
+                    print("   no log level specified. Default value set")
             else:
                 config.add_section("log")
                 config.set("log", "file", os.path.join(_default_config.get_logdir(),
                                                        ConfigManager.get_logfile_name_template(conffile)))
                 config.set("log", "level", _default_config.get_loglevel())
-                print "   no section `log` found. Default values set"
+                print("   no section `log` found. Default values set")
 
             config.commit_to_disk()
 
             if config.has_section("general"):
                 # remove old backuplinks options - it's now always done.
                 if config.has_option("general", "backuplinks"):
-                    print "   Removing backuplinks option (not needed anymore)"
+                    print("   Removing backuplinks option (not needed anymore)")
                     config.remove_option("general", "backuplinks")
                     config.commit_to_disk()
 
@@ -454,7 +454,7 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
             self._modify_default_profile()
             self._modify_other_profiles()
         except Exception as error:
-            print "Error while upgrading profiles: %s" % error
+            print("Error while upgrading profiles: %s" % error)
             traceback.print_exc()
 
 
@@ -475,20 +475,20 @@ class CronSetter(object):
         """
         if system.is_superuser():
             try:
-                print "Reading schedule info from superuser's default profile"
+                print("Reading schedule info from superuser's default profile")
                 _conffilehdl = ConfigManager.ConfigurationFileHandler()
                 _defconffile = _conffilehdl.get_default_conffile_fullpath()
-                print "Configuration: `%s`" % _defconffile
+                print("Configuration: `%s`" % _defconffile)
 
                 if os.path.exists(_defconffile):
                     _conf = ConfigManager.ConfigManager(_defconffile)
                     _conf.write_schedule()
             except Exception as error:
-                print "Error while writing CRON settings: %s" % error
+                print("Error while writing CRON settings: %s" % error)
                 traceback.print_exc()
 
         else:
-            print "Operation requires root privileges"
+            print("Operation requires root privileges")
 
 
 class UpgradeSBackupConf_v010_011(object):
@@ -504,10 +504,10 @@ class UpgradeSBackupConf_v010_011(object):
         self._valid_opts = ConfigManager.ConfigManagerStaticData.get_our_options()
 
     def _query_default_conffile(self):
-        print "Reading schedule info from superuser's default profile"
+        print("Reading schedule info from superuser's default profile")
         _conffilehdl = ConfigManager.ConfigurationFileHandler()
         _defconffile = _conffilehdl.get_default_conffile_fullpath()
-        print "Configuration: `%s`" % _defconffile
+        print("Configuration: `%s`" % _defconffile)
         self._conffile = _defconffile
         if not os.path.exists(self._conffile):
             self._conffile = None
@@ -518,7 +518,7 @@ class UpgradeSBackupConf_v010_011(object):
             shutil.copy2(self._conffile, _bakf)
 
     def _clean_opts(self):
-        print "Validating config file: %s" % self._conffile
+        print("Validating config file: %s" % self._conffile)
         _mod = False
         if (self._valid_opts is None):
             return
@@ -528,22 +528,22 @@ class UpgradeSBackupConf_v010_011(object):
                 if (section not in self._valid_opts):
                     _conf.remove_section(section)
                     _mod = True
-                    print "Section [%(section)s] in '%(configfile)s' should not exist. Removed."\
-                          % {'section': section, 'configfile' : self._conffile}
+                    print("Section [%(section)s] in '%(configfile)s' should not exist. Removed."\
+                          % {'section': section, 'configfile' : self._conffile})
 
                 if (key in self._valid_opts[section] or '*' in self._valid_opts[section]):
                     continue
 
                 _conf.remove_option(section, key)
                 _mod = True
-                print "Option '%s' in section '%s' in file '%s' is not known. Removed."\
-                      % (key, section, self._conffile)
+                print("Option '%s' in section '%s' in file '%s' is not known. Removed."\
+                      % (key, section, self._conffile))
 
         if _mod:
             _conf.commit_to_disk()
 
     def _update_compress_format(self):
-        print "Updating config file: %s" % self._conffile
+        print("Updating config file: %s" % self._conffile)
         _conf = _Config(self._conffile)
         if _conf.has_option("general", "format"):
             _compr = _conf.get("general", "format")
@@ -560,7 +560,7 @@ class UpgradeSBackupConf_v010_011(object):
                 and not _conf.has_option("schedule", "anacron")):
             _sched = _conf.get_schedule_and_probe()
             if _sched is not None:  # entry in cron.* found that is not stored in conf file
-                print "Schedule found on FS: %s" % str(_sched)
+                print("Schedule found on FS: %s" % str(_sched))
                 _ctype = _sched[0]
                 _cexpr = _sched[1]
                 assert _ctype in ConfigManager.SCHEDULE_TYPES, "Given schedule type `%s` is invalid" % _ctype
@@ -583,11 +583,11 @@ class UpgradeSBackupConf_v010_011(object):
                     self._update_compress_format()
                     self._update_schedule()
             except Exception as error:
-                print "Error while upgrading configuration 0.10 to 0.11: %s" % error
+                print("Error while upgrading configuration 0.10 to 0.11: %s" % error)
                 traceback.print_exc()
 
         else:
-            print "Operation requires root privileges"
+            print("Operation requires root privileges")
 
 
 class UpgradeApplication(object):
@@ -610,12 +610,12 @@ class UpgradeApplication(object):
         an appropriate error code.
 
         """
-        print "-" * 60
-        print "%s %s upgrade tool" % (Infos.NAME, Infos.VERSION)
-        print "-" * 60
+        print("-" * 60)
+        print("%s %s upgrade tool" % (Infos.NAME, Infos.VERSION))
+        print("-" * 60)
 
         if not system.is_superuser():
-            print "Upgrade script must be run with root privileges!"
+            print("Upgrade script must be run with root privileges!")
             retcode = NO_SUPERUSER
         else:
             retcode = NO_ERRORS
@@ -634,11 +634,11 @@ if __name__ == "__main__":
         _UPGRADER = UpgradeApplication()
         RETC = _UPGRADER.main()
     except:
-        print "errors occurred:"
+        print("errors occurred:")
         traceback.print_exc()
         RETC = GENERAL_ERROR
 
     if RETC == NO_ERRORS:
-        print "successful finished."
+        print("successful finished.")
 
     sys.exit(RETC)

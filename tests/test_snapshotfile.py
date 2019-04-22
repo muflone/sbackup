@@ -45,12 +45,12 @@ class TestSnapshotfile(unittest.TestCase):
         snar = tar.SnapshotFile(self.__file)
 #        print str(snar)
         _time = snar.get_time_of_backup()
-        print "Time of backup: %s sec" % (_time)
+        print("Time of backup: %s sec" % (_time))
 
         _dict = snar.get_dict_format2()
 
         for _item in _dict:
-            print _item, _dict[_item]
+            print(_item, _dict[_item])
 
 #        _size = sys.getsizeof(_dict)
 #        mb = _size / (1000*1000)

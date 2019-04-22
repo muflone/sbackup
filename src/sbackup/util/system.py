@@ -174,17 +174,17 @@ def switch_user(uid_name):
     try:
         os.setgid(running_gid)
     except OSError as e:
-        print 'Could not set effective group id: %s' % e
+        print('Could not set effective group id: %s' % e)
 
     try:
         os.setgroups([running_gid])
     except OSError as e:
-        print 'Could not set associated groups: %s' % e
+        print('Could not set associated groups: %s' % e)
 
     try:
         os.setuid(running_uid)
     except OSError as e:
-        print 'Could not set effective user id: %s' % e
+        print('Could not set effective user id: %s' % e)
 
     # Ensure a very convervative umask
     new_umask = 077
@@ -194,9 +194,9 @@ def switch_user(uid_name):
 
     final_uid = os.getuid()
     final_gid = os.getgid()
-    print 'drop privileges: running as %s/%s' % \
+    print('drop privileges: running as %s/%s' % \
     (pwd.getpwuid(final_uid).pw_name,
-    grp.getgrgid(final_gid).gr_name)
+    grp.getgrgid(final_gid).gr_name))
 
 
 def drop_privileges():
@@ -211,9 +211,9 @@ def set_grp(groupname):
             os.setgid(_gid)
         except KeyError:
             # LP #696183:
-            print "Group not changed to `%s`: unknown group" % groupname
+            print("Group not changed to `%s`: unknown group" % groupname)
         except OSError as error:
-            print "Failed to set GID to `%s`: %s" % (groupname, error)
+            print("Failed to set GID to `%s`: %s" % (groupname, error))
 
 
 def nice():
@@ -253,7 +253,7 @@ def get_process_environment(pid):
         _envlst = [_var for _var in _readline_nullsep(fobj)]
         fobj.close()
     except (OSError, IOError) as error:
-        print "Unable to open Gnome session environment: %s." % error
+        print("Unable to open Gnome session environment: %s." % error)
         _envlst = None
 
     _env = None
@@ -263,7 +263,7 @@ def get_process_environment(pid):
             if _var != "":
                 _vars = _var.split("=", 1)
                 if len(_vars) != 2:
-                    print "Unable to read environment variable '%s'. Skipped." % _var
+                    print("Unable to read environment variable '%s'. Skipped." % _var)
                 else:
                     _env[_vars[0]] = _vars[1]
     return _env
@@ -318,12 +318,12 @@ def launch_dbus_if_required():
     #
     if not is_dbus_session_bus_set():
         output = exec_command_stdout(['dbus-launch'])
-        print "D-Bus session bus launched"
+        print("D-Bus session bus launched")
         for _line in output.split('\n'):
-            print "\t%s" % _line
+            print("\t%s" % _line)
             _var = _line.split('=', 1)
             if len(_var) != 2:
-                print "Unable to read environment variable '%s'. Skipped." % _line
+                print("Unable to read environment variable '%s'. Skipped." % _line)
             else:
                 os.environ[_var[0]] = _var[1]
                 if _var[0] == 'DBUS_SESSION_BUS_PID':
@@ -332,7 +332,7 @@ def launch_dbus_if_required():
                         _pid = int(_var[1])
                         atexit.register(os.kill, _pid, signal.SIGTERM)
                     except ValueError as error:
-                        print "Unable to register dbus clean-up action: %s" % error
+                        print("Unable to register dbus clean-up action: %s" % error)
 
 
 def set_dbus_session_bus_from_session():
@@ -351,7 +351,7 @@ def _set_envvar_from_session(key):
         _env = get_session_environment()
         if _env is not None:
             _nvalue = _env.get(key)
-            print "Updating %s to: %s" % (key, _nvalue)
+            print("Updating %s to: %s" % (key, _nvalue))
             if _nvalue is not None:
                 os.environ[key] = _nvalue
 
@@ -367,18 +367,18 @@ def get_session_environment():
         _session_pid = grep_pid(_name, True)
         if _session_pid is not None:
             mod_env = _get_session_env(_name, _session_pid)
-            print "Desktop session %s found" % _name
+            print("Desktop session %s found" % _name)
             break
     if mod_env is None:
-        print "Searching not owned sessions"
+        print("Searching not owned sessions")
         for _name in _sessionnames:
             _session_pid = grep_pid(_name)
             if _session_pid is not None:
                 mod_env = _get_session_env(_name, _session_pid)
-                print "Desktop session %s found" % _name
+                print("Desktop session %s found" % _name)
                 break
     if mod_env is None:
-        print "No Desktop session found"
+        print("No Desktop session found")
     return mod_env
 
 
@@ -387,7 +387,7 @@ def _get_session_env(session, _session_pid=None):
     if _session_pid is None:
         _session_pid = grep_pid(processname = session)
     if _session_pid is None:
-        print "Session `%s` not found" % session
+        print("Session `%s` not found" % session)
     else:
 #        print "Session `%s` PID: %s" % (session, _session_pid)
         _mod_env = get_clean_environment()
@@ -401,11 +401,11 @@ def _get_session_env(session, _session_pid=None):
 
 
 def debug_print_environment(env, description):
-    print "\nEnvironment `%s`:" % description
-    print "-----------------------------------------------------------------------------"
+    print("\nEnvironment `%s`:" % description)
+    print("-----------------------------------------------------------------------------")
     for _var in env:
-        print "%s: %s" % (_var, env[_var])
-    print "-----------------------------------------------------------------------------"
+        print("%s: %s" % (_var, env[_var]))
+    print("-----------------------------------------------------------------------------")
 
 
 def exec_command_async(args, env = None):
@@ -450,7 +450,7 @@ def grep_pid(processname, withuid=False):
     if withuid:
         cmd.extend(["-U", str(os.getuid())])
     output = exec_command_stdout(args=cmd)
-    print "DEBUG: %s = %s" % (str(cmd), output)
+    print("DEBUG: %s = %s" % (str(cmd), output))
     try:
         _pid = int(output)
     except ValueError:

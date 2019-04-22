@@ -47,7 +47,7 @@ class TestSnapshotfile(object):
         snar = tar.SnapshotFile(self.__file)
 #        print str(snar)
         _time = snar.get_time_of_backup()
-        print "Time of backup: %s sec" % (_time)
+        print("Time of backup: %s sec" % (_time))
 
 #        _dict = snar.get_dict_format2()
         self.read_on_demand(snar)

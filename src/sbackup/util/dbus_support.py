@@ -637,7 +637,7 @@ def get_session_name():
         session = "kde"
         kde_found = True
     except dbus.exceptions.DBusException as error:
-        print "Unable to get KDE Session Manager: %s" % error
+        print("Unable to get KDE Session Manager: %s" % error)
         kde_found = False
 
     try:
@@ -647,7 +647,7 @@ def get_session_name():
         session = "gnome"
         gnome_found = True
     except dbus.exceptions.DBusException as error:
-        print "Unable to get Gnome Session Manager: %s" % error
+        print("Unable to get Gnome Session Manager: %s" % error)
         gnome_found = False
 
     if gnome_found and kde_found:

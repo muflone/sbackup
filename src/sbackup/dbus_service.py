@@ -397,14 +397,14 @@ def run(args):
         _running = is_running()
         if _cmd == "start":
             if _running is True:
-                print "Simple Backup DBus service is already running"
+                print("Simple Backup DBus service is already running")
             else:
                 __launch_service(keep_alive = _options.keep_alive)
         elif _cmd == "stop":
             if _running is True:
                 __stop_service()
             else:
-                print "Simple Backup DBus service is not running"
+                print("Simple Backup DBus service is not running")
         elif _cmd == "restart":
             if _running is True:
                 __stop_service()
@@ -413,6 +413,6 @@ def run(args):
         exitcode = constants.EXCODE_SUCCESS
 
     except dbus.DBusException as error:
-        print "Error in Simple Backup DBus service:\n%s" % str(error)
+        print("Error in Simple Backup DBus service:\n%s" % str(error))
         exitcode = constants.EXCODE_GENERAL_ERROR
     return exitcode

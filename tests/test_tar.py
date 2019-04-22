@@ -150,7 +150,7 @@ class TestSnapshotFile(unittest.TestCase):
         modifications of the snarfile for further tests.
         """
         _templates = self.__get_templates()
-        print "TEMPLATES: %s" % _templates
+        print("TEMPLATES: %s" % _templates)
         for _templ in _templates:
             rmcmd = ["cp", "-f", _templ["template"], _templ["target"]]
             subprocess.call(rmcmd)
@@ -162,16 +162,16 @@ class TestSnapshotFile(unittest.TestCase):
     def testParseFormat2(self):
         """Parse the SNAR file"""
         for f in self.snarSNPfile.parseFormat2():
-            print f[-2] + "\t"
+            print(f[-2] + "\t")
             for d in f[-1]:
-                print str(d)
+                print(str(d))
 
     def testMemSnasphotFile(self):
         " Create and read a MemSnapshotFile "
         msnpf = MemSnapshotFile(self.snarSNPfile)
         for i in msnpf.getContent("/home/wattazoum/Images/camescope/2007-04-08--09.09.05"):
-            print str(i)
-        print msnpf
+            print(str(i))
+        print(msnpf)
 
     def testGetFirstItems(self):
         " Get the list of first items into a snarfile"
@@ -279,7 +279,7 @@ class TestSnapshotFile(unittest.TestCase):
         entry1 = dir_file[0]
         entry2 = dir_file[1]
 
-        print "ENTRY:\n%s" % entry2
+        print("ENTRY:\n%s" % entry2)
 
         # evaluate the results
         self.assertEqual(dumpdir1_name, entry1[SnapshotFile.REC_DIRNAME])
@@ -330,7 +330,7 @@ class TestSnapshotFile(unittest.TestCase):
                     ]
         snpf = SnapshotFile(self.snarf_new, writeFlag = True)
         _res = snpf.createContent(_dumpdirs)
-        print "CONTENT: '%s'" % (_res)
+        print("CONTENT: '%s'" % (_res))
 
     def test_addrecord(self):
         dumpdir1_name = "/home/peer/backups/testdocs/docs/new folder"
@@ -440,7 +440,7 @@ class TestProcSnapshotFile(unittest.TestCase):
         modifications of the snarfile for further tests.
         """
         _templates = self.__get_templates()
-        print "TEMPLATES: %s" % _templates
+        print("TEMPLATES: %s" % _templates)
         for _templ in _templates:
             rmcmd = ["cp", "-f", _templ["template"], _templ["target"]]
             subprocess.call(rmcmd)
@@ -449,14 +449,14 @@ class TestProcSnapshotFile(unittest.TestCase):
         " Create and read a ProcSnapshotFile "
         psnpf = ProcSnapshotFile(self.snarSNPfile)
         for i in psnpf.getContent("/home/wattazoum/Images/camescope/2007-04-08--09.09.05"):
-            print str(i)
-        print psnpf
+            print(str(i))
+        print(psnpf)
 
         psnpf = ProcSnapshotFile(self.snarSNPfile2)
         self.assertRaises(SBException, psnpf.getContent, "/home/wattazoum/Images/camescope/2007-04-08--09.09.05")
         for i in psnpf.getContent("/home/wattazoum/Images"):
-            print str(i)
-        print psnpf
+            print(str(i))
+        print(psnpf)
 
 
 class TestTarUtilsArchiveType(unittest.TestCase):

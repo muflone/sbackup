@@ -59,7 +59,7 @@ def main():
         try:
             obj, name = import_by_name(name)
         except ImportError as e:
-            print "Failed to import '%s': %s" % (name, e)
+            print("Failed to import '%s': %s" % (name, e))
             continue
 
         fn = os.path.join(path, '%s.rst' % name)

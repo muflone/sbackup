@@ -1073,7 +1073,7 @@ class ConfigManager(configparser.ConfigParser):
             except OSError:
                 pass
             else:
-                print "Cron entry `%s` was removed" % path
+                print("Cron entry `%s` was removed" % path)
 
     def testMail(self):
         """Test the mail settings

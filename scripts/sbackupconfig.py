@@ -70,7 +70,7 @@ class _Config(configparser.ConfigParser):
         configparser.ConfigParser.__init__(self)
         self._configfile = configfile
         try:
-            fobj = file(self._configfile, "r")
+            fobj = open(self._configfile, "r")
         except IOError:
             print("Unable to open `%s` for reading." % str(self._configfile))
         else:
@@ -90,7 +90,7 @@ class _Config(configparser.ConfigParser):
 
         """
         try:
-            fobj = file(self._configfile, "wb")
+            fobj = open(self._configfile, "wb")
         except IOError:
             print("Unable to open `%s` for writing." % str(self._configfile))
         else:
@@ -176,7 +176,7 @@ class _UpgradeAllConffiles(object):
         if os.path.isfile(defspath) and os.access(defspath, os.F_OK and os.R_OK):
             eof = False
             try:
-                defsfile = file(defspath, "r")
+                defsfile = open(defspath, "r")
                 while not eof:
                     defsline = defsfile.readline()
                     if defsline == "":

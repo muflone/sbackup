@@ -63,7 +63,7 @@ def __get_resource(resource_name, is_file = False):
     """
 #    print "Debug: Looking for '%s' (isFile=%s)" % (resourceName, isFile)
     tmp = inspect.getabsfile(sbackup)
-    resfile = file(os.path.join(os.path.dirname(tmp), constants.RSRC_FILE), "r")
+    resfile = open(os.path.join(os.path.dirname(tmp), constants.RSRC_FILE), "r")
     resfilelines = resfile.readlines()
     resfile.close()
 
@@ -118,7 +118,7 @@ def get_version_number():
     ver_line = "VERSION=n.a."
 
     tmp = inspect.getabsfile(sbackup)
-    resfile = file(os.sep.join([os.path.dirname(tmp), "metainfo"]), "r")
+    resfile = open(os.sep.join([os.path.dirname(tmp), "metainfo"]), "r")
     resfilelines = resfile.readlines()
     resfile.close()
 

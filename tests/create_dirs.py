@@ -138,7 +138,7 @@ class TestdataCreator(object):
         for cnum in range(0, maxfilenum):
             fname = os.path.join(dirname, "f%s" % cnum)
     #        print "create '%s'" % fname
-            fobj = file(fname, "wb")
+            fobj = open(fname, "wb")
             fobj.write(self.generate_content())
             fobj.close()
             self.cum_files += 1

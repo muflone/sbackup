@@ -28,7 +28,7 @@
 """
 
 
-import urlparse
+import urllib.parse
 import urllib
 import datetime
 import types
@@ -172,9 +172,9 @@ class UriParser(object):
 #        contains password in plain text
 #        _logger.debug("set and parse uri: %s" % uri)
         self.__clear()
-        splituri = urlparse.urlsplit(uri, scheme = "", allow_fragments = False)
+        splituri = urllib.parse.urlsplit(uri, scheme = "", allow_fragments = False)
         self.__uri = splituri.geturl()  # gets normalized URI
-        splituri = urlparse.urlsplit(self.__uri, scheme = "", allow_fragments = False)
+        splituri = urllib.parse.urlsplit(self.__uri, scheme = "", allow_fragments = False)
 
 #        print "\nSplit uri:\n"
 #        print "url: %s" % splituri.geturl()

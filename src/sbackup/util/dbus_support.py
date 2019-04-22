@@ -311,13 +311,13 @@ class DBusProviderFacade(_DBusConnection, metaclass=structs.Singleton):
         :param event: the actually processed event
         :param urgency: how urgent the message is
         """
-        if not isinstance(event, types.StringTypes):
+        if not isinstance(event, str):
             raise TypeError("Parameter `event` of string type expected. Got %s instead." % str(type(event)))
-        if not isinstance(urgency, types.StringTypes):
+        if not isinstance(urgency, str):
             raise TypeError("Parameter `urgency` of string type expected. Got %s instead." % str(type(urgency)))
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.emit_event_signal, event, urgency)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def emit_error_signal(self, error):
@@ -327,50 +327,50 @@ class DBusProviderFacade(_DBusConnection, metaclass=structs.Singleton):
         :param error: error message to be passed
 
         """
-        if not isinstance(error, types.StringTypes):
+        if not isinstance(error, str):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(error)))
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.emit_error_signal, error)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def emit_targetnotfound_signal(self):
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.emit_targetnotfound_signal)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def set_backup_pid(self, pid):
-        if not isinstance(pid, types.IntType):
+        if not isinstance(pid, int):
             raise TypeError("Parameter of integer type expected. Got %s instead." % str(type(pid)))
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.set_backup_pid, pid)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def set_target(self, target):
-        if not isinstance(target, types.StringTypes):
+        if not isinstance(target, str):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(target)))
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.set_target, target)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def set_profilename(self, profilename):
-        if not isinstance(profilename, types.StringTypes):
+        if not isinstance(profilename, str):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(profilename)))
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.set_profilename, profilename)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def set_space_required(self, space):
-        if not isinstance(space, (types.IntType, types.LongType)):
+        if not isinstance(space, int):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(space)))
         space = int(space)
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.set_space_required, space)
-        assert isinstance(res, types.BooleanType)
+        assert isinstance(res, bool)
         return res
 
     def get_retry_target_check(self):

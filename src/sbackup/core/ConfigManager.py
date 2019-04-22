@@ -633,7 +633,7 @@ class ConfigManager(configparser.ConfigParser):
 
         """
         _section = "dirconfig"
-        if not isinstance(dirconf, types.DictionaryType):
+        if not isinstance(dirconf, dict):
             raise TypeError("Given parameter must be a Dictionary. "\
                             "Got %s instead." % (type(dirconf)))
 
@@ -648,7 +648,7 @@ class ConfigManager(configparser.ConfigParser):
         """
         _section = "exclude"
         _option = "regex"
-        if not isinstance(aregex, types.StringTypes):
+        if not isinstance(aregex, str):
             raise TypeError("Given parameter must be of string type. "\
                             "Got %s instead." % (type(aregex)))
         self.set(_section, _option, aregex)
@@ -1539,7 +1539,7 @@ class Configuration(object):
         return self._cformat
 
     def get_follow_links(self):
-        if not isinstance(self._follow_links, types.BooleanType):
+        if not isinstance(self._follow_links, bool):
             raise TypeError("Boolean value for 'followlinks' expected. "\
                             "Found '%s' instead." % type(self._follow_links))
         return self._follow_links

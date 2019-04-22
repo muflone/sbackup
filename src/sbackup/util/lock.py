@@ -41,11 +41,11 @@ from sbackup.util import log
 class ApplicationLock(object):
 
     def __init__(self, lockfile, processname, pid):
-        if not isinstance(lockfile, types.StringTypes):
+        if not isinstance(lockfile, str):
             raise TypeError("String for parameter `lockfile`expected")
-        if not isinstance(processname, types.StringTypes):
+        if not isinstance(processname, str):
             raise TypeError("String for parameter `processname`expected")
-        if not isinstance(pid, types.IntType):
+        if not isinstance(pid, int):
             raise TypeError("String for parameter `pid`expected")
 
         self.__lockfile = lockfile

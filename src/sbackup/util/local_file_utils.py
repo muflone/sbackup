@@ -397,11 +397,11 @@ def rename_rotating(src, dst, max_num, compressed = True):
     process.
     If `compressed` is set to True, compressed files (*.gz) are considered.
     """
-    if not isinstance(src, types.StringTypes):
+    if not isinstance(src, str):
         raise TypeError("Expected string as source. Got %s instead." % type(src))
-    if not isinstance(dst, types.StringTypes):
+    if not isinstance(dst, str):
         raise TypeError("Expected string as destination. Got %s instead." % type(dst))
-    if not isinstance(max_num, types.IntType):
+    if not isinstance(max_num, int):
         raise TypeError("Expected integer as max. number. Got %s instead." % type(max_num))
     if max_num < 1:
         raise ValueError("Max. number must be greater than 0.")
@@ -422,9 +422,9 @@ def rename_rotating(src, dst, max_num, compressed = True):
 def compress_rotated_files(basename, max_num):
     """Compresses files with trailing number 0..max_num.
     """
-    if not isinstance(basename, types.StringTypes):
+    if not isinstance(basename, str):
         raise TypeError("Expected string as basename. Got %s instead." % type(basename))
-    if not isinstance(max_num, types.IntType):
+    if not isinstance(max_num, int):
         raise TypeError("Expected integer as max. number. Got %s instead." % type(max_num))
     if max_num < 1:
         raise ValueError("Max. number must be greater than 0.")
@@ -436,7 +436,7 @@ def compress_rotated_files(basename, max_num):
 
 
 def compress(src, keep_original = False):
-    if not isinstance(src, types.StringTypes):
+    if not isinstance(src, str):
         raise TypeError("Expected string as source. Got %s instead." % type(src))
 
     out_file = "%s.gz" % src

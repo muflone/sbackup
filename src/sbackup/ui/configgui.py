@@ -561,7 +561,7 @@ class SBconfigGTK(GladeGnomeApp):
         @todo: Opening of directories (e.g. target) must be unified over all
                modules that use such functionality!
         """
-        if not isinstance(probe_fs, types.BooleanType):
+        if not isinstance(probe_fs, bool):
             raise TypeError("Given parameter must be of boolean type. "\
                             "Got %s instead." % (type(probe_fs)))
         try:

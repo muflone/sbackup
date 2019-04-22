@@ -182,7 +182,7 @@ class FuseOperations(interfaces.IOperations, metaclass=structs.Singleton):
             raise exceptions.FileAlreadyClosedError(_("Error while closing stream: %s") % error)
 
 def get_scheme_from_service(service):
-    if not isinstance(service, types.IntType):
+    if not isinstance(service, int):
         raise TypeError
     if service not in REMOTE_SERVICES_AVAIL:
         raise ValueError("Given remote service not supported")

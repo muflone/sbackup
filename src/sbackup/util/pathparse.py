@@ -272,17 +272,17 @@ class UriParser(object):
 
 def construct_remote_uri_from_tupel(scheme, hostname, port, path, username, password):
     _logger = log.LogFactory.getLogger()
-    if not isinstance(scheme, types.StringTypes):
+    if not isinstance(scheme, str):
         raise TypeError
-    if not isinstance(hostname, types.StringTypes):
+    if not isinstance(hostname, str):
         raise TypeError
-    if not isinstance(port, types.StringTypes):
+    if not isinstance(port, str):
         raise TypeError
-    if not isinstance(path, types.StringTypes):
+    if not isinstance(path, str):
         raise TypeError
-    if not isinstance(username, types.StringTypes):
+    if not isinstance(username, str):
         raise TypeError
-    if not isinstance(password, types.StringTypes):
+    if not isinstance(password, str):
         raise TypeError
 
     if scheme not in VALID_URI_SCHEMES:
@@ -338,9 +338,9 @@ def _get_eff_uri_scheme(uri_scheme):
 
 
 def append_time_to_filename(filename, filetype = ""):
-    if not isinstance(filename, types.StringTypes):
+    if not isinstance(filename, str):
         raise TypeError("Expected string. Got %s instead." % type(filename))
-    if not isinstance(filetype, types.StringTypes):
+    if not isinstance(filetype, str):
         raise TypeError("Expected string as file type. Got %s instead." % type(filetype))
     if filetype != "" and not filetype.startswith("."):
         raise ValueError("Given file type must start with dot (.xyz).")
@@ -360,11 +360,11 @@ def append_str_to_filename(filename, str_to_append, filetype = ""):
              result with specifying filetype '.log' = basename.123.log
 
     """
-    if not isinstance(filename, types.StringTypes):
+    if not isinstance(filename, str):
         raise TypeError("Expected string as filename. Got %s instead." % type(filename))
-    if not isinstance(str_to_append, types.StringTypes):
+    if not isinstance(str_to_append, str):
         raise TypeError("Expected string to append. Got %s instead." % type(str_to_append))
-    if not isinstance(filetype, types.StringTypes):
+    if not isinstance(filetype, str):
         raise TypeError("Expected string as file type. Got %s instead." % type(filetype))
     if filetype != "" and not filetype.startswith("."):
         raise ValueError("Given file type must start with dot (.xyz).")

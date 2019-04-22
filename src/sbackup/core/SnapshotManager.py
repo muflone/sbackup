@@ -74,7 +74,7 @@ class SnapshotManager(object):
         """Default constructor. Takes the path to the target backup
         directory as parameter.
         """
-        if not isinstance(destination, types.StringTypes):
+        if not isinstance(destination, str):
             raise TypeError("Destination path of type string expected. Got %s instead"\
                             % type(destination))
 

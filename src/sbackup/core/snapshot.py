@@ -120,7 +120,7 @@ class Snapshot(object):
         return self.getName()
 
     def set_space_required(self, space):
-        if not isinstance(space, (types.IntType, types.LongType)):
+        if not isinstance(space, int):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(space)))
         space = int(space)
         self.__space_required = space

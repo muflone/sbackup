@@ -55,7 +55,7 @@ class GioTargetHandler(interfaces.ITargetHandler):
         self._is_initialized = False
 
     def set_use_mainloop(self, use):
-        if not isinstance(use, types.BooleanType):
+        if not isinstance(use, bool):
             raise TypeError("Expected boolean type")
         self._use_mainloop = use
 

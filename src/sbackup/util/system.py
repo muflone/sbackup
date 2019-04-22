@@ -409,7 +409,7 @@ def debug_print_environment(env, description):
 
 
 def exec_command_async(args, env = None):
-    if not isinstance(args, types.ListType):
+    if not isinstance(args, list):
         raise TypeError("List of arguments expected.")
     pid = subprocess.Popen(args, env = env).pid
     return pid
@@ -419,7 +419,7 @@ def exec_command_stdout(args, env = None):
     """
     :note: Standard output is hold in memory. Don't use this if you expect much output.
     """
-    if not isinstance(args, types.ListType):
+    if not isinstance(args, list):
         raise TypeError("List of arguments expected.")
     _output = subprocess.Popen(args, stdout = subprocess.PIPE, env = env).communicate()[0]
     _output = _output.strip()
@@ -429,7 +429,7 @@ def exec_command_stdout(args, env = None):
 def exec_command_returncode(args, env = None):
     """
     """
-    if not isinstance(args, types.ListType):
+    if not isinstance(args, list):
         raise TypeError("List of arguments expected.")
     _ret = subprocess.call(args, env = env)
     return _ret
@@ -463,10 +463,10 @@ def pid_exists(pid, processname = None):
     """
     @type pid: String
     """
-    if not isinstance(pid, types.StringTypes):
+    if not isinstance(pid, str):
         raise TypeError("PID expected as string.")
     if processname is not None:
-        if not isinstance(processname, types.StringTypes):
+        if not isinstance(processname, str):
             raise TypeError("Process name expected as string.")
 
     _exists = False
@@ -481,7 +481,7 @@ def pid_exists(pid, processname = None):
 
 
 def proc_exists(processname, env = None):
-    if not isinstance(processname, types.StringTypes):
+    if not isinstance(processname, str):
         raise TypeError("Process name expected as string.")
     if COMMAND_GREP in processname:
         raise ValueError("Name of checked process must not contain `%s`" % COMMAND_GREP)

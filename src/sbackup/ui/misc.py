@@ -46,7 +46,7 @@ def set_model(widget, values):
     """
     sorted by dictionary keys
     """
-    if not isinstance(values, types.DictionaryType):
+    if not isinstance(values, dict):
         raise TypeError
 
     # query types

@@ -224,7 +224,7 @@ def is_valid_regexp(aregex):
 
     @todo: Is an empty expression valid or not? Can we combine both checks?
     """
-    if not isinstance(aregex, types.StringTypes):
+    if not isinstance(aregex, str):
         raise TypeError("is_valid_regexp: Given parameter must be a string. "\
                         "Got %s instead." % (type(aregex)))
     _res = True
@@ -241,7 +241,7 @@ def is_empty_regexp(aregex):
 
     @type aregex: String
     """
-    if not isinstance(aregex, (types.StringTypes, types.NoneType)):
+    if not isinstance(aregex, (str, type(None))):
         raise TypeError("is_empty_regexp: Given parameter must be a string "\
                         "or None. Got %s instead." % (type(aregex)))
     _res = False
@@ -329,13 +329,13 @@ def __conf_entry_func_type_check(confline, entry, separator):
     """Private helper function that does common type checking
     in the `conf_entry_*` functions.
     """
-    if not isinstance(confline, types.StringTypes):
+    if not isinstance(confline, str):
         raise TypeError("Given parameter must be a string. "\
                         "Got %s instead." % (type(confline)))
-    if not isinstance(entry, types.StringTypes):
+    if not isinstance(entry, str):
         raise TypeError("Given parameter must be a string. "\
                         "Got %s instead." % (type(entry)))
-    if not isinstance(separator, types.StringTypes):
+    if not isinstance(separator, str):
         raise TypeError("Given parameter must be a string. "\
                         "Got %s instead." % (type(separator)))
     return None
@@ -346,7 +346,7 @@ def _remove_dups(sequence):
     This is not the most efficient implementation, however it
     provides safe behavior.
     """
-    if not isinstance(sequence, types.ListType):
+    if not isinstance(sequence, list):
         raise TypeError("Expected parameter of type 'list'. Got '%s' instead."\
                         % type(sequence))
 
@@ -361,10 +361,10 @@ def _list_union_no_dups_safe(source_a, source_b):
     """Merges the given lists into a single list not containing any
     duplicate entries using the default way.
     """
-    if not isinstance(source_a, types.ListType):
+    if not isinstance(source_a, list):
         raise TypeError("Expected parameter of type 'list'. Got '%s' instead."\
                         % type(source_a))
-    if not isinstance(source_b, types.ListType):
+    if not isinstance(source_b, list):
         raise TypeError("Expected parameter of type 'list'. Got '%s' instead."\
                         % type(source_b))
 
@@ -384,10 +384,10 @@ def list_union(source_a, source_b):
     # however, this only works if the lists do not contain
     # unhashable entries (such as other lists etc.)
     # in this case the default algorithm is used
-    if not isinstance(source_a, types.ListType):
+    if not isinstance(source_a, list):
         raise TypeError("Expected parameter of type 'list'. Got '%s' instead."\
                         % type(source_a))
-    if not isinstance(source_b, types.ListType):
+    if not isinstance(source_b, list):
         raise TypeError("Expected parameter of type 'list'. Got '%s' instead."\
                         % type(source_b))
 
@@ -415,7 +415,7 @@ def get_humanreadable_size(size_in_bytes, binary_prefixes = False):
     @todo: Implement sophisicated class for this!
     @note: Have also a look at function `get_humanreadable_size_str`.
     """
-    if isinstance(size_in_bytes, types.StringTypes):
+    if isinstance(size_in_bytes, str):
         size_in_bytes = int(size_in_bytes)
 
     factor = 1000

@@ -60,7 +60,7 @@ class FileCollectorStats(object):
         self.__nexcl_config = 0
 
     def set_followlinks(self, followlinks):
-        if not isinstance(followlinks, types.BooleanType):
+        if not isinstance(followlinks, bool):
             raise TypeError("Expected parameter of boolean type. "\
                             "Got %s instead." % type(followlinks))
         self.__followlinks = followlinks
@@ -76,7 +76,7 @@ class FileCollectorStats(object):
         The overhead is calculated based on the number of files and their overhead
         per file given as parameter.
         """
-        if not isinstance(size_per_item, types.IntType):
+        if not isinstance(size_per_item, int):
             raise TypeError("Expected parameter of integer type. "\
                             "Got %s instead." % type(size_per_item))
         _overhead = (self.__ndirs + self.__nfiles_incl) * size_per_item
@@ -201,7 +201,7 @@ class FileCollectorParentSnapshotFacade(object):
         """Sets the time the parent backup was created. The time is
         measured in seconds since beginning of the epoch (unix style).
         """
-        if not isinstance(backup_time, types.FloatType):
+        if not isinstance(backup_time, float):
             raise TypeError("Expected parameter of floar type. "\
                             "Got %s instead." % type(backup_time))
         self.__logger.debug("Backup time of parent snapshot: %s" % backup_time)
@@ -210,7 +210,7 @@ class FileCollectorParentSnapshotFacade(object):
     def __set_base_snardict(self, snardict):
         """Sets the dictonary containing the parent snapshot file (snar file).
         """
-        if not isinstance(snardict, types.DictionaryType):
+        if not isinstance(snardict, dict):
             raise TypeError("Expected parameter of dictionary type. "\
                             "Got %s instead." % type(snardict))
         self.__base_snardict = snardict
@@ -314,7 +314,7 @@ class FileCollector(object):
         since the snapshot derives this information from its name on every
         request again.
         """
-        if not isinstance(isfull, types.BooleanType):
+        if not isinstance(isfull, bool):
             raise TypeError("Expected parameter of boolean type. "\
                             "Got %s instead." % type(isfull))
         self.__isfull = isfull

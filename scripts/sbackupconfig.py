@@ -39,7 +39,7 @@ import sys
 import traceback
 import os
 import pwd
-import ConfigParser
+import configparser
 import re
 import shutil
 
@@ -55,7 +55,7 @@ NO_SUPERUSER = 1
 GENERAL_ERROR = 9
 
 
-class _Config(ConfigParser.ConfigParser):
+class _Config(configparser.ConfigParser):
     """A customized ConfigParser for reading and writing of SBackup
     configuration files.
 
@@ -67,7 +67,7 @@ class _Config(ConfigParser.ConfigParser):
         :param configfile: Full path to the current configuration file
 
         """
-        ConfigParser.ConfigParser.__init__(self)
+        configparser.ConfigParser.__init__(self)
         self._configfile = configfile
         try:
             fobj = file(self._configfile, "r")
@@ -94,7 +94,7 @@ class _Config(ConfigParser.ConfigParser):
         except IOError:
             print "Unable to open `%s` for writing." % str(self._configfile)
         else:
-            ConfigParser.ConfigParser.write(self, fobj)
+            configparser.ConfigParser.write(self, fobj)
             fobj.close()
 
 

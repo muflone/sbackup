@@ -29,7 +29,7 @@ example configuration file in sbackup/data/sbackup.conf.example.
 
 
 from gettext import gettext as _
-import ConfigParser
+import configparser
 import smtplib
 import types
 import os.path
@@ -178,7 +178,7 @@ def parse_cronexpression(cronfile_content):
 
 
 
-class ConfigManager(ConfigParser.ConfigParser):
+class ConfigManager(configparser.ConfigParser):
     """SBackup config manager
 
     The configuration manager is responsible for the following:
@@ -209,7 +209,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         @todo: remove command-line parsing from here; \
                 this class should only take a filename as parameter.
         """
-        ConfigParser.ConfigParser.__init__(self)
+        configparser.ConfigParser.__init__(self)
         self.__conffile_hdl = ConfigurationFileHandler()
 
         self.__servicefile = ConfigManagerStaticData.get_schedule_script_file()
@@ -499,12 +499,12 @@ class ConfigManager(ConfigParser.ConfigParser):
         @rtype: Boolean
         """
         if section == "dirconfig" and \
-                not ConfigParser.ConfigParser.has_option(self, section, option):
+                not configparser.ConfigParser.has_option(self, section, option):
             if option == "remote":
-                return ConfigParser.ConfigParser.has_option(self, section,
+                return configparser.ConfigParser.has_option(self, section,
                                                             option)
             #search through remote option to get the option
-            if ConfigParser.ConfigParser.has_option(self, "dirconfig",
+            if configparser.ConfigParser.has_option(self, "dirconfig",
                                                             'remote'):
                 remotes = self.get("dirconfig", "remote")
                 if isinstance(remotes, str):
@@ -514,33 +514,33 @@ class ConfigManager(ConfigParser.ConfigParser):
                             % {'parameter': remotes, 'value': type(remotes)})
                 if option not in remotes:
                     # then it wasn't for us , fall back on the parent
-                    return ConfigParser.ConfigParser.has_option(self, section,
+                    return configparser.ConfigParser.has_option(self, section,
                                                                 option)
                 else:
                     # we have this key
                     return True
             else:
-                return ConfigParser.ConfigParser.has_option(self, section,
+                return configparser.ConfigParser.has_option(self, section,
                                                             option)
         else:
             #fall back in parent behaviour
-            return ConfigParser.ConfigParser.has_option(self, section, option)
+            return configparser.ConfigParser.has_option(self, section, option)
 
     def get(self, section, option):
         """Returns a given option value from this config.
         """
         # if we have (dirconfig,opt), if opt=remote
-        if section == "dirconfig" and not option == 'remote' and self.has_option(section, option) and not ConfigParser.ConfigParser.has_option(self, section, option):
+        if section == "dirconfig" and not option == 'remote' and self.has_option(section, option) and not configparser.ConfigParser.has_option(self, section, option):
             #search through remote option to get the option
-            remotes = ConfigParser.ConfigParser.get(self, "dirconfig", "remote", True)
+            remotes = configparser.ConfigParser.get(self, "dirconfig", "remote", True)
             if isinstance(remotes, str):
                 remotes = eval(remotes)
             if not isinstance(remotes, dict):
                 raise exceptions.SBException(_("Couldn't evaluate '%(parameter)s' as a dictionary (value got = '%(value)r' )") % {'parameter': remotes, 'value': type(remotes)})
             # we have that key
             return remotes[option]
-        elif section == "dirconfig" and option == 'remote' and ConfigParser.ConfigParser.has_option(self, section, option):
-            remotes = ConfigParser.ConfigParser.get(self, "dirconfig", "remote", True)
+        elif section == "dirconfig" and option == 'remote' and configparser.ConfigParser.has_option(self, section, option):
+            remotes = configparser.ConfigParser.get(self, "dirconfig", "remote", True)
             if isinstance(remotes, str):
                 remotes = eval(remotes)
             if not isinstance(remotes, dict):
@@ -548,7 +548,7 @@ class ConfigManager(ConfigParser.ConfigParser):
             return remotes
         else:
             #fall back in parent behaviour
-            return ConfigParser.ConfigParser.get(self, section, option, True)
+            return configparser.ConfigParser.get(self, section, option, True)
 
     def set(self, section, option, value):
         """Set an option just like a configParser but in case of
@@ -562,19 +562,19 @@ class ConfigManager(ConfigParser.ConfigParser):
             if not isinstance(value, dict):
                 raise exceptions.SBException(_("You must provide a dictionary."))
             if not self.has_option(section, option):
-                ConfigParser.ConfigParser.set(self, section, option, value)
+                configparser.ConfigParser.set(self, section, option, value)
             else:
-                remotes = ConfigParser.ConfigParser.get(self, section, option, True)
+                remotes = configparser.ConfigParser.get(self, section, option, True)
                 if isinstance(remotes, str):
                     remotes = eval(remotes)
                 if not isinstance(remotes, dict):
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
                 for rsource, flag in value.items():
                     remotes[rsource] = flag
-                ConfigParser.ConfigParser.set(self, section, option, remotes)
+                configparser.ConfigParser.set(self, section, option, remotes)
         else:
             #fall back in normal bahaviour
-            ConfigParser.ConfigParser.set(self, section, option, value)
+            configparser.ConfigParser.set(self, section, option, value)
 
     def remove_option(self, section, option):
         """Remove an option, but it's different for remote.
@@ -582,11 +582,11 @@ class ConfigManager(ConfigParser.ConfigParser):
         If option is in remote dict, section ='dirconfig' and
         option='ssh://test/me' then the entry in the remote dict will be removed.
         """
-        if section == "dirconfig" and not ConfigParser.ConfigParser.has_option(self, section, option):
+        if section == "dirconfig" and not configparser.ConfigParser.has_option(self, section, option):
             #search through remote option to get the option
             if not self.has_option("dirconfig", "remote"):
                 #fall back in parent behaviour
-                ConfigParser.ConfigParser.remove_option(self, section, option)
+                configparser.ConfigParser.remove_option(self, section, option)
             else:
                 self.logger.debug("search through remote option to get the option")
                 remotes = self.get("dirconfig", "remote")
@@ -596,15 +596,15 @@ class ConfigManager(ConfigParser.ConfigParser):
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
                 if option not in remotes:
                     # then it wasn't for us , fall back on the parent
-                    ConfigParser.ConfigParser.remove_option(self, section, option)
+                    configparser.ConfigParser.remove_option(self, section, option)
                 else:
                     # we have that key
                     remotes.pop(option)
                     self.logger.debug("remote is now '%r'" % remotes)
-                    ConfigParser.ConfigParser.set(self, section, "remote", remotes)
+                    configparser.ConfigParser.set(self, section, "remote", remotes)
         else:
             #fall back in parent behaviour
-            ConfigParser.ConfigParser.remove_option(self, section, option)
+            configparser.ConfigParser.remove_option(self, section, option)
 
     def __clear_dirconfig(self):
         """The internal variable containing the directory configuration
@@ -720,7 +720,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         """
         if filename:
             self.conffile = filename
-        retValue = ConfigParser.ConfigParser.read(self, self.conffile)
+        retValue = configparser.ConfigParser.read(self, self.conffile)
 
         if len(retValue) == 0:
             raise exceptions.SBException(_("The config file '%s' couldn't be read!")\

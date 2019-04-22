@@ -45,19 +45,19 @@ class FileCollectorStats(object):
         self.__followlinks = False
         self.set_followlinks(followlinks)
         # uncompressed size of snapshot (cummulative)
-        self.__size_in_bytes = 0L
+        self.__size_in_bytes = 0
 
-        self.__ndirs = 0L
-        self.__nfiles = 0L
-        self.__nsymlinks = 0L
+        self.__ndirs = 0
+        self.__nfiles = 0
+        self.__nsymlinks = 0
 
         # for incremental counting (in case of full snapshot only `__nfile_incl` is used)
-        self.__nfiles_incl = 0L
-        self.__nfiles_skip = 0L
-        self.__nfiles_new = 0L
+        self.__nfiles_incl = 0
+        self.__nfiles_skip = 0
+        self.__nfiles_new = 0
 
-        self.__nexcl_forced = 0L
-        self.__nexcl_config = 0L
+        self.__nexcl_forced = 0
+        self.__nexcl_config = 0
 
     def set_followlinks(self, followlinks):
         if not isinstance(followlinks, types.BooleanType):
@@ -127,15 +127,15 @@ class FileCollectorStats(object):
     def clear(self):
         """Clears collected data.
         """
-        self.__size_in_bytes = 0L
-        self.__ndirs = 0L
-        self.__nfiles = 0L
-        self.__nsymlinks = 0L
-        self.__nfiles_incl = 0L
-        self.__nfiles_skip = 0L
-        self.__nexcl_forced = 0L
-        self.__nexcl_config = 0L
-        self.__nfiles_new = 0L
+        self.__size_in_bytes = 0
+        self.__ndirs = 0
+        self.__nfiles = 0
+        self.__nsymlinks = 0
+        self.__nfiles_incl = 0
+        self.__nfiles_skip = 0
+        self.__nexcl_forced = 0
+        self.__nexcl_config = 0
+        self.__nfiles_new = 0
 
     def add_size(self, value):
         """The given value is added to the cumulated file size.

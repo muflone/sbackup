@@ -2,6 +2,7 @@
 #
 #   Simple Backup - Launcher script for indicator application (status icon)
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -23,7 +24,7 @@ def parse_cmdline(argv):
     import optparse
     from sbackup.pkginfo import Infos
     from sbackup.util import constants
-    
+
     usage = "Usage: %prog [options] (use -h or --help for more infos)"
     version = "%prog " + Infos.VERSION
     prog = constants.INDICATORAPP_FILE
@@ -42,8 +43,8 @@ def parse_cmdline(argv):
         parser.error("Unknown argument given")
 
     return options
-    
-    
+
+
 if __name__ == '__main__':
     import sys
     import os
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     from sbackup.util import system
     system.set_default_environment()
     system.set_display_from_session()
-    system.set_gio_env_from_session()    
+    system.set_gio_env_from_session()
 
     options = parse_cmdline(sys.argv)
     os.nice(5)

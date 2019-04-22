@@ -1,5 +1,6 @@
-#   Simple Backup - FTP fuse plugin 
+#   Simple Backup - FTP fuse plugin
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -35,7 +36,7 @@ ftpUrlRegex = ftp_re + "(([^:]+):([^@]+)@)?" + "([^/^:^@]+?)" + "(:([0-9]+))?" +
 
 class ftpFuseFAM (pluginFAM)  :
     """The fuseFAM plugin for ftp
-    
+
     @requires: curlftpfs
     @todo: Dependency on 'curlftpfs' must be taken into account for packaging!
     """
@@ -56,7 +57,7 @@ class ftpFuseFAM (pluginFAM)  :
         to handle a FTP address if this address is not valid. The user
         would be confused. The validity of a given FTP address must be
         checked separate.
-        
+
         @todo: The plugins ssh, sftp do not behave if the suggested way! Fix them!
         """
         _res = False
@@ -70,7 +71,7 @@ class ftpFuseFAM (pluginFAM)  :
         create a mount point to mount the source. The name of the mount
         point should be very expressive so that we avoid collision with
         other mount points
-        
+
         @param source: The remote path
         @param mountbase: The mount points base dir
         @return: The mount point complete path
@@ -143,7 +144,7 @@ class ftpFuseFAM (pluginFAM)  :
 
     def checkifmounted(self, source, mountbase):
         """Checks if the given source is already mounted in given directory.
-        
+
         @return: True if mounted, False if not
         """
         spliturl = SplittedURL(source)
@@ -171,13 +172,13 @@ class ftpFuseFAM (pluginFAM)  :
 class SplittedURL:
     """This will match the RE and give us a group like
         ('ftp://', 'test:pass@', 'wattazoum-vm.ft.nn', 'ddd/kjlh/klhkl/vvvv')
-        
+
         @param remote: the remote site address
         @type remote: String
-        
+
         @return: the address split into protocol, user, password, server
                  and path on server
-        @rtype:  Tuple of Strings         
+        @rtype:  Tuple of Strings
         """
 
     def __init__(self, url):

@@ -1,5 +1,6 @@
 #   Simple Backup - GTK+ GUI resources
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify

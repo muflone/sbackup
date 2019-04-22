@@ -1,5 +1,6 @@
 #   Simple Backup - provides access to TAR functionality
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -63,8 +64,8 @@ _FOP = fam.get_file_operations_facade_instance()
 
 def getArchiveType(archive):
     """Determines the type of an archive by its file extension.
-     
-    @param archive: Full path to file to check  
+
+    @param archive: Full path to file to check
     @return: tar, gzip, bzip2 or None
     @rtype: String
     """
@@ -79,7 +80,7 @@ def getArchiveType(archive):
 
 def extract(sourcear, eff_local_sourcear, restore_file, dest , bckupsuffix = None, splitsize = None):
     """Extract from source archive the file "file" to dest.
-    
+
     @param sourcear: path of archive
     @param file:
     @param dest:
@@ -139,16 +140,16 @@ def extract(sourcear, eff_local_sourcear, restore_file, dest , bckupsuffix = Non
 
 # extract2 is currently (series 0.2) only used in SnapshotManager.makeTmpTAR
 def extract2(sourcear, fileslist, dest, bckupsuffix = None, additionalOpts = None):
-    """Extract the files listed in the 'fileslist' file to dest. This method 
-    has been created to optimize the time spent by giving to tar a complete 
+    """Extract the files listed in the 'fileslist' file to dest. This method
+    has been created to optimize the time spent by giving to tar a complete
     list of file to extract.
-    
+
     Use this if ever you have to extract more than 1 dir .
-    
+
     @param sourcear:
     @param fileslist: a path to the file containing the list
     @param dest: destination
-    @param bckupsuffix: 
+    @param bckupsuffix:
     @param additionalOpts: a list of options to add
     """
     # tar option  -p, --same-permissions, --preserve-permissions:
@@ -232,13 +233,13 @@ def appendToTarFile(desttar, fileslist, workingdir, additionalOpts):
 
 def __prepare_common_opts(snapshot, targethandler, publish_progress, use_io_pipe):
     """Prepares common TAR options used when full or incremental
-    backups are being made.  
-    
+    backups are being made.
+
     :param snapshot: The snapshot to fill in
     :return: a list of options to be use to launch tar
-    
+
     :todo: Check whether it's necessary to escape white spaces in path names!
-    
+
     """
     # don't escape spaces i.e. do not replace them with '\ '; this will fail
     # take care where to insert additional options (e.g. --gzip)
@@ -550,8 +551,8 @@ def __finish_tar(exitcode, output_str, error_str):
 def get_dumpdir_from_list(lst_dumpdirs, filename):
     """Searchs within the given list of dumpdirs for the given filename
     and the dumpdir if found.
-    
-    @raise SBExcetion: if filename couldn't be found in list  
+
+    @raise SBExcetion: if filename couldn't be found in list
     """
 #    print ">>> get_dumpdir_from_list"
 #    print "  Looking for: %s" % filename
@@ -728,23 +729,23 @@ class TarBackendLauncherSingleton(object):
 
 class Dumpdir(object):
     """This is actually a single dumdir entry.
-    
+
     Here is the definition from TAR manual:
     Dumpdir is a sequence of entries of the following form: C filename \0
     where C is one of the control codes described below, filename is the name
     of the file C operates upon, and '\0' represents a nul character (ASCII 0).
-    
+
     The white space characters were added for readability, real dumpdirs do not
     contain them. Each dumpdir ends with a single nul character.
-    
-    Dumpdirs stored in snapshot files contain only records of types 'Y', 'N'
-    and 'D'. 
 
-    
+    Dumpdirs stored in snapshot files contain only records of types 'Y', 'N'
+    and 'D'.
+
+
     @note: Is the nul character stored???
-    
+
     @see: http://www.gnu.org/software/tar/manual/html_chapter/Tar-Internals.html#SEC173
-    
+
     @todo: It should be distiguished between 'unchanged', 'excluded' and
            'removed'!
     @todo: Rename this class into 'DumpdirEntry'!
@@ -764,7 +765,7 @@ class Dumpdir(object):
         we will parse this line and fill the Dumpdir in
         @param line: the line (in dumpdir point of view ) to parse
         @raise Exception: when the line doesn't have the requeried format
-        
+
         @todo: make the instance variables private!
         """
         self.control = None
@@ -780,7 +781,7 @@ class Dumpdir(object):
     def __set_entry(self, line):
         """Private helper method that sets the given dumdir entry. It checks
         for type and length of given parameter.
-        
+
         @todo: Add checks for validity of control etc.!
         """
         if (not isinstance(line, str)):
@@ -795,7 +796,7 @@ class Dumpdir(object):
         """
         get the filename embedded in the Dumpdir
         @return: finename
-        @raise Exception: if the filename is null 
+        @raise Exception: if the filename is null
         """
         if self.filename :
             return self.filename
@@ -807,7 +808,7 @@ class Dumpdir(object):
         Get the control character from the DumpDir
         @return: control
         @raise Exception: if the control is null
-        
+
         @todo: Checking against None is useless here!
         """
         if self.control:
@@ -826,7 +827,7 @@ class Dumpdir(object):
         """
         @return: The Human Readable control dictionary
         @rtype: dict
-        
+
         """
         return cls.__HRCtrls
 
@@ -837,20 +838,20 @@ class SnapshotFile(object):
     of the dump and is used to determine which files were modified since the
     last backup. GNU tar version 1.20 supports three snapshot file formats.
     They are called 'format 0', 'format 1' and 'format 2'.
-    
+
     Dumpdirs stored in snapshot files contain only records of types 'Y', 'N'
-    and 'D'. 
-    
+    and 'D'.
+
     For displaying the content of an incremental backup manually use:
     tar --bzip --list --incremental --verbose --verbose --file files.tar.bz2
 
     @see: http://www.gnu.org/software/tar/manual/html_chapter/Tar-Internals.html#SEC177
-    
+
     @attention: Only snapshot files in `format 2` are supported.
-    
+
     @todo: Rename into 'DirectoryFile' or 'SnapshotDirectoryFile' since it only
            collects directories!
-           
+
     @todo: Add class describing a SnapshotFile record!
     """
     versionRE = re.compile("GNU tar-(.+?)-([0-9]+?)")
@@ -858,7 +859,7 @@ class SnapshotFile(object):
     __SEP = '\000'
     __entrySEP = 2 * __SEP
 
-    # Infos on indices in a record 
+    # Infos on indices in a record
     REC_NFS = 0
     REC_MTIME_SEC = 1
     REC_MTIME_NANO = 2
@@ -870,7 +871,7 @@ class SnapshotFile(object):
 
     def __init__(self, filename, writeFlag = False):
         """Constructor
-         
+
         @param filename: the snapshot file (absolute? do we use relative paths?) file path to get the infos (SNAR file)
         @param writeFlag: if set, the file will be created in case it doesn't exist
         """
@@ -907,8 +908,8 @@ class SnapshotFile(object):
 #    def getFormatVersion(self):
 #        """
 #        Get the format version
-#        @return: the version 
-#        @rtype: int 
+#        @return: the version
+#        @rtype: int
 #        """
 #        if self.version :
 #            return self.version
@@ -981,11 +982,11 @@ class SnapshotFile(object):
     def parseFormat2(self):
         """Iterator method that gives each line entry in SNAR-file.
         A line contains informations about a directory and its content.
-        
+
         @warning: only compatible tar version 2 of Tar format
-        
+
         @return: [nfs,mtime_sec,mtime_nano,dev_no,i_no,name,contents] where contents is a list of Dumpdirs
-        
+
         @todo: Iterator methods should have names like 'parseFormat2Iterator' or
                'parseFormat2Iter'!
         """
@@ -1063,7 +1064,7 @@ class SnapshotFile(object):
 
     def setHeader(self, timeofBackup):
         """
-        Sets the header of the snar File. 
+        Sets the header of the snar File.
         GNU tar-1.19-2  -> in the first line
         second line is timeofBackupInSec\000timeofBackupInNano
         @param timeofBackup: The time to set in the snar file
@@ -1097,7 +1098,7 @@ class SnapshotFile(object):
 
     def createContent(self, contentList):
         """Creates a content item from a list of given Dumpdirs.
-        
+
         @param contentList: the list of Dumpdirs
         @type contentList: list
         @return: a string containing the computed content
@@ -1120,7 +1121,7 @@ class SnapshotFile(object):
     def get_time_of_backup(self):
         """Returns the time of the snapshot (as stored in the snapshot file)
         in seconds since beginning of the epoch.
-        
+
         @rtype: Float
         """
         _header = self.getHeader()
@@ -1136,7 +1137,7 @@ class SnapshotFile(object):
         This provides a much faster way of accessing the content than
         parsing the file on demand. The required RAM is moderate,
         a 10GiB partition filled with files results in 6MiB dictonary.
-        
+
         @warning: only compatible tar version 2 of Tar format
         @note: Uses the same algorithm as method `parseFormat2` and is ~15% faster
                 than the high-level variant below.
@@ -1184,7 +1185,7 @@ class SnapshotFile(object):
         return _snardict
 
 #    def get_dict_format2(self):
-#        """        
+#        """
 #        @warning: only compatible tar version 2 of Tar format
 #
 #        more high-level programmed
@@ -1199,25 +1200,25 @@ class SnapshotFile(object):
 ##            if _dirname in _dirdict:
 ##                raise ValueError("Directory is already contained.")
 ##            _dirdict[_dirname] = _content
-#            
+#
 #            _snardict[_dirname] = Dumpdir.DIRECTORY
-#            
+#
 #            for _entry in _content:
 ##                print "Type: %s name: '%s' control: '%s'" %(type(_entry),
 ##                                                        _entry.getFilename(),
 ##                                                        _entry.getControl())
 #                _epath = fam.joinpath(_dirname, _entry.getFilename())
 #                _snardict[_epath] = _entry.getControl()
-#            
 #
-##        print "Dir dictionary:\n%s" % _dirdict              
-##        print "Snar dictionary:\n%s" % _snardict  
+#
+##        print "Dir dictionary:\n%s" % _dirdict
+##        print "Snar dictionary:\n%s" % _snardict
 #        return _snardict
 
 
 class SnapshotFileWrapper(object):
     """Something like an Interface class.
-    
+
     @todo: Review/Implement
     """
     def __init__(self):
@@ -1231,7 +1232,7 @@ class MemSnapshotFile(SnapshotFileWrapper, SBdict):
     """
     This is a representation in memory of a simplified SNAR file. The used structure is an SBDict.
     The "prop" value is the content of the directory. wich is a list of L{Dumpdir}
-    
+
     @note: In the series 0.2 implementation this variant is not used.
     """
 
@@ -1277,7 +1278,7 @@ class MemSnapshotFile(SnapshotFileWrapper, SBdict):
 
     def setHeader(self, timeofBackup):
         """
-        Sets the header of the snar File. 
+        Sets the header of the snar File.
         GNU tar-1.19-2  -> in the first line
         second line is timeofBackupInSec\000timeofBackupInNano
         @param timeofBackup: The time to set in the snar file
@@ -1299,7 +1300,7 @@ class MemSnapshotFile(SnapshotFileWrapper, SBdict):
         """
         Get the first items in this SnapshotFile (the lower level dirs in the file)
         @return: A list of paths
-        @rtype: list 
+        @rtype: list
         """
         result = list()
         for f in self.iterFirstItems():
@@ -1334,7 +1335,7 @@ class ProcSnapshotFile(SnapshotFileWrapper):
 
     def get_snapfile_obj(self):
         """Returns the wrapped instance of the snapshot file.
-        
+
         @return: snapshot file object
         @rtype: SnapshotFile
         """
@@ -1397,7 +1398,7 @@ class ProcSnapshotFile(SnapshotFileWrapper):
 
     def setHeader(self, timeofBackup):
         """
-        Sets the header of the snar File. 
+        Sets the header of the snar File.
         GNU tar-1.19-2  -> in the first line
         second line is timeofBackupInSec\000timeofBackupInNano
         @param timeofBackup: The time to set in the snar file
@@ -1407,13 +1408,13 @@ class ProcSnapshotFile(SnapshotFileWrapper):
 
     def getContent(self, dirpath):
         """convenance method to get the content of a directory.
-        
+
         @param dirpath: The directory absolute path to get
         @type dirpath: str
-        
+
         @return: The content of the dir
         @rtype: list
-        
+
         @raise SBException: if the path isn't found in the snapshot file
         """
         for f in self.__snapshotFile.parseFormat2():
@@ -1425,7 +1426,7 @@ class ProcSnapshotFile(SnapshotFileWrapper):
         """
         Get the first items in this SnapshotFile (the lower level dirs in the file)
         @return: A list of paths
-        @rtype: list 
+        @rtype: list
         """
 
         def cleanDupl():

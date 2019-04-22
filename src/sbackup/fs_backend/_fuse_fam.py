@@ -1,5 +1,6 @@
 #   Simple Backup - Target file access management using Fuse plugins
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2009: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -43,7 +44,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
     def __init__(self):
         """
         Constructor
-        @param configManager: 
+        @param configManager:
         """
         interfaces.ITargetHandler.__init__(self)
 
@@ -96,12 +97,12 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 
     def initialize(self):
         """Test existence of path after initialization.
-        
+
         Get the list of dir to mount and mount them. If the keep alive tag is set , it creates a Thread that will keep the mounted dir alive.
         @param keepAlive: Optional int that is used to determine the loop time (number of seconds) to keep the mount pint alive
-        
+
         @todo: For later releases: The distinction between local and remote
-               sites must be improved!               
+               sites must be improved!
         """
         self._logger.info(_("Initializing FUSE File Access Manager."))
         if self._is_initialized is True:
@@ -171,7 +172,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
     def __mount_uri(self, uri):
         """Mounts an arbitrary uri and returns effective path. It uses the __mountdir param to know
         where to mount. It also fills the __mountedDirs dict. The configuration is not modified.
-        
+
         @return: effective path of given uri or None if local path was given
         """
         self.__check_mountdir()
@@ -266,17 +267,17 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 #        * checking of the adress scheme and the validity of the adress
 #        * mounting of the remote site
 #        * write and read access on the remote site.
-#        
+#
 #        If no plugin is able to handle the given path, an exception is
 #        raised.
-#        
+#
 #        @todo: Customize the raised exception to provided more informations!
 #        """
 #        if remotedir.startswith(os.sep) :
 #            raise SBException("Nothing to do for localpath '%s'." % remotedir)
 #
 ##TODO: inconsistent path handling!
-#        # set the defaults 
+#        # set the defaults
 #        if os.getuid() == 0 :
 #            mountdir = "/mnt/sbackup/"
 #        else :

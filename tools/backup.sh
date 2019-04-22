@@ -14,6 +14,7 @@
 # * no files are written or modified within the actual branch
 #
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -83,7 +84,7 @@ echo "Checking for external compression application"
 if type $COMPRAPP >/dev/null 2>&1 ; then
   echo "  "$COMPRAPP" is installed."
   EXT="7z"
-else 
+else
   echo "  "$COMPRAPP" is not installed."
   COMPRAPP="gzip"
   EXT="tar.gz"

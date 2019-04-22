@@ -1,5 +1,6 @@
 #   Simple Backup - Configuration GUI (GTK+)
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2009: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -58,17 +59,17 @@ system.launch_dbus_if_required()
 
 class SBconfigGTK(GladeGnomeApp):
     """
-    
+
     @todo: Unify displaying of error messages/dialog boxes!
     @todo: Strictly separate UI from core. Don't set defaults from the UI (business logic in handler).
     @todo: Use functions from ConfigManager to set the paths in
-            a consistent manner.         
+            a consistent manner.
     @todo: Configuration handling must be reviewed. Direct manipulation
             of the configuration from widget's signal handler is *really*
             errorprone and hard to debug (e.g. clearing a text input field
             from the source code/application side before filling it with new
             content currently yields in the removal of the according
-            config option and the config is unintentionally changed). 
+            config option and the config is unintentionally changed).
     """
     # why class variables?
     configman = None
@@ -186,7 +187,7 @@ class SBconfigGTK(GladeGnomeApp):
         self.profilestv.append_column(enableCBColumn)
         self.profilestv.append_column(prfNameColumn)
 
-        # The split size coices        
+        # The split size coices
         self.splitSizeLS = misc.set_model(widget = self.widgets['splitsizeCB'],
                                           values = ConfigManagerStaticData.get_splitsize_dict())
 
@@ -194,22 +195,22 @@ class SBconfigGTK(GladeGnomeApp):
                                                       values = fam.get_remote_services_avail())
 
         self._fill_widgets_from_config(probe_fs = True)
-        
+
         self.xml.signal_autoconnect(self.cb_dict)
-        
+
 
     def isConfigChanged(self, force_the_change = False):
         """Checks whether the current configuration has changed compared to
         the configuration which was originally loaded resp. stored on last
         save action. The result (irrespective whether it was forced or not)
         is returned by the method.
-        
+
         @param force_the_change: Flag that that forces the check to be True
                                 (i.e. the method acts as there were changes
                                 regardless of the real test result)
-        
+
         @return: True if the config has changed, False otherwise
-        @rtype: Boolean                        
+        @rtype: Boolean
         """
         changed = not self.configman.isConfigEquals(self.orig_configman)
         if force_the_change == True:
@@ -222,7 +223,7 @@ class SBconfigGTK(GladeGnomeApp):
         """Checks whether the configuration has changed and displays
         a dialog window if so. The user then can decide to save, not to save
         the configuration or to cancel the process.
-        
+
         @return: False if the user pressed 'yes' or 'no'; True in any other case
         @rtype: Boolean
         """
@@ -268,7 +269,7 @@ class SBconfigGTK(GladeGnomeApp):
             if not Util.is_empty_regexp(r):
                 _list = str(r).split(",")
                 for i in _list:
-# Bugfix LP #258542 
+# Bugfix LP #258542
                     if re.match(r"\\\.\w+\$", i):
                         _ftype = i[2:len(i) - 1]
                         if _ftype in _known_ftypes_dict:
@@ -464,15 +465,15 @@ class SBconfigGTK(GladeGnomeApp):
         """Sets the UI elements for 'schedule' to the value
         specified in configuration (only from configuration or from file
         and file system).
-        
+
         @param from_func: function object reference which is called in order
                             to retrieve the current cron state
-                            
+
         @note: Purpose of the given function object is to use this method
                 with `ConfigManager.get_schedule` as well as
                 `ConfigManager.get_schedule_and_probe`.
-                
-        @todo: Implement signature checking. 
+
+        @todo: Implement signature checking.
         """
         if not isinstance(from_func, types.MethodType):
             raise TypeError("Given parameter 'from_func' must be of type "\
@@ -524,7 +525,7 @@ class SBconfigGTK(GladeGnomeApp):
         """
         if self.__destination_uri_obj is None:
             self.__destination_uri_obj = pathparse.UriParser()
-            
+
         self.__destination_uri_obj.set_and_parse_uri(uri = self.configman.get_destination_path())
         _dest = fam.get_fam_target_handler_facade_instance()
         _dest.set_destination(self.__destination_uri_obj.uri)
@@ -554,9 +555,9 @@ class SBconfigGTK(GladeGnomeApp):
 
     def _fill_widgets_from_config(self, probe_fs):
         """Prefill the GTK window with config infos.
-        
+
         @param probe_fs: Flag whether to probe the filesystem for schedule info
-        
+
         @todo: Opening of directories (e.g. target) must be unified over all
                modules that use such functionality!
         """
@@ -683,12 +684,12 @@ class SBconfigGTK(GladeGnomeApp):
 
     def already_inc (self, configlist, toInclude):
         """configlist is like self.conf.items( "dirconfig" )
-         
+
         @return: True if the dir is already included, False if not
         """
         for i, v in configlist :
             if v == "1" and i == toInclude :
-                # the chosen item match an included one 
+                # the chosen item match an included one
                 dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = _("Already included item !"))
                 dialog.run()
                 dialog.destroy()
@@ -698,12 +699,12 @@ class SBconfigGTK(GladeGnomeApp):
 
     def already_ex (self, configlist, toExclude):
         """configlist is like self.conf.items( "dirconfig" )
-        
+
         @return: True if the dir is already excluded, False if not
         """
         for i, v in configlist :
             if v == "0" and i == toExclude :
-                # the chosen item match an included one 
+                # the chosen item match an included one
                 dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = _("Already excluded item !"))
                 dialog.run()
                 dialog.destroy()
@@ -1045,9 +1046,9 @@ class SBconfigGTK(GladeGnomeApp):
     def __enable_schedule_page(self, enable = True):
         """Enables resp. disables the complete schedule page including the
         tab label.
-        
+
         @param enable: If True the page gets enabled, if False disabled.
-        
+
         """
         self.widgets["label_schedule_page"].set_sensitive(enable)
 
@@ -1149,7 +1150,7 @@ class SBconfigGTK(GladeGnomeApp):
     def on_cmbbx_simple_schedule_freq_changed(self, *args):
         """Signal handler which is called whenever the schedule time frequency
         in the 'time_freq' combo box is changed.
-        
+
         """
         _selection = self.widgets["cmbbx_simple_schedule_freq"].get_active()
 
@@ -1313,7 +1314,7 @@ class SBconfigGTK(GladeGnomeApp):
     def on_ex_addftype_clicked(self, *args):
         """Signal handler that is called when the user presses the
         'Add filetype' exclude button.
-        
+
         @note: A dot separating filename and extension is added automatically.
         """
         _known_ftypes_dict = ConfigManagerStaticData.get_known_ftypes_dict()
@@ -1330,7 +1331,7 @@ class SBconfigGTK(GladeGnomeApp):
             r = r""
             if self.configman.has_option("exclude", "regex"):
                 r = self.configman.get("exclude", "regex")
-# Bugfix LP #258542 
+# Bugfix LP #258542
             ftype_regex = r"\.%s$" % ftype.strip()
             _sep = ","
             if _sep in ftype_regex:
@@ -1359,7 +1360,7 @@ class SBconfigGTK(GladeGnomeApp):
         if store and iter:
             value = store.get_value(iter, 1)
             r = self.configman.get("exclude", "regex")
-# Bugfix LP #258542 
+# Bugfix LP #258542
             ftype_regex = r"\.%s$" % value
             r = Util.remove_conf_entry(r, ftype_regex)
             self.configman.set("exclude", "regex", r)
@@ -1463,7 +1464,7 @@ class SBconfigGTK(GladeGnomeApp):
     def on_btn_browse_local_clicked(self, *args): #IGNORE:W0613
         _dest = self.__dest_from_config_helper()
         ctarget = _dest.query_dest_display_name()
-        
+
         self.logger.debug("Current destination: %s" % ctarget)
         self.widgets["dialog_browse_localdest"].set_current_folder(ctarget)
         gobject.idle_add(self.__browse_localdest)
@@ -1475,10 +1476,10 @@ class SBconfigGTK(GladeGnomeApp):
 
         if response == gtk.RESPONSE_APPLY:
             dialog.hide()
-            _target = dialog.get_filename()            
+            _target = dialog.get_filename()
             if _target is None:  # LP #1174124 Catch invalid selections
                 _target = ""
-            
+
             if not (os.path.isdir(_target) and \
                     os.access(_target, os.R_OK | os.W_OK | os.X_OK)):
                 _sec_msg = _("Please make sure the directory exists "\
@@ -1543,7 +1544,7 @@ class SBconfigGTK(GladeGnomeApp):
         _pass = ""
 
         # fill entries
-#TODO: wrap use of UriParser into Fam facade        
+#TODO: wrap use of UriParser into Fam facade
         if self.__destination_uri_obj is not None:
             if not self.__destination_uri_obj.is_local():
 
@@ -1952,7 +1953,7 @@ class SBconfigGTK(GladeGnomeApp):
         else :
             dir, file = prfConf.rsplit(os.sep, 1)
 
-            # rename the file 
+            # rename the file
             if enable :
                 # then disable
                 self.logger.debug("Disabling %s " % prfName)
@@ -2010,7 +2011,7 @@ class SBconfigGTK(GladeGnomeApp):
 
 def _forbid_default_profile_removal():
     """Helper function that shows an info box which states that we are
-    not able to do the given action on the default profile.    
+    not able to do the given action on the default profile.
     """
     info = _("<b>Unable to remove default profile</b>\n\nThe default profile cannot be removed. In the case you want to use just a single profile, please set up the default profile accordingly.")
 
@@ -2024,7 +2025,7 @@ def _forbid_default_profile_removal():
 
 def _forbid_default_profile_disable():
     """Helper function that shows an info box which states that we are
-    not able to do the given action on the default profile.    
+    not able to do the given action on the default profile.
     """
     info = _("<b>Unable to remove default profile</b>\n\nThe default profile cannot be disabled. In the case you want to use just a single profile, please set up the default profile accordingly.")
 
@@ -2038,7 +2039,7 @@ def _forbid_default_profile_disable():
 
 def _notify_new_default_profile_created():
     """Helper function that shows an info box which states that
-    a new default profile was created.    
+    a new default profile was created.
     """
     info = _("<b>No backup profile found.</b>\n\nNo default profile was found. You are probably running Simple Backup for the first time. A backup profile using default values was created.\n\nPlease modify the settings according to your needs and save the configuration in order to use it.")
 

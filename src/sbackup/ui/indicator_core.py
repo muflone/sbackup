@@ -1,6 +1,7 @@
 #   Simple Backup - Indicator application (status icon)
 #                   core implementation
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010,2012,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -43,28 +44,28 @@ from sbackup.ui import misc
 class INotifyMixin(object):
     """Mix-in class that provides the displaying of notifications using the
     pynotify module.
-    
+
     """
     def __init__(self, logger, iconfile, trayicon = None):
         pass
 
     def _notify_info(self, profilename, message):
         """Shows up a pop-up window to inform the user. The notification
-        supports mark-up.        
+        supports mark-up.
 
          :param message: The message (body) that should be displayed.
          :type message:  String
-         
+
         """
         raise NotImplementedError
 
     def _notify_warning(self, profilename, message):
         """Shows up a pop-up window to inform the user. The notification
-        supports mark-up.        
+        supports mark-up.
 
          :param message: The message (body) that should be displayed.
          :type message:  String
-         
+
         """
         raise NotImplementedError
 
@@ -75,22 +76,22 @@ class INotifyMixin(object):
 
          :param message: The message (body) that should be displayed.
          :type message:  String
-         
+
         """
         raise NotImplementedError
 
 
 class PyNotifyMixin(INotifyMixin):
     """Mix-in class that provides the displaying of notifications using the
-    pynotify module.    
+    pynotify module.
     """
     def __init__(self, logger, iconfile, trayicon = None):
         """Default constructor.
-        
+
         :param logger: Instance of logger to be used.
-        
+
         :todo: The notification domain should be retrieved from a central place!
-        
+
         """
         INotifyMixin.__init__(self, logger, iconfile, trayicon)
         self.__logger = logger
@@ -123,11 +124,11 @@ class PyNotifyMixin(INotifyMixin):
 
     def _notify_info(self, profilename, message):
         """Shows up a pop-up window to inform the user. The notification
-        supports mark-up.        
+        supports mark-up.
 
          :param message: The message (body) that should be displayed.
          :type message:  String
-         
+
         """
         if self.__pynotif_avail:
             if self.__notif is None:
@@ -144,16 +145,16 @@ class PyNotifyMixin(INotifyMixin):
                     self.__notif.set_urgency(self.__pynotif_mod.URGENCY_LOW)
                     self.__notif.show()
                 except gobject.GError, exc:
-                    # Connection to notification-daemon failed 
+                    # Connection to notification-daemon failed
                     self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
 
     def _notify_warning(self, profilename, message):
         """Shows up a pop-up window to inform the user. The notification
-        supports mark-up.        
+        supports mark-up.
 
          :param message: The message (body) that should be displayed.
          :type message:  String
-         
+
         """
         self.__notify_new(profilename, message, mode = "warning")
 
@@ -164,7 +165,7 @@ class PyNotifyMixin(INotifyMixin):
 
          :param message: The message (body) that should be displayed.
          :type message:  String
-         
+
         """
         self.__notify_new(profilename, message, mode = "critical")
 
@@ -175,8 +176,8 @@ class PyNotifyMixin(INotifyMixin):
 
         :param message: The message (body) that should be displayed.
         :type message:  String
-         
-        :note: Comply with Ubuntu Notification Guidelines (no actions, no permanent notifications) 
+
+        :note: Comply with Ubuntu Notification Guidelines (no actions, no permanent notifications)
         """
         if self.__pynotif_avail:
             notif = self.__get_notification(profilename, message)
@@ -193,25 +194,25 @@ class PyNotifyMixin(INotifyMixin):
                         notif.set_urgency(self.__pynotif_mod.URGENCY_NORMAL)
                     notif.show()
                 except gobject.GError, exc:
-                    # Connection to notification-daemon failed 
+                    # Connection to notification-daemon failed
                     self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
 
     def __get_notification(self, profilename, message):
         """Returns a notification object but does not display it. The
         notification supports mark-up. If notifications aren't supported
         the method returns None.
-         
+
         :param message: The message (body) that should be displayed.
         :type message:  String
-         
+
         :return: The created notification object or None
         :rtype: Notification or None
-        
+
         :todo: Replace single '<' characters by '&lt;' in a more reliable way!\
                See function `gobject.markup_escape_text` for this.
         :todo: The header and the icon should be given as parameter to make
                this mix-in class more generic!
-               
+
         """
         notif = None
         if self.__pynotif_avail:
@@ -221,20 +222,20 @@ class PyNotifyMixin(INotifyMixin):
             try:
                 notif = self.__pynotif_mod.Notification(title, message, self.__iconfile)
             except gobject.GError, exc:
-                # Connection to notification-daemon failed 
+                # Connection to notification-daemon failed
                 self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
                 notif = None
         return notif
 
     def __update_notification(self, profilename, message):
-        """         
+        """
         :param message: The message (body) that should be displayed.
         :type message:  String
-         
+
         :todo: Replace single '<' characters by '&lt;' in a more reliable way!
         :todo: The header and the icon should be given as parameter to make
                this mix-in class more generic!
-               
+
         """
         if self.__pynotif_avail:
             message = message.replace("<", "&lt;")
@@ -243,7 +244,7 @@ class PyNotifyMixin(INotifyMixin):
             try:
                 self.__notif.update(title, message, self.__iconfile)
             except gobject.GError, exc:
-                # Connection to notification-daemon failed 
+                # Connection to notification-daemon failed
                 self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
                 self.__notif = None
 
@@ -403,7 +404,7 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._set_menuitems_status(self._indicator_hdl.get_progress_menu_label, checkpoint)
 
     def _connect_dbus_signal_handlers(self):
-        """Binds DBus signals to their corresponding handler methods.        
+        """Binds DBus signals to their corresponding handler methods.
         """
         self._indicator_hdl.connect_dbus_event_signal(self.dbus_event_signal_hdl)
         self._indicator_hdl.connect_dbus_error_signal(self.dbus_error_signal_hdl)
@@ -424,7 +425,7 @@ class SBackupdIndicatorBase(INotifyMixin):
 
             self._indicator_hdl.dbus_reconnect()
             self._indicator_hdl.test_dbus_validity()
-            if self._indicator_hdl.is_dbus_valid():    # re-connection successful?                    
+            if self._indicator_hdl.is_dbus_valid():    # re-connection successful?
                 self._connect_dbus_signal_handlers()
 #TODO: get new values here!
             else:
@@ -501,8 +502,8 @@ class SBackupdIndicatorBase(INotifyMixin):
             self._menuitems["show_windows"].set_sensitive(False)
 
     def dbus_event_signal_hdl(self, event, urgency):
-        """Method which handles event signals over D-Bus. 
-        
+        """Method which handles event signals over D-Bus.
+
         :todo: Implement methods for setting 'finished status' etc. (set menu, disable cancel, hide show
                messages, set icon...
         """
@@ -646,7 +647,7 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._set_menuitems_status_progress(checkpoint)
 
     def dbus_alreadyrunning_signal_hdl(self):
-        self._exit = False # eventually interrupt termination 
+        self._exit = False # eventually interrupt termination
         self._notify_info(profilename = "",
                           message = _("Attempt of starting another instance of Simple Backup while this one is already running."))
 
@@ -972,7 +973,7 @@ class SBackupdIndicatorHandler(object):
         1. Headline
         2. actual error message
         3. additional info
-        
+
         :todo: rename into `format_error_msg`
         """
         self.__update_properties()
@@ -987,7 +988,7 @@ class SBackupdIndicatorHandler(object):
 
 
 class SBackupdIndicatorApp(object):
-    """GUI for listen to the backup daemon. It uses DBus service. 
+    """GUI for listen to the backup daemon. It uses DBus service.
     """
     def __init__(self, options):
         self.__options = options

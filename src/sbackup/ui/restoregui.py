@@ -1,5 +1,6 @@
 #   Simple Backup - Restoration GUI in GTK+
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -199,7 +200,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
     def __set_destination_done_cb(self, error):
         if error is not None:
             gobject.idle_add(self._make_topwin_busy, False)
-            self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error            
+            self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error
             self._show_destination_error(error)
         else:
             gobject.idle_add(self.__set_destination_done)
@@ -207,7 +208,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
     def __set_destination_done(self):
         self.target = self.__fam_target_hdl.query_mount_uri()
         if self.__fam_target_hdl.dest_path_exists() is False: # no errors so far
-            self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error            
+            self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error
             gobject.idle_add(self._show_destination_error, _("Specified path does not exist"))
             self.__fam_target_hdl.set_terminate_callback(self._set_dest_failed_cb)
             gobject.idle_add(self.__fam_target_hdl.terminate)
@@ -259,13 +260,13 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
     def __send_statusbar_msg(self, message):
         """Puts the given message on the statusbar's message stack and
         returns the id.
-        
+
         @param message: The message that should be displayed
         @type message:  String
-        
+
         @return: the id of the message
         @rtype:  Integer
-    
+
         @raise AssertionError: if the statusbar is not initialized
         """
         if self.__context_id is None:
@@ -280,10 +281,10 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         If no id is given the last message is removed from stack. Whenever
         it is possible one should use the message id to remove a certain
         message to prevent unwanted removal of 'other' messages.
-        
+
         @param message_id: the id of the message to remove
         @type message_id:  Integer
-         
+
         @return: None
 
         @raise AssertionError: if the statusbar is not initialized
@@ -463,7 +464,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         tstore, iter = self.widgets['filelisttreeview'].get_selection().get_selected()
         if iter is not None:
             self.widgets['buttonspool'].set_sensitive(True)
-            # deactivate restore buttons if the selection is not included in 
+            # deactivate restore buttons if the selection is not included in
             state = tstore.get_value(iter, 1)
             if state == Dumpdir.getHRCtrls()['N'] :
                 self.widgets['restore'].set_sensitive(False)
@@ -501,8 +502,8 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
     def __load_filestree(self):
         """Method that loads the files list from a snapshot. It uses threads
         and shows a progressbar.
-        
-        @return: None 
+
+        @return: None
         """
         self.flisttreestore.clear()
         self.widgets['buttonspool'].set_sensitive(False)
@@ -516,13 +517,13 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         magic *args parameter due to the use of this method as callback
         function. Exceptions that were raised within the thread are handled
         here.
-        
+
         @param args: parameters of this method; used as follows:
                      [0] - the id of the prior set statusbar message
                      [1] - the result of the threaded retrieval of items
 
         @return: None
-        
+
         @raise ValueError: If number of parameters mismatch
         """
         if len(args) != 2:
@@ -569,7 +570,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         """This method shows a message in the statusbar and retrieves the
         snapshot informations in background (threaded).
         After finishing the retrieval the method '__show_filestree' is called.
-        
+
         @return: None
         """
         self._set_topwin_widgets_sensitive(False)
@@ -695,19 +696,19 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         """Helper method that creates a thread for the restoration process
         in background and shows an appropriate dialog box. The distinction
         between reverting and restoring is done by using a 'mode' variable.
-        
+
         @param mode: operation mode of the restoration
         @param restore_callable: the object that actually performs the
                                  restoration
         @param source:  what should be restored (filename/directory)
         @param dirname: where should it restored; if not set the original
                         location is used
-                        
+
         @type mode:                String
         @type restore_callable: callable object
         @type source:             String
         @type dirname:             String (if used)
-        
+
         @return: None
         """
         snapshot = self.currentSnp
@@ -731,13 +732,13 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         process. We need to use the magic *args parameter due to the use
         of this method as callback function. Exceptions that were raised
         within the thread are handled here.
-        
+
         @param args: parameters of this method; used as follows:
                      [0] - the id of the prior set statusbar message
                      [1] - the result of the threaded restoration
 
         @return: None
-        
+
         @raise ValueError: If number of parameters mismatch
         """
         if len(args) != 2:
@@ -899,7 +900,7 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
                      'revert'
                      'revert_as'
         @type mode: String
-        
+
         @return: None
         """
         self.__mode = mode
@@ -914,7 +915,7 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
     def begin_restore(self):
         """Signals the beginning of the restoration process using the prior
         set informations.
-        
+
         @return: NoneS
         """
         dirname = self.__dirname
@@ -933,7 +934,7 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
 
     def finish_sucess(self):
         """Signals the successful finish of the restoration process.
-        
+
         @return: None
         """
         dirname = self.__dirname
@@ -952,10 +953,10 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
     def finish_failure(self, failure):
         """Signals the finish of the restoration process if a failure
         happened.
-        
+
         @param failure: the failure that happend
         @type failure:  any object that is reprintable using 'str()'
-        
+
         @return: None
         """
         dirname = self.__dirname

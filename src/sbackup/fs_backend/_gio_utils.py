@@ -1,5 +1,6 @@
 #   Simple Backup - file access management using GIO/GVFS
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -151,7 +152,7 @@ class GioMountHandler(object):
     def __init__(self):
         """
         Constructor
-        @param configManager: 
+        @param configManager:
         """
         self.__logger = log.LogFactory.getLogger()
 
@@ -260,7 +261,7 @@ class GioMountHandler(object):
         _local = self._is_local(_gfileobj)
         if _local:
             self.__logger.debug("Mounting local path is not required - calling additional callback")
-#Note: call additional callbacks anyway              
+#Note: call additional callbacks anyway
             if self.__mount_finish_callback is not None:
                 self.__mount_finish_callback(error = None)
         else:
@@ -433,7 +434,7 @@ class GioMountHandler(object):
 
 
 class GioOperations(interfaces.IOperations):
-    """Collects simple operations    
+    """Collects simple operations
     """
     __metaclass__ = structs.Singleton
 
@@ -500,9 +501,9 @@ class GioOperations(interfaces.IOperations):
     def _prepare_copy(cls, src_gfile, dst_gfile):
         """Helper function that prepares the given paths for copying
         using 'nssb_copy'.
-        
+
         Source must be a file or symbolic link to a file!
-        
+
         @todo: Implement test case for symbolic links!
         """
         _src_uri = src_gfile.get_uri()
@@ -566,7 +567,7 @@ class GioOperations(interfaces.IOperations):
     @classmethod
     def _add_write_permission(cls, path, recursive = True):
         """Sets write permissions for user, group, and others for
-        given directory or file (recursive). 
+        given directory or file (recursive).
         """
         _gfileobj = gio.File(path)
         try:
@@ -591,7 +592,7 @@ class GioOperations(interfaces.IOperations):
     @classmethod
     def chmod_no_rwx_grp_oth(cls, path):
         """Sets write permissions for user only for
-        given directory or file (*not* recursive). 
+        given directory or file (*not* recursive).
         """
         _gfileobj = gio.File(path)
         try:
@@ -629,13 +630,13 @@ class GioOperations(interfaces.IOperations):
     def _copytree(cls, src, dst):
         """mod of `shutil.copytree`. This doesn't fail if the
         directory exists, it copies inside.
-    
+
         :param src: source path for copy operation
         :param dst: destination
         :param symlinks: copy symlinks?
         :type src: string
         :type dst: string
-    
+
         """
         names = cls.listdir(src)
         if not cls.path_exists(dst):

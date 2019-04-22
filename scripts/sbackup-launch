@@ -2,6 +2,7 @@
 #
 #   Simple Backup - service file used by cron/anacron
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -30,22 +31,22 @@ logfile=$logdir/sbackup-cron.log
 
 
 if ! [ -d $logdir ]; then
-	mkdir -p $logdir
+    mkdir -p $logdir
 fi
 
 if [ -x /usr/bin/nice ]; then
-	nicecmd="/usr/bin/nice -n 19"
+    nicecmd="/usr/bin/nice -n 19"
 fi
 
 # See ionice(1)
 if [ -x /usr/bin/ionice ]; then
-	#ionicecmd="/usr/bin/ionice -c 2 -n 7 -t"
-	# option -t is not implement in Ubuntu Hardy
-	ionicecmd="/usr/bin/ionice -c 3"
+    #ionicecmd="/usr/bin/ionice -c 2 -n 7 -t"
+    # option -t is not implement in Ubuntu Hardy
+    ionicecmd="/usr/bin/ionice -c 3"
 fi
 
 if [ -x /usr/bin/sbackup ]; then
-	$nicecmd $ionicecmd /usr/bin/sbackup > $logfile 2>&1
+    $nicecmd $ionicecmd /usr/bin/sbackup > $logfile 2>&1
 elif [ -x /usr/local/bin/sbackup ]; then
-	$nicecmd $ionicecmd /usr/local/bin/sbackup > $logfile 2>&1
+    $nicecmd $ionicecmd /usr/local/bin/sbackup > $logfile 2>&1
 fi

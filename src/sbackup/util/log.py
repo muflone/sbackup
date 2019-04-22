@@ -1,5 +1,6 @@
 #   Simple Backup - Logging facilities
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2009: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -44,7 +45,7 @@ class LogFactory(object):
     def getLogger(name = None, logfile = None, level = 20) :
         """Returns last used logger instance. If no instance exists, a new
         one is created.
-        
+
         @param name: The name of the logger
         @param logfile : default=False
         @param level: The level of the logger (default = logging.INFO(20) )

@@ -1,5 +1,6 @@
-#   Simple Backup - SSH fuse plugin 
+#   Simple Backup - SSH fuse plugin
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -47,7 +48,7 @@ class sshFuseFAM (pluginFAM)  :
 
     def match_scheme(self, remoteSource):
         """
-        SSH schema is like : ssh://user:pass@example.com/home/user/backup/ 
+        SSH schema is like : ssh://user:pass@example.com/home/user/backup/
         (user,pass, the first '/' ) are mandatory
         """
         _res = False
@@ -58,7 +59,7 @@ class sshFuseFAM (pluginFAM)  :
 
     def match_scheme_full(self, remoteSource):
         """
-        SSH schema is like : ssh://user:pass@example.com/home/user/backup/ 
+        SSH schema is like : ssh://user:pass@example.com/home/user/backup/
         (user,pass, the first '/' ) are mandatory
         """
         _res = False
@@ -69,7 +70,7 @@ class sshFuseFAM (pluginFAM)  :
 
     def mount(self, source, mountbase):
         """
-        Mount the source intor the mountbase dir . This method should create a mount point to mount the source. 
+        Mount the source intor the mountbase dir . This method should create a mount point to mount the source.
         The name of the mount point should be very expressive so that we avoid collision with other mount points
         @param source: The remote path
         @param mountbase: The mount points base dir

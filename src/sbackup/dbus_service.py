@@ -1,5 +1,6 @@
 #   Simple Backup - DBus System Service
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -47,7 +48,7 @@ from sbackup.util.system import drop_privileges
 from sbackup.util.system import pid_exists
 
 
-#TODO: Further split of object's responsibility: sender object/receiver 
+#TODO: Further split of object's responsibility: sender object/receiver
 #TODO: Add module dbus_constants?
 __START = "start"
 __STOP = "stop"
@@ -289,7 +290,7 @@ class SBackupDbusConnectionObject(dbus.service.Object):
 
 class SBackupDBusService(object):
     """This is the DBUS service that provide basic signals.
-    
+
     """
     def __init__(self, keep_alive = False):
         self._system_bus = None

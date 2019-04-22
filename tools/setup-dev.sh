@@ -24,7 +24,7 @@
 # Usage:
 #   execute this script from the root directory of the branch
 #   using the command './tools/setup-dev.sh'
-#	Exit development environment using 'exit'
+#   Exit development environment using 'exit'
 #
 ################################################################################
 
@@ -44,64 +44,64 @@ echo "-------------------------------------------------------"
 #
 METAFILE="METAINFO"
 if [ ! -e $METAFILE ]; then
-	echo "ERROR: file '"$METAFILE"' not found!"
-	echo "Please make sure you are executing this script from the root directory of the branch."; echo
+    echo "ERROR: file '"$METAFILE"' not found!"
+    echo "Please make sure you are executing this script from the root directory of the branch."; echo
 else
-	echo -n "Found file '"$METAFILE"' contains:"
-	#
-	# grab name and current version
-	#
-	VERSION=$(grep "^VERSION=" $METAFILE|cut -d "=" -f 2 -)
-	PKGNAME=$(grep "^PKGNAME=" $METAFILE|cut -d "=" -f 2 -)
-	echo -n "    PKGNAME = "$PKGNAME; echo "    VERSION = "$VERSION
+    echo -n "Found file '"$METAFILE"' contains:"
+    #
+    # grab name and current version
+    #
+    VERSION=$(grep "^VERSION=" $METAFILE|cut -d "=" -f 2 -)
+    PKGNAME=$(grep "^PKGNAME=" $METAFILE|cut -d "=" -f 2 -)
+    echo -n "    PKGNAME = "$PKGNAME; echo "    VERSION = "$VERSION
 
 
-	devpath=$STARTPWD"/src"
-	binpath=$STARTPWD"/scripts"
-	datapath=$STARTPWD"/data"
-	iconpath=$STARTPWD"/data/icons"
-	uipath=$STARTPWD"/data/ui"
-	localedir=$STARTPWD"/po/locale"
+    devpath=$STARTPWD"/src"
+    binpath=$STARTPWD"/scripts"
+    datapath=$STARTPWD"/data"
+    iconpath=$STARTPWD"/data/icons"
+    uipath=$STARTPWD"/data/ui"
+    localedir=$STARTPWD"/po/locale"
 
-	#
-	# add path of current branch to PYTHONPATH
-	# idea: wrapper script to bend pythonpath for testing/developing!
-	export PYTHONPATH=$devpath":"$PYTHONPATH
+    #
+    # add path of current branch to PYTHONPATH
+    # idea: wrapper script to bend pythonpath for testing/developing!
+    export PYTHONPATH=$devpath":"$PYTHONPATH
 
-	#
-	# build languages (po -> mo) in tree; will be removed when cleaning tree
-	# note: ${langfull/\/*\//} is explained on man bash under "Parameter Expansion
-	#
-	echo "Installing languages in '$localedir'"
-	for langfull in $STARTPWD/po/*.po; do langshort=${langfull/\/*\//}; lang=${langshort%.po}; echo -n "$lang "; install -d "$localedir/$lang/LC_MESSAGES/"; msgfmt "$langfull" -o "$localedir/$lang/LC_MESSAGES/sbackup.mo"; done
+    #
+    # build languages (po -> mo) in tree; will be removed when cleaning tree
+    # note: ${langfull/\/*\//} is explained on man bash under "Parameter Expansion
+    #
+    echo "Installing languages in '$localedir'"
+    for langfull in $STARTPWD/po/*.po; do langshort=${langfull/\/*\//}; lang=${langshort%.po}; echo -n "$lang "; install -d "$localedir/$lang/LC_MESSAGES/"; msgfmt "$langfull" -o "$localedir/$lang/LC_MESSAGES/sbackup.mo"; done
 
-	# fill templates
-	echo; echo "Create file 'metainfo' within source directory"
-	sed s+@version@+$VERSION+ src/sbackup/metainfo.in > src/sbackup/metainfo.tmp
-	sed s+@pkgname@+$PKGNAME+ src/sbackup/metainfo.tmp > src/sbackup/metainfo
-	echo "Create file 'resources' within source directory"
-	echo "$localedir" > src/sbackup/resources
-	echo "$binpath" >> src/sbackup/resources
-	echo "$datapath" >> src/sbackup/resources
-	echo "$iconpath" >> src/sbackup/resources
-	echo "$uipath" >> src/sbackup/resources
+    # fill templates
+    echo; echo "Create file 'metainfo' within source directory"
+    sed s+@version@+$VERSION+ src/sbackup/metainfo.in > src/sbackup/metainfo.tmp
+    sed s+@pkgname@+$PKGNAME+ src/sbackup/metainfo.tmp > src/sbackup/metainfo
+    echo "Create file 'resources' within source directory"
+    echo "$localedir" > src/sbackup/resources
+    echo "$binpath" >> src/sbackup/resources
+    echo "$datapath" >> src/sbackup/resources
+    echo "$iconpath" >> src/sbackup/resources
+    echo "$uipath" >> src/sbackup/resources
 
-	# create softlink sbackup-run -> sbackup
-	ln -sf $binpath/sbackup-run $binpath/sbackup
+    # create softlink sbackup-run -> sbackup
+    ln -sf $binpath/sbackup-run $binpath/sbackup
 
-	#
-	# change directory into 'scripts' directory
-	#
-	cd $STARTPWD"/scripts"
+    #
+    # change directory into 'scripts' directory
+    #
+    cd $STARTPWD"/scripts"
 
-	# modify and show a distinct prompt in development environment
-	export PROMPT_COMMAND="echo -n '=SBACKUP DEVELOPMENT= '"
+    # modify and show a distinct prompt in development environment
+    export PROMPT_COMMAND="echo -n '=SBACKUP DEVELOPMENT= '"
 
-	/bin/bash
+    /bin/bash
 
-	# when finished, clean up everything
-	cd $STARTPWD
-	./tools/teardown-dev.sh
+    # when finished, clean up everything
+    cd $STARTPWD
+    ./tools/teardown-dev.sh
 
 fi
 

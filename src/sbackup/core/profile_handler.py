@@ -1,5 +1,6 @@
 #   Simple Backup - process a certain profile (a distinct configuration)
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -49,7 +50,7 @@ from sbackup.util import log
 
 class BackupProfileHandler(object):
     """Class that handles/manages the backup process of a single profile.
-    
+
     """
 
     def __init__(self, configmanager, backupstate, dbus_connection = None,
@@ -58,10 +59,10 @@ class BackupProfileHandler(object):
 
         :param configmanager : The current configuration manager
         :param backupstate: object that stores the current state of the process
-        
+
         :note: Make sure to call for the appropriate logger before\
                instantiating this class!
-               
+
         """
         self.logger = log.LogFactory.getLogger()
 #TODO: Simplify/refactor these attributes.
@@ -89,14 +90,14 @@ class BackupProfileHandler(object):
         configuration file. Currently defined are
         * pre-backup - before preparation of backup starts
         * post-backup - after completion and finishing of backup
-        
+
         """
         #LP #173490
         import commands
         hooks = None
         if self.config.has_option('hooks', hookname):
             hooks = str(self.config.get('hooks', hookname)).split(",")
-    
+
         if hooks is not None:
             self.logger.info(_("Running of hooks: %s") % hookname)
             for hook in hooks:
@@ -123,7 +124,7 @@ class BackupProfileHandler(object):
 
     def process(self):
         """Runs the whole backup process:
-        
+
         1. check pre-conditions
         3. purge snapshots (if configured)
         4. open new snapshot containing common metadata (full or incr.
@@ -136,7 +137,7 @@ class BackupProfileHandler(object):
         assert self.__fam_target_hdl.is_initialized()
 
         self.__snpman = SnapshotManager(self.__fam_target_hdl.query_mount_uri())
-        
+
         # get basic informations about new snapshot
         self.__state.set_state('prepare')
         (snppath, base) = self.__retrieve_basic_infos(force_full_snp = self.__full_snp)
@@ -309,11 +310,11 @@ class BackupProfileHandler(object):
 
     def finish(self, error = None):
         """End SBackup session :
-        
+
         - copy the log file into the snapshot dir
-        
+
         Might be called multiple times.
-        
+
         :note: When this method is called no exceptions were raised during the backup.
         """
         self.__copylogfile()
@@ -339,7 +340,7 @@ class BackupProfileHandler(object):
         self.__state.set_target(_target_display_name)
         self.logger.info(_("Backup destination: %s") % _target_display_name)
 
-        # Check if the target dir exists, but Do not create any directories. 
+        # Check if the target dir exists, but Do not create any directories.
         if not self.__fam_target_hdl.dest_path_exists():
             self.logger.warning(_("Unable to find destination directory."))
             self.__state.set_state('target-not-found')
@@ -382,12 +383,12 @@ class BackupProfileHandler(object):
         to be created. This informations include:
         1. the path of the new snapshot
         2. the base of the new snapshot
-        
+
         :param listing: a list of snapshots
-        
+
         :return: the determined `snppath` and `base`
         :rtype: a tuple
-        
+
         """
         _fop = fam.get_file_operations_facade_instance()
         # Get the list of snapshots that matches the latest snapshot format
@@ -399,8 +400,8 @@ class BackupProfileHandler(object):
         if (len(listing) == 0) or (force_full_snp is True):
             increment = False
         else:
-            # we got some snaphots 
-            # we search for the last full 
+            # we got some snaphots
+            # we search for the last full
             base = listing[0]
             if listing[0].isfull() :  # Last backup was full backup
                 self.logger.debug("Last (%s) was a full backup" % listing[0].getName())

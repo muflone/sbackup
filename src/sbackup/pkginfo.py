@@ -2,6 +2,7 @@
 #
 #   Simple Backup - package info
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -29,19 +30,20 @@ from sbackup import util
 
 class Infos(object):
     """Collects general informations about SBackup.
-    
+
     `name` The application's full name
     `version` Full current version
     `description` some description
-    
+
     @todo: Remove the smtpfrom info from here.
-    
+
     """
     NAME = "Simple Backup Suite"
     VERSION = util.get_version_number()
     DESCRIPTION = _("This is a user friendly backup solution for common desktop needs. If you want to help by submitting bugs, by translating or anything else please visit our website.")
     WEBSITE = "https://launchpad.net/sbackup/"
-    COPYRIGHT = "2005-2013 The Simple Backup authors"
+    COPYRIGHT = ["2019 Fabio Castelli (Muflone) <muflone@vbsimple.net>",
+                 "2005-2013 The Simple Backup authors"],
     AUTHORS = [_("Maintainers:"),
                "Jean-Peer Lorenz <peer.loz@gmx.net>",
                "Oumar Aziz Ouattara <wattazoum@gmail.com>",

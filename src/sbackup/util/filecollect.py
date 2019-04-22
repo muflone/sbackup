@@ -1,5 +1,6 @@
 #   Simple Backup - collection of files and files metadata
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -30,7 +31,7 @@ from sbackup.util import exceptions
 from sbackup.util import log
 
 
-#TODO: make this module independent from archive backend 
+#TODO: make this module independent from archive backend
 
 
 class FileCollectorStats(object):
@@ -185,9 +186,9 @@ class FileCollectorParentSnapshotFacade(object):
 
     def set_base_snar(self, basesnar):
         """Sets the snapshot file (snar) of the base (parent) snapshot.
-        
+
         @note: This implies that the current snapshot is incremental.
-        
+
         """
 #        if not isinstance(basesnar, tar.SnapshotFile):
 #            raise TypeError("Expected parameter of type 'SnapshotFile'. "\
@@ -228,7 +229,7 @@ class FileCollectorParentSnapshotFacade(object):
 class FileCollector(object):
     """Responsible for the process of collecting files that are being backuped.
     The collecting process comprises of:
-    
+
     * check the files are readable/accessable
     * apply exclusion rules (Regex) defined by user to the list of files
     * calculate the required space for the backup
@@ -254,7 +255,7 @@ class FileCollector(object):
         self.__fisdir = None
         # list of Regular Expressions defining exclusion rules
         self.__excl_regex = []
-# TODO: put list of compiled regex into `Snapshot` (i.e. compile them when setting the excludes). 
+# TODO: put list of compiled regex into `Snapshot` (i.e. compile them when setting the excludes).
 
         self.set_snapshot(snp)
         self.set_configuration(configuration)
@@ -279,9 +280,9 @@ class FileCollector(object):
 
     def set_parent_snapshot(self, parent):
         """Sets the snapshot file (snar) of the base (parent) snapshot.
-        
+
         @note: This implies that the current snapshot is incremental.
-        
+
         """
 #        if not isinstance(parent, tar.SnapshotFile):
 #            raise TypeError("Expected parameter of type 'SnapshotFile'. "\
@@ -296,7 +297,7 @@ class FileCollector(object):
 
     def __prepare_collecting(self):
         """The actual process of collecting is prepared (i.e. stats are cleared etc.).
-        
+
         @note: Depending on setting `Follow links` are functions for testing file existance and
                retrieval of file stats selected here.
         """
@@ -308,10 +309,10 @@ class FileCollector(object):
 
     def __set_isfull(self, isfull):
         """Sets attribute `__isfull` to the given boolean value.
-        
+
         Attribute `__isfull` is introduced because of performance concerns
         since the snapshot derives this information from its name on every
-        request again.  
+        request again.
         """
         if not isinstance(isfull, types.BooleanType):
             raise TypeError("Expected parameter of boolean type. "\
@@ -361,7 +362,7 @@ class FileCollector(object):
 #            try:
 #                os.close(fdscr)
 #            except OSError:
-#                pass    
+#                pass
         return _res
 
     def __is_circular_symlink(self, path):
@@ -381,13 +382,13 @@ class FileCollector(object):
         * snapshot destination
         * regular expressions
         * blacklisted names.
-                
+
         @return: True if the file has to be excluded, false if not
         """
         if path == self.__configuration.get_target_dir():
             self.__logger.info(_("File '%(file)s' is backup's target directory.") % {'file' : path})
             return True
-        
+
         # if the file is in exclude list, return true
         if self.__snapshot.is_path_in_excl_filelist(path):
             self.__logger.info(_("Path '%(file)s' defined in excludes list.") % {'file' : path})
@@ -410,7 +411,7 @@ class FileCollector(object):
 
         Currently, following configuration options are tested:
         * file size
-                
+
         @return: True if the file has to be excluded, false if not
         """
         #if the file is too big
@@ -440,12 +441,12 @@ class FileCollector(object):
         """Checks given `path` for exclusion and adds it to the `ExcludeFlist` if
         required. Sub-directories are only entered in the case the `path` is not
         excluded.
-        
+
         @param path: The path being checked for exclusion
-        
+
         @note: Links are always backuped; TAR follows links (i.e. dereferences them = stores the actual
                content) only if option `followlinks` is set. A link targeting a directory yields
-               'islink=True' and 'isdir=True'. 
+               'islink=True' and 'isdir=True'.
         """
         _excluded = False
         _stop_checking = False
@@ -457,7 +458,7 @@ class FileCollector(object):
                 self.__snapshot.addToExcludeFlist(path)
                 self.__collect_stats.count_excl_config()
                 _excluded = True
-            
+
         elif self._is_excluded_by_force(path):
             # force exclusion e.g. path is defined in includes list but does not exist/is not accessable
             self.__snapshot.addToExcludeFlist(path)
@@ -473,7 +474,7 @@ class FileCollector(object):
                 _excluded = True
 
         if not _excluded:
-            # path was not excluded, so do further tests (stats, enter dir...)            
+            # path was not excluded, so do further tests (stats, enter dir...)
             if self.__fislink:
                 self.__logger.debug("Symbolic link found: '%(path)s' -> '%(ln_target)s'."\
                                 % {'path' : path, 'ln_target' : local_file_utils.get_link(path)})
@@ -505,7 +506,7 @@ class FileCollector(object):
 
     def __cumulate_size(self, path):
         """
-        
+
         Files not contained in SNAR file are backuped in any case!
         (e.g. a directory was added to the includes)
         """
@@ -514,7 +515,7 @@ class FileCollector(object):
         if self.__isfull:        # full snapshots do not have a base snar file
             _incl_file = True
         else:
-            # we don't look at the access time since this was even modified during the last backup 
+            # we don't look at the access time since this was even modified during the last backup
             ftime = max(self.__fstats.st_mtime,
                         self.__fstats.st_ctime)
             if path in self.__parent.get_base_snardict():
@@ -558,10 +559,10 @@ class FileCollector(object):
         """Paths (i.e. directories and files) defined in the configuration are added
         to the corresponding include/exclude file lists. These lists represent the
         explicitely defined includes and excludes. Includes are stronger than excludes!
-        
+
         The config GUI avoids the definition of a file as included and excluded at the same time.
         The `ConfigManager` returns the last defined entry in the case of multiple definitions
-        in section `dirconfig`.        
+        in section `dirconfig`.
         """
         _config = self.__configuration
         if _config is None:
@@ -608,7 +609,7 @@ class FileCollector(object):
         self.__prepare_explicit_flists()
         util.enable_timeout_alarm()
 
-        # We have now every thing we need , the rexclude, excludelist, includelist and already stored 
+        # We have now every thing we need , the rexclude, excludelist, includelist and already stored
         self.__logger.debug("Creation of the complete exclude list.")
 
         # walk recursively into paths defined as includes (therefore don't call nested paths)
@@ -671,7 +672,7 @@ class FileCollectorConfigFacade(object):
 
     def get_dirconfig_local(self):
         """Returns the directory configuration stored in a list of pairs (name, value).
-        
+
         @rtype: List
         """
         return self.__dirconfig

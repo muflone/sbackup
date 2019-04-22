@@ -1,5 +1,6 @@
 #   Simple Backup - file access management using FUSE
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -65,7 +66,7 @@ class FuseOperations(interfaces.IOperations):
 
     def __init__(self):
         interfaces.IOperations.__init__(self)
-        
+
     @classmethod
     def chmod_no_rwx_grp_oth(cls, path):
         local_file_utils.chmod_no_rwx_grp_oth(path)

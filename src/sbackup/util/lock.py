@@ -1,5 +1,6 @@
 #   Simple Backup - lock file facilities
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -63,10 +64,10 @@ class ApplicationLock(object):
                 raise exceptions.ApplicationLockError
 
     def lock(self):
-        """Sets a lock file. 
+        """Sets a lock file.
         In 0.3 following changes take effect:
         * use fixed location (users and superusers); ignore settings in configuration files
-        * existence of directory `sbackup` with mode 777 is assumed (no sticky bit set) 
+        * existence of directory `sbackup` with mode 777 is assumed (no sticky bit set)
         """
         self.__prepare_lock_dir()
 

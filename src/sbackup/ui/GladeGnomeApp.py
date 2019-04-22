@@ -1,5 +1,6 @@
 #   Simple Backup - Base class for Gnome applications (deprecated)
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -67,8 +68,8 @@ class GladeGnomeApp(object):
 
         '''
         __init__(self, app_name, app_version, filename, top_window, widget_list, pull_down_dict=None):
-        
-        app_name, app_version : application name and version 
+
+        app_name, app_version : application name and version
         filename: filename of the .glade file
         top_window: the glade name of the top level widget (this will then
            be accessible as self.top_window)
@@ -114,7 +115,7 @@ class GladeGnomeApp(object):
     def set_top_window(self, top_window):
 
         '''set_top_window(self, top_window):
-        
+
         notebook pages that are in containers need to be able to change
         their top window, especially so the dialog is set_transient_for
         the actual main window
@@ -125,7 +126,7 @@ class GladeGnomeApp(object):
 #    def set_callback_function(self, cb_func, *cb_args, **cb_kwargs):
 #
 #        '''set_callback_function(cb_func, *cb_args, **cb_kwargs):
-#        
+#
 #        stores the cb_func and its cb_args and cb_kwargs
 #        '''
 #        self.cb_func = cb_func
@@ -135,7 +136,7 @@ class GladeGnomeApp(object):
     def show(self, center = 1, prev_window = None, *args):
 
         '''show(self, center=1, prev_window=None, *args):
-        
+
         display the top_window widget
         '''
 
@@ -150,7 +151,7 @@ class GladeGnomeApp(object):
     def hide(self):
 
         '''hide(self):
-        
+
         hides the current window, shows self.prev_window
         if self.cb_func is not None, it is called with its cb_args
         and cb_kwargs

@@ -2,6 +2,7 @@
 
 #   Simple Backup - helper script for multiple volume backups
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -56,7 +57,7 @@ if __name__ == '__main__':
     subcommand = os.getenv("TAR_SUBCOMMAND")
 
     m = archRE.match(arch)
-    if arch == "-":   # stdin/stdout   
+    if arch == "-":   # stdin/stdout
         raise Exception("Multiple archives from/to stdin/stdout are not supported")
     elif m and m.group(1):
         path = m.group(1)
@@ -67,12 +68,12 @@ if __name__ == '__main__':
     origPath = os.getenv("TAR_ARCHIV_PATH", "")
 
     try:
-    	_splitsize = os.getenv("SBACKUP_VOLUME_SIZE")
-    	if _splitsize is not None:
-	        _splitsize = int(_splitsize)
-	        _blockfac = int(os.getenv("TAR_BLOCKING_FACTOR"))
-	        _chkpt = ((_vol - 1) * _splitsize) / (_blockfac * TAR_BLOCKSIZE)
-	        publish_progress(_chkpt)
+        _splitsize = os.getenv("SBACKUP_VOLUME_SIZE")
+        if _splitsize is not None:
+            _splitsize = int(_splitsize)
+            _blockfac = int(os.getenv("TAR_BLOCKING_FACTOR"))
+            _chkpt = ((_vol - 1) * _splitsize) / (_blockfac * TAR_BLOCKSIZE)
+            publish_progress(_chkpt)
     except Exception, error:
         output.write("Error while publishing progress: %s" % error)
 

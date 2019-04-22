@@ -2,6 +2,7 @@
 #
 # sbackup - legacy support for restore operation
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2005-2008: Aigars Mahinovs <aigarius@debian.org>
 #
@@ -38,7 +39,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 2 and sys.argv[1] == '--gui':
         legacy_restore.SRestoreGTK()
-        
+
     else:
         r = legacy_restore.SRestore()
         if len(sys.argv) == 3:
@@ -52,6 +53,6 @@ if __name__ == "__main__":
             print "  /var/backup/2005-08-09_14.59.38.441112.myhost.ful/"
             print " Use 'sbackup-legacy-restore --gui' for more ease of use.\n"
             sys.exit(1)
-            
+
         if not ret:
             print "Restore FAILED! Please check you parameters."

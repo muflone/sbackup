@@ -1,5 +1,6 @@
 #   Simple Backup - the actual backup service
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -75,14 +76,14 @@ system.launch_dbus_if_required()
 class SBackupProc(object):
     """This class is intended to be a wrapper of the process of backups of
     multiple profiles.
-    
+
     It manages :
     - the full backup process : creation of instances of the BackupProfileHandler
-      with the corresponding config file 
+      with the corresponding config file
     - the logging of exception not handled by BackupProfileHandler
     - the removal of lockfiles
     - the sending of emails
-    
+
     """
 
     def __init__(self, notifiers, configfile, dbus_connection = None,
@@ -92,14 +93,14 @@ class SBackupProc(object):
         :param notifiers: instances of notifiers that should be used
         :param configfile: use this configuration file
         :param dbus_connection: DBus connection (connected and registerd)
-        
+
         :type notifiers: list
-        
+
         :note: The configuration managers are retrieved very early
                to ensure that specific logger instances are created.
-               
+
         :todo: Collect options (configfile, use_indicator...) in class/struct!
-        
+
         """
         self.__dbus_conn = dbus_connection
         self.__use_indicator = use_indicator
@@ -151,11 +152,11 @@ class SBackupProc(object):
             self.__state.detach(_notifier)
 
     def __sendEmail(self):
-        """Checks if the sent of emails is set in the config file 
+        """Checks if the sent of emails is set in the config file
         then send an email with the report
-        
+
         :todo: Transfer this functionality to a specialized class!
-        
+
         """
         self.logger.debug("Send email report")
         if self.__bprofilehdl.config.has_option("report", "from") :
@@ -227,9 +228,9 @@ class SBackupProc(object):
         for the existing profiles. Super-user rights are taken into account.
         The created configuration managers are stored in member variable
         'self.__confm'.
-        
+
         :todo: Place the path names in class `ConfigStaticData`.
-        
+
         """
         self.__confm = []
 
@@ -263,7 +264,7 @@ class SBackupProc(object):
 
     def run(self):
         """Actual main method to make backups using SBbackup
-        
+
         - launch BackupProfileHandler with the user configuration file
         - catches all exceptions thrown and logs them
         """
@@ -343,7 +344,7 @@ class SBackupProc(object):
     def __notify_init_errors(self):
         """Errors that occurred during the initialization process were stored
         in an error list. This error list is showed to the user by this method.
-        
+
         Consolidate this method, `__write_errors_to_log` and `__notify_error`!
         """
         if len(self.__errors) > 0:
@@ -355,7 +356,7 @@ class SBackupProc(object):
         """Errors that occurred during the initialization process
         were stored in an error list. The full list of errors is
         added to the current log.
-        
+
         """
         if len(self.__errors) > 0:
             self.logger.info(_("The following error(s) occurred before:"))
@@ -366,9 +367,9 @@ class SBackupProc(object):
 
 class SBackupApp(object):
     """The application that processes the backup.
-    
+
     :todo: Implement a base class providing common commandline parsing etc.!
-    
+
     """
 
     def __init__(self, argv):
@@ -392,7 +393,7 @@ class SBackupApp(object):
         the backup process. Purpose is to split between notifier creation and
         notifier use: the backup process has no information about the
         specific notifiers (type...)
-        :note: import D-Bus related modules only if using D-Bus is enabled        
+        :note: import D-Bus related modules only if using D-Bus is enabled
         """
         if self.__options_given.use_dbus and self.__dbus_avail:
             from sbackup.util import dbus_support
@@ -414,7 +415,7 @@ class SBackupApp(object):
         connection in order to keep the service alive as long as this
         application is running. Call `finalize` to close the
         connection properly when terminating the application.
-        
+
         :note: import D-Bus related modules only if using D-Bus is enabled
         """
         from sbackup.util import dbus_support
@@ -430,10 +431,10 @@ class SBackupApp(object):
             self.__use_indicator = False
 
     def _launch_indicator(self):
-        """              
+        """
         environ: the Gnome-session environ is accessable for root and the
                  user who owns the session.
-        :note: import D-Bus related modules only if using D-Bus is enabled                 
+        :note: import D-Bus related modules only if using D-Bus is enabled
         """
         print "Attempt to launch indicator application (status icon)."
         _path_to_app = get_resource_file(constants.INDICATORAPP_FILE)
@@ -475,12 +476,12 @@ class SBackupApp(object):
         attributes. It must be considered that the DBus service can
         be used without the tray GUI but in contrast the tray GUI
         cannot be used without the DBus service.
-        
+
         The method uses the commandline arguments given to class'
         constructor.
-        
+
         :todo: An option '--dry-run' would be nice!
-        
+
         """
         usage = "Usage: %prog [options] (use -h or --help for more infos)"
         version = "%prog " + Infos.VERSION
@@ -527,7 +528,7 @@ class SBackupApp(object):
     def __on_already_running(self, error):
         """Handler for the case a backup process is already running.
         Fuse is not initialized yet.
-        :note: import D-Bus related modules only if using D-Bus is enabled        
+        :note: import D-Bus related modules only if using D-Bus is enabled
         """
         print _("Backup is not being started.\n%s") % (str(error))
         if self.__options_given.use_dbus and self.__dbus_avail:
@@ -541,7 +542,7 @@ class SBackupApp(object):
     def run(self):
         """Runs the whole backup process including launching of
         external applications and services...
-        
+
         """
         try:
             enable_termsignal()
@@ -577,7 +578,7 @@ class SBackupApp(object):
 def main(argv):
     """Public function that process the backups.
     :note: DBus connection is not given as parameter here because it is not clear
-           whether to use DBus or not at this time.           
+           whether to use DBus or not at this time.
     """
     sbackup_app = SBackupApp(argv)
     exitcode = sbackup_app.run()

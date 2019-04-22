@@ -37,16 +37,16 @@ echo "-------------------------------------------------------"
 #
 METAFILE="METAINFO"
 if [ ! -e $METAFILE ]; then
-	echo "ERROR: file '"$METAFILE"' not found!"
-	echo "Please make sure you are executing this script from the root directory of the branch."; echo
+    echo "ERROR: file '"$METAFILE"' not found!"
+    echo "Please make sure you are executing this script from the root directory of the branch."; echo
 else
-	echo -n "Found file '"$METAFILE"' contains:"
-	#
-	# grab name and current version
-	#
-	VERSION=$(grep "^VERSION=" $METAFILE|cut -d "=" -f 2 -)
-	PKGNAME=$(grep "^PKGNAME=" $METAFILE|cut -d "=" -f 2 -)
-	echo -n "    PKGNAME = "$PKGNAME; echo "    VERSION = "$VERSION
+    echo -n "Found file '"$METAFILE"' contains:"
+    #
+    # grab name and current version
+    #
+    VERSION=$(grep "^VERSION=" $METAFILE|cut -d "=" -f 2 -)
+    PKGNAME=$(grep "^PKGNAME=" $METAFILE|cut -d "=" -f 2 -)
+    echo -n "    PKGNAME = "$PKGNAME; echo "    VERSION = "$VERSION
 
 
         devpath=$STARTPWD"/src"
@@ -57,17 +57,17 @@ else
         localedir=$STARTPWD"/po/locale"
 
 
-	echo "Removing installed languages from '$localedir'"
-	if [ -e $localedir ]; then rm -rf $localedir; fi
-	echo "Remove file 'metainfo' from source directory"
-	if [ -e src/sbackup/metainfo ]; then rm src/sbackup/metainfo; fi
-	if [ -e src/sbackup/metainfo.tmp ]; then rm src/sbackup/metainfo.tmp; fi
-	echo "Remove file 'resources' from source directory"
-	if [ -e src/sbackup/resources ]; then rm src/sbackup/resources; fi
-	echo "Remove softlink sbackup-run -> sbackup"
+    echo "Removing installed languages from '$localedir'"
+    if [ -e $localedir ]; then rm -rf $localedir; fi
+    echo "Remove file 'metainfo' from source directory"
+    if [ -e src/sbackup/metainfo ]; then rm src/sbackup/metainfo; fi
+    if [ -e src/sbackup/metainfo.tmp ]; then rm src/sbackup/metainfo.tmp; fi
+    echo "Remove file 'resources' from source directory"
+    if [ -e src/sbackup/resources ]; then rm src/sbackup/resources; fi
+    echo "Remove softlink sbackup-run -> sbackup"
         rm -f $binpath/sbackup
-	
-	#TODO: how to restore PYTHONPATH?
+
+    #TODO: how to restore PYTHONPATH?
 fi
 exit 0
 

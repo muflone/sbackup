@@ -1,5 +1,6 @@
 #   Simple Backup - Target file access management using GIO/GVFS
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -36,8 +37,8 @@ class GioTargetHandler(interfaces.ITargetHandler):
         """
         Constructor
         :param configuration:
-         
-        only mounted path is Target (currently)        
+
+        only mounted path is Target (currently)
         """
         interfaces.ITargetHandler.__init__(self)
 
@@ -101,7 +102,7 @@ class GioTargetHandler(interfaces.ITargetHandler):
         if self._dest is None:
             raise TypeError("No destination given")
 
-#TODO: skip initialization or raise exception?        
+#TODO: skip initialization or raise exception?
         if self._is_initialized is True:
             raise AssertionError("GIO File Access Manager is already initialized.")
 

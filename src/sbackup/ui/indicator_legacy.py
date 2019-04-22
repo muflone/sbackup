@@ -1,6 +1,7 @@
 #   Simple Backup - Indicator application (status icon)
 #                   legacy implementation
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify

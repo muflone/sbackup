@@ -1,5 +1,6 @@
 #   Simple Backup - GTK+ common helper functionality
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -94,7 +95,7 @@ def label_set_autowrap(widget):
     """Make labels automatically re-wrap if their containers are resized.
     Accepts label or container widgets.    For this to work the label in the
     glade file must be set to wrap on words.
-    
+
     from http://stackoverflow.com/questions/1893748/pygtk-dynamic-label-wrapping
     """
     if isinstance(widget, gtk.Container):
@@ -125,10 +126,10 @@ def _label_size_allocate(widget, allocation):
 def show_infodialog(message_str, parent, headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is
     displaying of error messages.
-    
+
     @param message_format: error message to show
     @type message_format: String
-    
+
     """
     __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_INFO,
                     parent = parent, boxtitle = "",
@@ -137,10 +138,10 @@ def show_infodialog(message_str, parent, headline_str = "", secmsg_str = ""):
 def show_warndialog(message_str, parent, headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is
     displaying of error messages.
-    
+
     @param message_format: error message to show
     @type message_format: String
-    
+
     """
     __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_WARNING,
                     parent = parent, boxtitle = "",
@@ -149,7 +150,7 @@ def show_warndialog(message_str, parent, headline_str = "", secmsg_str = ""):
 def show_errdialog(message_str, parent, headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is
     displaying of error messages.
-    
+
     @param message_format: error message to show
     @type message_format: String
     """
@@ -168,12 +169,12 @@ def __show_msgdialog(message_str, msgtype, parent, boxtitle = "",
                     headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is
     displaying of error messages.
-    
+
     Do not use markup for the strings.
-    
+
     @param message_format: error message to show
     @type message_format: String
-    
+
     @todo: Add proper escaping before markup is applied to the headlline.
     """
     # in compliance with Gnome HIG a 'Close' button instead of 'OK' is used
@@ -189,12 +190,12 @@ def msgdialog(message_str, msgtype, parent, boxtitle = "", buttons = gtk.BUTTONS
                     headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is
     displaying of error messages.
-    
+
     Do not use markup for the strings.
-    
+
     @param message_format: error message to show
     @type message_format: String
-    
+
     @todo: Add proper escaping before markup is applied to the headlline.
     """
     # in compliance with Gnome HIG a 'Close' button instead of 'OK' is used
@@ -244,12 +245,12 @@ def msgdialog_standalone(message_str, msgtype, boxtitle, buttons = gtk.BUTTONS_C
                     headline_str = "", secmsg_str = "", sticky = True):
     """Creates and displays a standalone dialog box. Main purpose is
     displaying of error messages within the indicator application.
-    
+
     Do not use markup for the strings.
-    
+
     @param message_format: error message to show
     @type message_format: String
-    
+
     @todo: Add proper escaping before markup is applied to the headlline.
     """
     # in compliance with Gnome HIG a 'Close' button instead of 'OK' is used

@@ -1,5 +1,6 @@
 #   Simple Backup - Miscellaneous utilities
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -53,12 +54,12 @@ def __get_resource(resource_name, is_file = False):
     The installation script writes into the 'resources' file where
     the files/resources are being stored.
     This function will look for them and return the appropriate path.
-    
+
     @param resourceName: the ressource name, as complete as possible
     @param isFile: flag whether the resource looked up is a file
-    
+
     @note: The resources file is required to be located in the
-            root directory of the sbackup package. 
+            root directory of the sbackup package.
     """
 #    print "Debug: Looking for '%s' (isFile=%s)" % (resourceName, isFile)
     tmp = inspect.getabsfile(sbackup)
@@ -70,7 +71,7 @@ def __get_resource(resource_name, is_file = False):
         _dir = _dir.strip()
 #        print "Debug: Searching in directory '%s'" % _dir
         if os.path.exists(_dir) and os.path.isdir(_dir):
-            # only directories stored in resource file are considered 
+            # only directories stored in resource file are considered
             if _dir.endswith(resource_name):
                 if not is_file:
 #                    print "Debug: Directory found in '%s'" % _dir
@@ -111,7 +112,7 @@ def get_locale_domain():
 
 def get_version_number():
     """Returns the version number that is stored in according 'metainfo' file.
-    
+
     @todo: Implement similar naming as CPython does (version, version_info).
     """
     ver_line = "VERSION=n.a."
@@ -138,12 +139,12 @@ def get_version_number():
 def launch(cmd, opts, env = None):
     """
     launch a command and gets stdout and stderr
-    outStr = a String containing the output from stdout" 
+    outStr = a String containing the output from stdout"
     errStr = a String containing the error from stderr
     retVal = the return code (= 0 means that everything were fine )
     @param cmd: The command to launch
     @return: (outStr, errStr, retVal)
-    
+
     """
     _logger = log.LogFactory.getLogger()
 
@@ -175,7 +176,7 @@ def launch(cmd, opts, env = None):
 
 def readlineNULSep(fd, fd1):
     """
-    Iterator that read a NUL separeted file as lines 
+    Iterator that read a NUL separeted file as lines
     @param fd: File descriptor
     @return: the gotten line
     @rtype: String
@@ -220,7 +221,7 @@ def readlineNULSep(fd, fd1):
 def is_valid_regexp(aregex):
     """Checks if the given string is a valid regular expression.
     @type aregex: String
-    
+
     @todo: Is an empty expression valid or not? Can we combine both checks?
     """
     if not isinstance(aregex, types.StringTypes):
@@ -237,8 +238,8 @@ def is_valid_regexp(aregex):
 def is_empty_regexp(aregex):
     """Checks if the given parameter is empty, i.e. is None or a string
     containing only whitespaces.
-    
-    @type aregex: String 
+
+    @type aregex: String
     """
     if not isinstance(aregex, (types.StringTypes, types.NoneType)):
         raise TypeError("is_empty_regexp: Given parameter must be a string "\
@@ -256,20 +257,20 @@ def is_empty_regexp(aregex):
 def add_conf_entry(confline, entry, separator = ","):
     """Appends the given entry to the given configuration line. Entries in
     configurations are separated by specified token.
-    
+
     @param confline:  the string the entry is appended to
     @param entry:      the string that is added
     @param separator: the token that separates the entries
-    
+
     @type confline:      String
     @type entry:      String
     @type separator:  String
-    
+
     @return: the configuration line with the added entry
     @rtype:  String
-    
+
     @raise TypeError: If one of the given parameters is not of string type
-    
+
     @todo: Review behaviour if the entry contains characters equal to the \
             separator.
     """
@@ -288,18 +289,18 @@ def remove_conf_entry(confline, entry, separator = ","):
     """Removes the given entry from the given string. Entries in configurations
     are separated by the specified token. Leading and trailing separators are
     taken into account.
-    
+
     @param confline:  the string from which the entry should be removed
     @param entry:      the string that is removed
     @param separator: the token that separates the entries
-    
+
     @type confline:      String
     @type entry:      String
     @type separator:  String
-    
+
     @return: the configuration line without the removed entry
     @rtype:  String
-    
+
     @raise TypeError: If one of the given parameters is not of string type
     """
     __conf_entry_func_type_check(confline, entry, separator)
@@ -410,7 +411,7 @@ def list_union(source_a, source_b):
 
 def get_humanreadable_size(size_in_bytes, binary_prefixes = False):
     """Converts given number into more readable values.
-     
+
     @todo: Implement sophisicated class for this!
     @note: Have also a look at function `get_humanreadable_size_str`.
     """
@@ -430,7 +431,7 @@ def get_humanreadable_size(size_in_bytes, binary_prefixes = False):
 
 def get_humanreadable_size_str(size_in_bytes, binary_prefixes = False):
     """Converts given number into readable string.
-     
+
     @todo: Implement sophisicated class for this!
     """
     _mb, _kb, _byt = get_humanreadable_size(size_in_bytes = size_in_bytes, binary_prefixes = binary_prefixes)
@@ -455,8 +456,8 @@ def get_humanreadable_size_str(size_in_bytes, binary_prefixes = False):
 
 def enable_timeout_alarm():
     """Helper method that enables timeout alarm handling.
-    
-    @todo: separate class? should we store the previous signal handler and restore it later? 
+
+    @todo: separate class? should we store the previous signal handler and restore it later?
     """
     # Set the signal handler
     signal.signal(signal.SIGALRM, sigalarm_handler)
@@ -470,7 +471,7 @@ def set_timeout_alarm(timeout):
 
 def sigalarm_handler(signum, stack_frame): #IGNORE:W0613
     """Signal handler that is connected to the SIGALRM signal.
-    
+
     @raise TimeoutError: A `TimeoutError` exception is raised.
     """
     raise exceptions.TimeoutError("Unable to open device.")

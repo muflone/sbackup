@@ -1,5 +1,6 @@
 #   Simple Backup - configuration file handling
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2009: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -61,11 +62,11 @@ SCHEDULE_TYPES = [SCHEDULE_TYPE_CRON, SCHEDULE_TYPE_ANACRON]
 def is_default_profile(conffile):
     """Checks whether the given configuration file corresponds to the
     default profile.
-    
+
     @param conffile: full path to configuration file to check
     @return: True if the file corresponds to the default profile, otherwise False.
     @rtype: Boolean
-    
+
     """
     is_default = False
     cfile = os.path.basename(conffile)
@@ -79,12 +80,12 @@ def is_default_profile(conffile):
 def get_logfile_name_template(conffile):
     """Determines the profilename from the given pathname `conffile`
     and returns an appropriate logfile name.
-    
+
     By 'template' is indicated this is the base logfile name. It is
-    extended by the current time if a logfile is actually created. 
-    
+    extended by the current time if a logfile is actually created.
+
     The given `conffile` may not exist.
-         
+
     """
     conffile_hdl = ConfigurationFileHandler()
     profilename = conffile_hdl.get_profilename(conffile)
@@ -96,22 +97,22 @@ def get_logfile_name_template(conffile):
 
 def get_profiles(prfdir):
     """Get the configuration profiles list
-     
-    @return: a dictionarity of { name: [path_to_conffile, enable] } 
+
+    @return: a dictionarity of { name: [path_to_conffile, enable] }
     """
     return _get_profiles(prfdir, application = "sbackup")
 
 def get_profiles_nssbackup(prfdir):
     """Get the configuration profiles list
-     
-    @return: a dictionarity of { name: [path_to_conffile, enable] } 
+
+    @return: a dictionarity of { name: [path_to_conffile, enable] }
     """
     return _get_profiles(prfdir, application = "nssbackup")
 
 def _get_profiles(prfdir, application):
     """Get the configuration profiles list
-     
-    @return: a dictionarity of { name: [path_to_conffile, enable] } 
+
+    @return: a dictionarity of { name: [path_to_conffile, enable] }
     """
     profiles = dict()
     if os.path.exists(prfdir) and os.path.isdir(prfdir):
@@ -179,15 +180,15 @@ def parse_cronexpression(cronfile_content):
 
 class ConfigManager(ConfigParser.ConfigParser):
     """SBackup config manager
-    
+
     The configuration manager is responsible for the following:
-     
+
     * creates a logger instance with specified log level and log file target
-    
+
     @todo: The configuration manager should not create the logger itself!
            This should be done outside of the configuration after reading and
            parsing the config file.
-           
+
     @todo: When a configuration is loaded from disk/file this configuration
             is checked for every required option. Non-existing options are
             then filled with reasonable default values.
@@ -195,16 +196,16 @@ class ConfigManager(ConfigParser.ConfigParser):
             default values are taken as 'implicitly' given in any method
             that requires such setting.
             This is not implemented yet.
-            
+
     @todo: Use the RawConfigParser instead of ConfigParser! And maybe the \
             parser should be a member of SBackup config!
     """
 
     def __init__(self, configfile = None):
         """Default constructor.
-        
+
         @param configfile: Full path to the used configuration file.
-        
+
         @todo: remove command-line parsing from here; \
                 this class should only take a filename as parameter.
         """
@@ -212,7 +213,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         self.__conffile_hdl = ConfigurationFileHandler()
 
         self.__servicefile = ConfigManagerStaticData.get_schedule_script_file()
-        self.__schedules_user = "root"    # schedules are only usable by root 
+        self.__schedules_user = "root"    # schedules are only usable by root
 
         # configuration object which is set to valid default values
         self.__default_config = _DefaultConfiguration() # is a dummy
@@ -270,10 +271,10 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def __init_sections(self):
         """Initializes the sections of the configuration.
-        
+
         @todo: Use the 'our_options' from ConfigManagerStaticData class for \
                 initialisation.
-                
+
         @note: Should we remove *unknown* sections? No, though we validate the file.
         """
         if not self.has_section("general"):
@@ -323,7 +324,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         """Sets default values for this configuration. It is distinguished
         between normal users and super-users. The path to the current
         configuration file (i.e. the current profile) is not touched.
-        
+
         @note: This method's purpose is to provide reasonable values when
                 creating a fresh configuration and restoring of these
                 'recommended' (or predefined) defaults on existing configs.
@@ -392,7 +393,7 @@ class ConfigManager(ConfigParser.ConfigParser):
     def get_target_default(self):
         """Wrapper method that return the default target path for
         the current user. No values of this configuration (actually
-        configuration manager) are touched. 
+        configuration manager) are touched.
         """
         defaults = self.__get_default_config_obj()
         target = defaults.get_target()
@@ -405,7 +406,7 @@ class ConfigManager(ConfigParser.ConfigParser):
     def get_destination_path(self):
         """Returns the target option that is currently set. Purpose is to
         hide the actual naming of options from external classes.
-        Returns None if not set.  
+        Returns None if not set.
         """
         self.__check_destination_option()
         _path = self.get("general", "target")
@@ -487,14 +488,14 @@ class ConfigManager(ConfigParser.ConfigParser):
     def optionxform(self, option):
         """Default behaviour of ConfigParser is to set the option
         keys to lowercase. By overiding this method, we make it
-        case sensitive. that's really important for dirconfig paths. 
+        case sensitive. that's really important for dirconfig paths.
         """
         return str(option)
 
     def has_option(self, section, option):
         """Checks this configuration for a given option comprising of
         section name and option name.
-        
+
         @rtype: Boolean
         """
         if section == "dirconfig" and \
@@ -621,13 +622,13 @@ class ConfigManager(ConfigParser.ConfigParser):
         """The configuration item 'dirconfig' (Directory configuration) is
         set to the value of the given dictionary. Previous values are
         overwritten.
-        
+
         @param dirconf:  new value
-    
+
         @type dirconf:      Dictionary
-        
+
         @return: None
-        
+
         @raise TypeError: If the given parameter is not of dictionary type
 
         """
@@ -658,9 +659,9 @@ class ConfigManager(ConfigParser.ConfigParser):
     def __create_logger(self):
         """Initializes logger with profile name as identifier
         and use the specified file as log file.
-        
+
         Uses the defined 'template' which is extended by the current time
-        in order to provide a unique name when the file is actually created. 
+        in order to provide a unique name when the file is actually created.
         """
         curr_logf = None
         if self.has_section("log") and self.has_option("log", "file"):
@@ -710,10 +711,10 @@ class ConfigManager(ConfigParser.ConfigParser):
         """Reads the configuration file and returns its content. Moreover it
         sets up a logger with appropriate log file and log level. This method
         overwrites the 'read' method from base class.
-        
+
         @param filename: Full path of configuration file.
         @type filename:  String
-        
+
         @return: The read configuration
         @rtype:  Same type as the base class returns
         """
@@ -767,13 +768,13 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def setSchedule(self, isCron, value):
         """Set the backup Schedule.
-        
+
         @param isCron : schedule type (cron/anacron)
         @param value : a string containing the value to set for Cron/Anacron. \
                         Valid values for Anacron are: \
                             daily/monthly/hourly/weekly
                         Valid values for Cron:
-                            cron expression to add at /etc/cron.d/sbackup.                            
+                            cron expression to add at /etc/cron.d/sbackup.
         """
         _logger = log.LogFactory().getLogger()  # in some cases a logger is not yet available
 
@@ -808,7 +809,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         @return: (isCron, value) a tuple where isCron = 0 if Anacron is used \
                  and isCron = 1 Cron is used. If no schedule setup has been \
                  found, 'None' is returned.
-                 
+
         """
         _value = None
         if not self.has_section("schedule") \
@@ -873,18 +874,18 @@ class ConfigManager(ConfigParser.ConfigParser):
     def remove_schedule(self):
         """Removes all options stored in section 'schedule'. The section
         itself remains. Existing entries in crontab etc. are not touched.
-        
+
         @return: Flag, whether something was removed or not. True is returned
                     in the case that any schedule information was found by
                     'getSchedule'.
-                    
+
         The return of this flag is somewhat a hack to force the GUI to enable
         the Save button for the rare case that:
         * the user wants to remove the schedule (i.e. sets it to 'Never')
         * no schedule information is stored in the configuration file
         * a script is linked in Anacron directories or in 'etc/cron.d/' which
-          is found when probing the filesystem for schedules.          
-          
+          is found when probing the filesystem for schedules.
+
         """
         _something_removed = False
         if self.get_schedule_and_probe() is not None:
@@ -897,13 +898,13 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def getProfileName(self):
         """Returns the current profile name for the current ConfigManager.
-        
+
         @return: the current profile name if the config file name match the
                  naming convention or Unknow otherwise
         @raise exceptions.SBException: if the configfile isn't set
-        
+
         @todo: Implement Command-Query Separation Principle (CQS)!
-        
+
         """
         if self.__profileName :
             return self.__profileName
@@ -916,9 +917,9 @@ class ConfigManager(ConfigParser.ConfigParser):
     def is_default_profile(self):
         """Checks whether this configuration is the default configuration
         (i.e. default profile).
-        
+
         @return: True if this is the default profile, False otherwise.
-        
+
         """
         if not self.conffile:
             raise exceptions.SBException(_("The config file is not set yet into this ConfigManager"))
@@ -928,9 +929,9 @@ class ConfigManager(ConfigParser.ConfigParser):
     def getProfiles(self):
         """Returns the list of defined backup profiles. Both, active and
         disabled profiles are retrieved.
-         
-        @return: a dictionary of {profilename: [path_to_conffile, enabled]} 
-        
+
+        @return: a dictionary of {profilename: [path_to_conffile, enabled]}
+
         """
         profdir = self.__conffile_hdl.get_profilesdir(self.conffile)
         self.logger.debug("Getting profiles from `%s`" % profdir)
@@ -944,7 +945,7 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def set_logdir(self, logdir):
         """Sets the given directory as current log directory for use with
-        log files.        
+        log files.
         """
         self.__logfile_dir = logdir
 
@@ -957,7 +958,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         """Retrieves the path to log file and writes it into the configuration.
 
         By 'template' is indicated this is the base logfile name. It is
-        extended by the current time if a logfile is actually created.         
+        extended by the current time if a logfile is actually created.
         """
         logf = self.__get_logfile_template()
         if not self.has_section("log") :
@@ -969,9 +970,9 @@ class ConfigManager(ConfigParser.ConfigParser):
         returns it. The log file for the default profile is named
         'sbackup.log', log files for other profiles are extended by
         the profile's name to keep them unique and avoid problems while logging.
-        
+
         By 'template' is indicated this is the base logfile name. It is
-        extended by the current time if a logfile is actually created. 
+        extended by the current time if a logfile is actually created.
 
         """
         logfname = get_logfile_name_template(self.conffile)
@@ -986,7 +987,7 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def __clear_report_section(self):
         """Any options present in the report section are removed. The section
-        itself is not removed. 
+        itself is not removed.
         """
         _section = "report"
         self.remove_section(_section)
@@ -996,10 +997,10 @@ class ConfigManager(ConfigParser.ConfigParser):
     def saveConf(self, configfile = None):
         """Saves the configuration (i.e. writes it into the specified file
         and sets scheduling in the case this is the default profile).
-         
+
         @param configfile: The config file in which to write the configuration.
                             Default is in the default location
-                             
+
         @todo: What happens if the config file is 'Save as...' in order to
                 store a configuration aside but the scheduling is different
                 from the *original* configuration that is used by sbackup?
@@ -1016,7 +1017,7 @@ class ConfigManager(ConfigParser.ConfigParser):
     def write_schedule(self):
         """Write the schedule from the configuration file. Scheduling is only
         written for admin default profiles.
-        
+
         """
         if not system.is_superuser():
             self.logger.warning("Schedules are not implemented for regular users")
@@ -1048,7 +1049,7 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def __make_cronfile_content(self):
         """Collects required data in order to create the content for
-        the file used to setup CRON (precise setting). 
+        the file used to setup CRON (precise setting).
         """
         _cronheader = ConfigManagerStaticData.get_cronheader()
         _cronexpr = self.get("schedule", "cron")
@@ -1076,10 +1077,10 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def testMail(self):
         """Test the mail settings
-        
+
         @return: True if succeded
         @raise exceptions.SBException: the error message why it didn't run
-        
+
         @todo: Not the right place for this kind of functionality?!?
         @todo: Implement specific `MailError` exception.
         """
@@ -1129,7 +1130,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         @param config : a configManager instance
         @return: True if the config are equals, False otherwise
         @rtype: boolean
-        
+
         """
         if not (isinstance(config, ConfigManager) or config is None):
             raise exceptions.SBException("Can't compare a ConfigManager with type '%s'"\
@@ -1169,8 +1170,8 @@ class ConfigManager(ConfigParser.ConfigParser):
 class ConfigurationFileHandler(object):
     """Determines paths to configuration files and profiles
     under consideration of users privileges.
-    
-    When running in special `Developer mode` paths are read 
+
+    When running in special `Developer mode` paths are read
     """
 
     def __init__(self):
@@ -1180,9 +1181,9 @@ class ConfigurationFileHandler(object):
     def __check_for_superuser(self):
         """Checks whether the application was invoked with super-user rights.
         If so, the member variable 'self.__super_user' is set.
-        
+
         :todo: Here should no distinction between user/superuser be necessary!
-        
+
         """
         if system.is_superuser():
             self.__super_user = True
@@ -1211,7 +1212,7 @@ class ConfigurationFileHandler(object):
         supposed that the profile directory is placed in the same
         directory as the configuration file (i.e. given conf file is
         the default profile's file.
-        
+
         """
         confdir = os.path.dirname(conffile)
         profdir = os.path.join(confdir, ConfigManagerStaticData.get_profiles_dir())
@@ -1219,7 +1220,7 @@ class ConfigurationFileHandler(object):
 
     def get_user_confdir(self):
         """Get the user config dir using the XDG specification.
-        
+
         :todo: Is method `ConfigManagerStaticData.get_superuser_confdir()` still relevant?
         """
         if self.__super_user:
@@ -1241,13 +1242,13 @@ class ConfigurationFileHandler(object):
     def get_user_tempdir(self):
         """Returns the user's temporary directory. Currently always
         the directory `/tmp` is used.
-        
+
         :return: full path to the SBackup tempdir
-        
+
         :todo: Review the use of '/tmp' as tempdir as solution for several\
                different distributions?
         :todo: Put the definition of used paths into `ConfigManagerStaticData`!
-               
+
         """
         if self.__super_user:
             tempdir = os.path.join("/tmp", "sbackup/")
@@ -1260,11 +1261,11 @@ class ConfigurationFileHandler(object):
         #LP #785495: make the temp directory RWX only by owner
         if (os.stat(tempdir).st_mode & 0777) != 0700:
             os.chmod(tempdir,0700)
-            
+
         return tempdir
 
     def get_profilename(self, conffile):
-        # find the profile 
+        # find the profile
         cfile = os.path.basename(conffile)
 
         if cfile == ConfigManagerStaticData.get_default_conffile():
@@ -1281,13 +1282,13 @@ class ConfigurationFileHandler(object):
 
 class ConfigManagerStaticData(object):
     """Any static data related to configurations are stored here.
-    
+
     @todo: Refactor this class into a class containing a default
             configuration, one containing name definitions, and one
             containing path and file names.
-            
+
     :todo: Simplify and use properties!
-    
+
     """
     __cronheader = "SHELL=/bin/bash \n"\
         "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
@@ -1389,7 +1390,7 @@ class ConfigManagerStaticData(object):
 
     @classmethod
     def get_default_logfile(cls):
-        """Returns the name of the logfile for the default profile.        
+        """Returns the name of the logfile for the default profile.
         """
         logfname = "%s.%s" % (cls.__logfile_basename,
                               cls.__logfile_ext)
@@ -1405,7 +1406,7 @@ class ConfigManagerStaticData(object):
     @classmethod
     def get_profile_logfile(cls, profilename):
         """Returns the name of the logfile for a certain profile
-        named `profilename`.        
+        named `profilename`.
         """
         logfname = "%s-%s.%s" % (cls.__logfile_basename,
                                  profilename,
@@ -1415,14 +1416,14 @@ class ConfigManagerStaticData(object):
     @classmethod
     def get_profiles_dir(cls):
         """Returns the name (only basename, no path) of the directory where
-        profile configurations are stored.        
+        profile configurations are stored.
         """
         return cls.__profiles_dir
 
     @classmethod
     def get_profiles_dir_nssbackup(cls):
         """Returns the name (only basename, no path) of the directory where
-        profile configurations are stored.        
+        profile configurations are stored.
         """
         return cls.__profiles_dir_nssbackup
 
@@ -1480,7 +1481,7 @@ class Configuration(object):
     (i.e. Boolean values get the value True/False, not '0/1' or 'yes/no').
     The transformation of the actual configuration values to data that is
     written to disk is done in the ConfigManager.
-    
+
     @note: This is an early attempt to refactor the configuration thing:
             * there are objects that represent the actual profile settings
             * there are certain global preferences that are valid for
@@ -1575,12 +1576,12 @@ class _DefaultConfiguration(Configuration):
     """Abstract base class for a default configuration. A default
     configuration is basically a configuration however the settings
     are predefined (and read-only in the best case).
-    
+
     @todo: Change this: the default configuration should not be a derived
             class rather an instance of a regular configuration which gets
             its content from a default config file (in share). Doing so,
             would be more flexible? What is with /home/$username?
-    
+
     """
 
     def __init__(self):
@@ -1611,12 +1612,12 @@ class _DefaultConfigurationForAdmins(_DefaultConfiguration):
     """Derived default configuration that specializes it for
     privileged users. Only settings that are unique for
     admins are defined here.
-    
+
     @todo: Change this: the default configuration should not be a derived
             class rather an instance of a regular configuration which gets
             its content from a default config file (in share). Doing so,
             would be more flexible? What is with /home/$username?
-    
+
     """
 
     def __init__(self):
@@ -1644,12 +1645,12 @@ class _DefaultConfigurationForUsers(_DefaultConfiguration):
     """Derived default configuration that specializes it for
     normal users. Only settings that are unique for normal users
     are defined here.
-    
+
     @todo: Change this: the default configuration should not be a derived
             class rather an instance of a regular configuration which gets
             its content from a default config file (in share). Doing so,
             would be more flexible? What is with /home/$username?
-    
+
     """
 
     def __init__(self):

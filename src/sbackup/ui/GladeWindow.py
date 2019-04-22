@@ -1,5 +1,6 @@
 #   Simple Backup - Base class for Gnome applications
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -66,7 +67,7 @@ class GladeWindow(object):
            will be created that maps these name to the actual widget object
         pull_down_dict: a dictionary that maps combo names to a tuple of
             strings to put in the combo
-            
+
         @todo: JPL: I don't want to change too much in this release but for\
                later releases: Create the XML external and give it to the\
                widget classes to avoid multiple instantiations!
@@ -177,7 +178,7 @@ class GladeWindow(object):
     def _show_message(self, msgtype, message_str, boxtitle = "",
                             headline_str = "", secmsg_str = ""):
         """Shows message box using markup.
-        
+
         @attention: gtk.MessageDialog is not fully thread-safe so it is
                     put in a critical section, here!
         """
@@ -225,13 +226,13 @@ class ProgressbarMixin(object):
         given as parameter. If the optional parameter 'hide_when_stopped' is
         set, the progressbar is only showed if it is active and will be
         hidden afterwards.
-        
+
         @param progressbar: a progressbar object
         @type progressbar: GtkProgressBar
         @param hide_when_stopped: if true, the progressbar is hidden when
                                   not active
         @type hide_when_stopped: Boolean
-        
+
         @return: None
         """
         self._progressbar = progressbar
@@ -251,7 +252,7 @@ class ProgressbarMixin(object):
     def _start_pulse(self):
         """Calling this method shows up the progressbar and starts
         the pulsing.
-        
+
         @return: None
         """
         if self.__pulsetimer_id is not None:
@@ -265,7 +266,7 @@ class ProgressbarMixin(object):
 
     def _stop_pulse(self):
         """Calling this method stops the progressbar.
-        
+
         @return: False
         @rtype:  Boolean
         """
@@ -280,9 +281,9 @@ class ProgressbarMixin(object):
 
     def __pulse(self):
         """Private helper method that actually performs the pulsing.
-        
+
         @return: True
-        @rtype:  Boolean        
+        @rtype:  Boolean
         """
         self._progressbar.pulse()
         return True

@@ -2,6 +2,7 @@
 
 #   Simple Backup - post-installation script for upgrading Simple Backup
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -57,14 +58,14 @@ GENERAL_ERROR = 9
 class _Config(ConfigParser.ConfigParser):
     """A customized ConfigParser for reading and writing of SBackup
     configuration files.
-    
+
     """
     def __init__(self, configfile):
         """Default constructor. Reads the given file into this
         parser.
-        
+
         :param configfile: Full path to the current configuration file
-        
+
         """
         ConfigParser.ConfigParser.__init__(self)
         self._configfile = configfile
@@ -78,15 +79,15 @@ class _Config(ConfigParser.ConfigParser):
 
     def optionxform(self, option):
         """
-        Default behaviour of ConfigParser is to set the option keys to lowercase. 
-        by overiding this method, we make it case sensitive. that's really important for dirconfig pathes 
+        Default behaviour of ConfigParser is to set the option keys to lowercase.
+        by overiding this method, we make it case sensitive. that's really important for dirconfig pathes
         """
         return str(option)
 
     def commit_to_disk(self):
         """Writes the current configuration set to the disk. The
         configuration file given to the constructor is used.
-        
+
         """
         try:
             fobj = file(self._configfile, "wb")
@@ -99,13 +100,13 @@ class _Config(ConfigParser.ConfigParser):
 
 class _Settings(object):
     """Class containing constants for upgrading the log option.
-    
+
     These constants cover
     - `__logindefs`: path to file ``login.defs``
     - `__uidmin_name`: name of entry for minimal uid
     - `__uidmax_name`: name of entry for maximal uid
-    
-    The constants are accessable using the defined classmethods.         
+
+    The constants are accessable using the defined classmethods.
     """
     __logindefs = "/etc/login.defs"
     __uidmin_name = "UID_MIN"
@@ -116,19 +117,19 @@ class _Settings(object):
 
     @classmethod
     def get_logindefs_path(cls):
-        """Returns the path to the file `login.defs`.            
+        """Returns the path to the file `login.defs`.
         """
         return cls.__logindefs
 
     @classmethod
     def get_uidmin_name(cls):
-        """Returns the name of the entry for minimal uid.            
+        """Returns the name of the entry for minimal uid.
         """
         return cls.__uidmin_name
 
     @classmethod
     def get_uidmax_name(cls):
-        """Returns the name of the entry for maximal uid.            
+        """Returns the name of the entry for maximal uid.
         """
         return cls.__uidmax_name
 
@@ -140,11 +141,11 @@ class _UpgradeAllConffiles(object):
     0.2.0-RC3 this has changed. From now the log file for the default
     profile is named `sbackup.log` and log files for any other
     profiles are named `sbackup-profilename.log`. This was
-    neccessary due to problems with identical names of log files.    
+    neccessary due to problems with identical names of log files.
     """
 
     def __init__(self):
-        """Constructor of the log option upgrader.        
+        """Constructor of the log option upgrader.
         """
         self._min_uid = 1000       # fallback values
         self._max_uid = 60000
@@ -169,7 +170,7 @@ class _UpgradeAllConffiles(object):
 
     def _read_logindefs(self):
         """Reads the lower and upper limit for user ids from
-        the `login.defs` file.        
+        the `login.defs` file.
         """
         defspath = _Settings.get_logindefs_path()
         if os.path.isfile(defspath) and os.access(defspath, os.F_OK and os.R_OK):
@@ -201,8 +202,8 @@ class _UpgradeAllConffiles(object):
     def _retrieve_users(self):
         """Retrieves all users from the password database that are
         apparently not system services (using the `uid_min` and
-        `uid_max` for this). 
-        
+        `uid_max` for this).
+
         """
         self._users = []
         allpw = pwd.getpwall()
@@ -218,13 +219,13 @@ class _UpgradeAllConffiles(object):
         """Creates a list containing all basic configuration directories
         of the previously retrieved users. This includes in any case the
         default configuration directory `/etc`.
-        
+
         :note: It is assumed that user configurations are stored in a\
                directory like `~/.config/sbackup`.
-        
+
         :todo: Implement a better way for retrieval of user's confdirs e.g.\
                by reading the users environ!
-               
+
         """
         self._configdirs = []
         # for the superuser
@@ -268,7 +269,7 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
 
     def _copy_other_profiles(self):
         """Modifies the configuration files for the other profiles.
-        
+
         """
         for cdir in self._configdirs:
             pdir = os.path.join(cdir, ConfigManager.ConfigManagerStaticData.get_profiles_dir())
@@ -290,13 +291,13 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
 
     def _copy_configfile(self, src, dst):
         """This method modifies a single configuration file, i.e.
-        
+
         * it reads the existing value from the file
         * retrieves the new value under consideration of the profile name
         * writes the new value to the configuration file.
-        
+
         Files that are not readable/writable are skipped.
-        
+
         """
         if os.path.isfile(src) and\
            os.access(src, os.F_OK and os.R_OK):
@@ -319,15 +320,15 @@ class CopyConf_nssbackup_to_sbackup_011(_UpgradeAllConffiles):
     def do_upgrade(self):
         """Public method that actually processes the upgrade
         consisting of the following steps:
-        
+
         1. Reading the login defaults for determination of non-system users
         2. Retrieve all users on the system
         3. Make a list of all configuration directories for these users
         4. modify the default profile configuration file
         5. modify the configuration files for any other profiles.
-        
+
         An appropriate error code is returned.
-        
+
         """
         self._read_logindefs()
         self._retrieve_users()
@@ -345,17 +346,17 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
     0.2.0-RC3 this has changed. From now the log file for the default
     profile is named `sbackup.log` and log files for any other
     profiles are named `sbackup-profilename.log`. This was
-    neccessary due to problems with identical names of log files.    
+    neccessary due to problems with identical names of log files.
     """
 
     def __init__(self):
-        """Constructor of the log option upgrader.        
+        """Constructor of the log option upgrader.
         """
         _UpgradeAllConffiles.__init__(self)
 
     def _modify_default_profile(self):
         """Modifies the configuration file for the default profile.
-        
+
         """
         for cdir in self._configdirs:
             cfile = os.path.join(cdir,
@@ -364,7 +365,7 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
 
     def _modify_other_profiles(self):
         """Modifies the configuration files for the other profiles.
-        
+
         """
         for cdir in self._configdirs:
             pdir = os.path.join(cdir,
@@ -380,13 +381,13 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
 
     def _modify_configfile(self, conffile):
         """This method modifies a single configuration file, i.e.
-        
+
         * it reads the existing value from the file
         * retrieves the new value under consideration of the profile name
         * writes the new value to the configuration file.
-        
+
         Files that are not readable/writable are skipped.
-        
+
         """
         if os.path.isfile(conffile) and\
            os.access(conffile, os.F_OK and os.R_OK and os.W_OK):
@@ -435,15 +436,15 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
     def do_upgrade(self):
         """Public method that actually processes the upgrade
         consisting of the following steps:
-        
+
         1. Reading the login defaults for determination of non-system users
         2. Retrieve all users on the system
         3. Make a list of all configuration directories for these users
         4. modify the default profile configuration file
         5. modify the configuration files for any other profiles.
-        
+
         An appropriate error code is returned.
-        
+
         """
         try:
             self._read_logindefs()
@@ -460,7 +461,7 @@ class UpgradeConfAllProfiles(_UpgradeAllConffiles):
 class CronSetter(object):
     """Reads schedule info from superuser's
     default profile and write according cron entries.
-    
+
     Purpose is to re-create cron entries after package upgrades
     (i.e. when configurations already exist).
     """
@@ -493,7 +494,7 @@ class CronSetter(object):
 class UpgradeSBackupConf_v010_011(object):
     """Reads schedule info from superuser's
     default profile and write according cron entries.
-    
+
     Purpose is to re-create cron entries after package upgrades
     (i.e. when configurations already exist).
     """
@@ -592,12 +593,12 @@ class UpgradeSBackupConf_v010_011(object):
 class UpgradeApplication(object):
     """The upgrade application class that instantiates several upgrade
     action classes and processes them. Due to this design one can simply
-    add and execute further upgrade actions. 
-    
+    add and execute further upgrade actions.
+
     """
     def __init__(self):
         """Default constructor. Creates an `UpgradeLogOption` object.
-        
+
         """
         self.__upgrader_v010 = UpgradeSBackupConf_v010_011()
         self.__upgrader_v011 = UpgradeConfAllProfiles()
@@ -606,8 +607,8 @@ class UpgradeApplication(object):
 
     def main(self):
         """Main method that actually does the upgrade process. It returns
-        an appropriate error code. 
-        
+        an appropriate error code.
+
         """
         print "-" * 60
         print "%s %s upgrade tool" % (Infos.NAME, Infos.VERSION)

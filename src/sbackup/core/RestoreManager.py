@@ -1,5 +1,6 @@
 #   Simple Backup - handling of restoration processes
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -47,8 +48,8 @@ class RestoreManager(object):
         Restore one file or directory from the backup tdir with name
         file to its old location.
         All existing files must be moved to a "*.before_restore_$time" files.
-        @param snapshot: 
-        @param file : 
+        @param snapshot:
+        @param file :
         """
         self.restoreAs(snapshot, _file, None)
 
@@ -58,11 +59,11 @@ class RestoreManager(object):
         file to target (or to its old location if None if given to target).
         All existing files must be moved to a "*.before_restore_$time" files.
         @param snapshot:
-        @param file :  
+        @param file :
         @param target: where to restore given file/dir (not the backup destination/snapshot dir)
         @param backupFlag: Set to false to make no backup when restoring (default = True)
         @param failOnNotFound: set to False if we don't want to fail if a file is not found (default is True)
-        
+
         :todo: Re-factor and simplify!
         """
         if snapshot is None:
@@ -143,7 +144,7 @@ class RestoreManager(object):
     def revert(self, snapshot, directory):
         """
         Revert a directory to its snapshot date state.
-        @param snapshot : The snapshot from which to revert 
+        @param snapshot : The snapshot from which to revert
         @param dir : the dir to revert, use self._fop.pathsep for the whole snapshot
         """
         self.revertAs(snapshot, directory, None)
@@ -162,9 +163,9 @@ class RestoreManager(object):
         """
         Revert a directory to its snapshot date state into a directory.
         We will restore the directory starting from the base snapshot to the selected one and clean the restore directory each time.
-        @param snapshot : The snapshot from which to revert 
+        @param snapshot : The snapshot from which to revert
         @param dir : the dir to revert, use self._fop.pathsep for the whole snapshot
-        @param targetdir: The dir in which to restore files 
+        @param targetdir: The dir in which to restore files
         """
         if not snapshot:
             raise exceptions.SBException("Please provide a Snapshot")

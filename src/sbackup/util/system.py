@@ -1,5 +1,6 @@
 #   Simple Backup - Operation System related utilities
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -51,7 +52,7 @@ DEFAULT_PATH = "/usr/bin:/usr/local/bin:/bin"
 
 
 CLEAN_ENVIRONMENT = {
-# default Gnome environment 
+# default Gnome environment
     "_" : "",
     "COLORTERM" : "",
     "DBUS_SESSION_BUS_ADDRESS" : "",
@@ -233,7 +234,7 @@ def set_default_environment():
     values if not defined. This can happen e.g. some root shells where
     no environment variable for the freedesktop.org base directories
     are defined.
-    
+
     """
     _vars = { ENVVAR_XDG_DATA_DIRS : DEFAULT_XDG_DATA_DIRS,
              ENVVAR_PATH : DEFAULT_PATH
@@ -359,7 +360,7 @@ def _set_envvar_from_session(key):
 def get_session_environment():
     #FIXME: support Unity, Mate, Cinnamon
     _sessionnames = ("x-session-manager", "gnome-session", "gnome-shell",
-                     "ksmserver", "xfce4-session", "gdm-x-session", 
+                     "ksmserver", "xfce4-session", "gdm-x-session",
                      "gdm-wayland-session", "gnome-session-binary")
     mod_env = None
     for _name in _sessionnames:
@@ -439,10 +440,10 @@ def grep_pid(processname, withuid=False):
     note for using pgrep: The process name used for matching is limited to
     the 15 characters present in the output of /proc/pid/stat. Use
     the -f option to match against the complete command line /proc/pid/cmdline.
-    
+
     therefore here a full RegEx is applied to complete command lines:
     pgreg -f "^(/(.+/)*)?processname($|\s+.+)
-    
+
     """
     _pid = None
     cmd = ["pgrep", "-f", "^(/(.+/)*)?%s($|\s+.+)" % processname]
@@ -501,7 +502,7 @@ def proc_exists(processname, env = None):
 
 def _readline_nullsep(fd):
     """
-    Iterator that read a NUL separeted file as lines 
+    Iterator that read a NUL separeted file as lines
     @param fd: File descriptor
     @return: the gotten line
     @rtype: String

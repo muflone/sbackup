@@ -1,5 +1,6 @@
 #   Simple Backup - general observer-notfifier implementation
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -55,9 +56,9 @@ class SBackupState(Subject):
     the backup process. Whenever interesting data changes
     one can change the state and it is published to registered
     observers.
-    
+
     :todo: Add type checking in setter methods!
-    
+
     """
     def __init__(self):
         Subject.__init__(self)
@@ -79,7 +80,7 @@ class SBackupState(Subject):
 
     def set_state(self, state):
         """Observers are only notified, if the state has changed.
-        
+
         """
         self.__state = state
         self.notify()
@@ -90,12 +91,12 @@ class SBackupState(Subject):
     def set_urgency(self, urgency):
         """The urgency is used to distinguish several types of events.
         There are following urgencies:
-        
+
         -critical
         -error
         -warning
         -info.
-        
+
         """
         self.__urgency = urgency
 

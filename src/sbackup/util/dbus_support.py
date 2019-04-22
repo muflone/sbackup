@@ -1,5 +1,6 @@
 #   Simple Backup - support of DBus functionality
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -51,13 +52,13 @@ KWARG_DBUS_INTERFACE = "dbus_interface"
 
 class _DBusConnection(object):
     """Abstract base class that provides functionality for sending signals
-    and calling methods over the dbus.    
+    and calling methods over the dbus.
     """
     def __init__(self, name):
         """Default constructor.
-        
+
         :param logger: Instance of logger to be used.
-        
+
         """
         self._logger = log.LogFactory.getLogger()
 #TODO: maybe it is better to retrieve the logger on demand?
@@ -134,8 +135,8 @@ class _DBusConnection(object):
     def connect(self, silent = True):
         """Connects passively to DBus service and registers this connection at the service.
         The service id is stored for later checks of the validity of the connection.
-        
-        Remote objects are set to None in case of failure. 
+
+        Remote objects are set to None in case of failure.
         """
         self.test_validity()
         if self._connected is True:
@@ -237,20 +238,20 @@ class _DBusConnection(object):
 class DBusProviderFacade(_DBusConnection):
     """This class provides functionality for sending signals
     and calling methods over the dbus.
-     
+
     The Dbus connection is only created on demand. In the case the user
     don't want to use it, no connection is created.
-    
+
     The Provider is the only class that is able to send an Exit signal over the
-    dbus. 
-    
+    dbus.
+
     :todo: Singleton!
     """
     __metaclass__ = structs.Singleton
 
     def __init__(self, name):
         """Default constructor.
-        
+
         """
         _DBusConnection.__init__(self, name)
 
@@ -266,7 +267,7 @@ class DBusProviderFacade(_DBusConnection):
 
     def ensure_connectivity(self):
         """Tests whether a connection is established and if not tries to connect.
-        If necessary, the service is being launched.  
+        If necessary, the service is being launched.
         """
         self.test_validity()
         if self.get_is_connected() is False:
@@ -282,7 +283,7 @@ class DBusProviderFacade(_DBusConnection):
     def connect(self, silent = False):
         """Connects actively to DBus service and registers this connection at the service.
         If necessary, the service is being launched. The service id is stored for later
-        checks of the validity of the connection.        
+        checks of the validity of the connection.
         """
         if dbus_service.is_running() is False:
             self._launch_dbusservice()
@@ -308,7 +309,7 @@ class DBusProviderFacade(_DBusConnection):
     def emit_event_signal(self, event, urgency):
         """Used for sending a generic event over the signal dbus.
         This includes informations and warnings.
-        
+
         :param event: the actually processed event
         :param urgency: how urgent the message is
         """
@@ -323,10 +324,10 @@ class DBusProviderFacade(_DBusConnection):
 
     def emit_error_signal(self, error):
         """Used for sending an error signal over the signal dbus.
-        
+
         :param profile: name of the current profile
         :param error: error message to be passed
-        
+
         """
         if not isinstance(error, types.StringTypes):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(error)))
@@ -377,9 +378,9 @@ class DBusProviderFacade(_DBusConnection):
     def get_retry_target_check(self):
         """This method is an exception from intended strict separation of setter/getter
         methods into Provider/Client objects.
-        
+
         Keep this method passive!
-        
+
         :todo: Improve design of dbus service related code.
         """
         retval = constants.RETRY_UNKNOWN
@@ -404,15 +405,15 @@ class DBusProviderFacade(_DBusConnection):
 class DBusClientFacade(_DBusConnection):
     """This class provides functionality for sending signals
     and calling methods over the dbus.
-    
+
     The sender needs a dbus connection.
-    
+
     The Dbus connection is only created on demand. In the case the user
     don't want to use it, no connection is created.
-    
+
     """
     def __init__(self, name):
-        """Default constructor.        
+        """Default constructor.
         """
         _DBusConnection.__init__(self, name)
 
@@ -536,7 +537,7 @@ class DBusClientFacade(_DBusConnection):
 class DBusNotifier(notifier.Observer):
     """Sends notifications as signals over the DBus.
     It uses an instance of DBusConnection for signaling.
-    
+
     """
     def __init__(self):
         notifier.Observer.__init__(self)
@@ -571,7 +572,7 @@ class DBusNotifier(notifier.Observer):
         """Interface method for observer objects that is called by the
         observed subject. In the case of the `DBusNotifier` were
         notifications send over the bus.
-         
+
         """
         self.__logger.debug("Observer update")
         self.__state = subject.get_state()
@@ -587,11 +588,11 @@ class DBusNotifier(notifier.Observer):
         """Private helper method that actually tries to notify over
         the DBus about several events. This method decides what
         signals are send over the bus.
-        
+
         :return: the value returned by the signal (usually True)
-        
+
         :todo: Remove urgency!
-        
+
         """
         state = self.__state
         urgency = self.__urgency

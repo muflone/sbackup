@@ -1,5 +1,6 @@
 #   Simple Backup - snapshot definition
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -53,7 +54,7 @@ AVAIL_SNP_FORMATS = ["none", "bzip2", "gzip"]
 
 class Snapshot(object):
     """The snapshot class represents one snapshot in the backup directory.
-    
+
     """
 
     __validname_re = re.compile(r"^(\d{4})-(\d{2})-(\d{2})_(\d{2})[\:\.](\d{2})[\:\.](\d{2})\.\d+\..*?\.(.+)$")
@@ -61,16 +62,16 @@ class Snapshot(object):
 
     def __init__ (self, path):
         """The snapshot constructor.
-        
+
         :param path : the path to the snapshot dir.
-        
+
         :todo: Any distinction between creation of a new snapshot and opening\
                an existing one from disk would be useful! The reason is that\
                instantiation a Snapshot with a not existing path creates a\
                snapshot directory in any case, currently! We need to handle the\
                case: opening an snapshot that is supposed to exist but in fact\
                doesn't!
-               
+
         :todo: Separate commit of snapshot and the snapshot (name, path, ...) itself into
                classes with concise responsibilities.
 
@@ -113,7 +114,7 @@ class Snapshot(object):
             self._fop.makedir(self.__snapshotpath)
             #LP #785512: make the snapshot directory RWX only by owner
             self._fop.chmod_no_rwx_grp_oth(self.__snapshotpath)
-    
+
     def __str__(self):
         "Return the snapshot name"
         return self.getName()
@@ -255,7 +256,7 @@ class Snapshot(object):
         was successful read from the snapshot directory once, this name is
         returned on any further calls to this method. If you don't want this
         you need to reset `self.__base` to None before.
-        
+
         """
         if not self.__base:
             basefile = self._fop.joinpath(self.__snapshotpath, "base")
@@ -272,7 +273,7 @@ class Snapshot(object):
     def getBaseSnapshot(self):
         """
         Return the base snapshot (as a Snapshot ) not only the name
-        @return: the base Snapshot if it exists or None otherwise (we are a full snapshot) 
+        @return: the base Snapshot if it exists or None otherwise (we are a full snapshot)
         """
         if self.__baseSnapshot is None:
             if not self.isfull():
@@ -334,9 +335,9 @@ class Snapshot(object):
                 ver = self._fop.readfile(verfile)
 #                self.logger.debug("Version read from snapshot: `%s`" % ver)
                 try :
-                    # major = 
+                    # major =
                     int(ver[0])
-                    # minor = 
+                    # minor =
                     int(ver[2])
                 except Exception:
                     raise SBException(_("%(file)s doesn't contain valid value. Ignoring incomplete or non - backup directory. ") % {"file" : verfile})
@@ -411,12 +412,12 @@ class Snapshot(object):
 
     def commit(self, targethandler, publish_progress = False, supports_publish = True):
         """Commit snapshot data (i.e. write to disk)
-        
+
         :param publish_progress: Flag whether to call checkpoint script
         :param use_io_pipe: Flag whether to use pipes instead of files defined as parameters for archive
                             writing (should be hidden in FAM)
-        
-        :todo: Hide implementation detail `use_io_pipe`. 
+
+        :todo: Hide implementation detail `use_io_pipe`.
         """
         if not self.isfull():
             self.commitbasefile()
@@ -455,12 +456,12 @@ class Snapshot(object):
         exclude).
 
         In theory it is impossible but what's in the case of manually written configuration files?
-        
+
         @todo: Implement this method.
         """
         pass
 
-    # Setters    
+    # Setters
     def setFormat(self, cformat = None):
         """
         Sets the backup compression format
@@ -486,7 +487,7 @@ class Snapshot(object):
         raises a `SBException`. The `baseName` is checked for validity.
         Note that the base of the snapshot is not committed to disk
         if it is set using this method. Call `commitbasefile` for this.
-        
+
         """
         if self.isfull():
             self.__base = None
@@ -509,14 +510,14 @@ class Snapshot(object):
     def setPackages(self, packages = "") :
         """
         set the packages list for debian based distros
-        @param packages: Must be the results of the 'dpkg - -get - selections' command . default = '' 
+        @param packages: Must be the results of the 'dpkg - -get - selections' command . default = ''
         """
         self.__packages = packages
 
     def setSplitedSize(self, size):
         """
         @param size: The size in KiB to set
-        
+
         """
         if type(size) != int:
             raise TypeError("The size parameter must be an integer")
@@ -524,7 +525,7 @@ class Snapshot(object):
 
     def setFollowLinks(self, activate):
         """
-        @param activate: boolean to activate symlinks follow up 
+        @param activate: boolean to activate symlinks follow up
         """
         if type(activate) != bool :
             raise TypeError("the activate parameter must be a boolean")
@@ -535,7 +536,7 @@ class Snapshot(object):
         """
         Validate the snapshot
         @param path : the snapshot path
-        @param name : the snapshot name 
+        @param name : the snapshot name
         """
         # validate the name
         if not self.__isValidName(self.__name) :
@@ -577,7 +578,7 @@ class Snapshot(object):
         """In case this snapshot is an incremental snapshot, base file is
         committed to the disk. If not, this method shouldn't be called.
         The absence of a base for an incremental backup raises a SBException.
-        
+
         """
         if self.isfull():
             self.logger.debug("WARNING: Attempt of committing base file for "\
@@ -593,7 +594,7 @@ class Snapshot(object):
     def commitexcludefile(self):
         """
         Commit exclude file on the disk (the list of Regex excludes).
-        @raise SBException: if excludes hasn't been set 
+        @raise SBException: if excludes hasn't been set
         """
         _exf = self._fop.joinpath(self.getPath(), "excludes")
         self._fop.pickledump(self.__excludes, _exf)

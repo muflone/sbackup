@@ -81,7 +81,7 @@ case "$1" in
     binary-from-orig)
         echo "Builds binary packages."
     ;;
-    
+
     print-paths)
         echo "Outputs paths being used and exits."
     ;;
@@ -248,19 +248,19 @@ rm -rf "$exportdestdir/tools"
 case "$1" in
     tarball)
         echo; echo "creating tarball"
-        
+
         tar -czf $TARNAME $REL_DESTAPPDIR
         mv -f $TARNAME $TARBALLDIR
         echo "Release tarball '$TARNAME' created in '$TARBALLDIR'"
         echo; echo "cleaning of destination directory $destdir"
         rm -rf $destdir
         cd $TARBALLDIR
-		#FIXME: replace md5 with sha256
+        #FIXME: replace md5 with sha256
         md5sum "$TARNAME" > "$TARNAME.md5"
         md5sum -c "$TARNAME.md5"
-        
 
-		cp "$TARNAME" "$ORIGTARNAME"
+
+        cp "$TARNAME" "$ORIGTARNAME"
         md5sum "$ORIGTARNAME" > "$ORIGTARNAME.md5"
         md5sum -c "$ORIGTARNAME.md5"
         gpg --armor --sign --detach-sig $ORIGTARNAME
@@ -269,7 +269,7 @@ case "$1" in
 
     snapshot)
         echo; echo "creating snapshot tarball"
-        
+
         tar -czf $TARNAME $REL_DESTAPPDIR
         mv -f $TARNAME $TARBALLDIR
         echo "Snapshot tarball '$TARNAME' created in '$TARBALLDIR'"
@@ -279,7 +279,7 @@ case "$1" in
 
 
     source-with-orig)
-		#TODO: test this chunk of code
+        #TODO: test this chunk of code
         echo; echo "building source package"
         if test "$version_pack" = ""; then
             echo "Version not found in changelog: $version_pack"; exit 1; fi
@@ -297,7 +297,7 @@ case "$1" in
     ;;
 
     update)
-		#TODO: test this chunk of code
+        #TODO: test this chunk of code
         echo; echo "updating source package"
         if test "$version_pack" = ""; then
             echo "Version not found in changelog: $version_pack"; exit 1; fi
@@ -314,7 +314,7 @@ case "$1" in
 
         debuild -S -sd --lintian-opts --color always
     ;;
-    
+
 
     publish)
         if [ $? -eq 0 ]; then
@@ -331,11 +331,11 @@ case "$1" in
         echo; echo "building binary packages from orig-tar"
         ls -lah
         echo "Removing destination folder "$exportdestdir
-  	    rm -rf $exportdestdir
+        rm -rf $exportdestdir
 
         if [ ! -f $TARBALLDIR/$ORIGTARNAME ]
-        then            
-	        echo "ERROR: orig-tarball ($TARBALLDIR/$ORIGTARNAME) not found. Please run 'release.sh tarball' first."
+        then
+            echo "ERROR: orig-tarball ($TARBALLDIR/$ORIGTARNAME) not found. Please run 'release.sh tarball' first."
             exit 1
         fi
         ls -lah
@@ -346,20 +346,20 @@ case "$1" in
         ls -lah
         mv sbackup-* $exportdestdir
         ls -lah
-        
+
         cd $exportdestdir
         echo; echo "Working directory changed to "$PWD
         ls -lah
         ls -lah ..
 
-    	if [ "$2" == "--no-signing" ]; then
-    	    DEBUILD_OPTS="-us -uc"; fi
-    	DEBUILD_CMD="debuild $DEBUILD_OPTS --lintian-opts --color always"
-    	echo "Running: "$DEBUILD_CMD
-    	$DEBUILD_CMD
+        if [ "$2" == "--no-signing" ]; then
+            DEBUILD_OPTS="-us -uc"; fi
+        DEBUILD_CMD="debuild $DEBUILD_OPTS --lintian-opts --color always"
+        echo "Running: "$DEBUILD_CMD
+        $DEBUILD_CMD
 
     ;;
-    
+
     *)
         echo; echo "called with unknown or missing argument: $1" >&2
         echo "Please use 'tarball', 'binary', or 'source' as parameter."

@@ -1,5 +1,6 @@
 #   Simple Backup - definition of custom exceptions
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -47,7 +48,7 @@ class SigTerminatedError(Exception) :
 
 class SBException(Exception):
     """This class will help us distinguish Exception that we must
-    handle (exceptions created by ourself) and exceptions due to 
+    handle (exceptions created by ourself) and exceptions due to
     programming errors (Python Exceptions).
     """
 
@@ -73,7 +74,7 @@ class BackupCanceledError(SBException) :
     """This Exception is thrown if the backup process is canceled from
     the indicator gui.
     """
-    
+
 class HookedScriptError(SBException) :
     """This Exception is thrown if a script run pre/post backup returns
     exitcodes != 0.
@@ -86,13 +87,13 @@ class NotValidSnapshotException(SBException) :
 
 class NotValidSnapshotNameException(NotValidSnapshotException):
     """Exception launched when the name of a snapshot is not valid
-    
+
     """
 
 
 class NotValidSectionException(SBException) :
     """This Exception is thrown by Config Section validation.
-    
+
     """
 
 class NonValidOptionException(SBException):
@@ -116,7 +117,7 @@ class RemoveSnapshotHasChildsError(SBackupError):
 class CopyFileAttributesError(SBException):
     """Thrown when a destination does not support file modes (e.g. some
     ftp servers or FAT filesystems).
-    
+
     """
 
 class NotSupportedError(Exception):

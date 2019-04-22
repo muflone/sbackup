@@ -1,5 +1,6 @@
 #   Simple Backup - Basic data structures
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -37,13 +38,13 @@ class Singleton(type):
 
 class SBdict(dict) :
     """
-    This is a structure used by sbackup to store flist and fprops . 
+    This is a structure used by sbackup to store flist and fprops .
     The structure is in fact a tree meant to :
     - ease the retrieval of the content of a folder
     - to optimise the use of memory to store the flist file by avoiding to store identical subpath.
-    
+
     The flist file has this contents :
-    
+
     /home
     /home/wattazoum
     /home/wattazoum/Desktop
@@ -53,37 +54,37 @@ class SBdict(dict) :
     /home/wattazoum/Desktop/sbackup-test/d17/d3/f4.txt
     /home/wattazoum/Desktop/sbackup-test/d17/d2
     /home/user/Desktop/sbackup-test/d17/d3/f4.txt
-    
+
     The goal of SBdict is to store the data this way
-    
+
     /home    ->wattazoum    ->Desktop    ->sbackup-test    ->d17    ->d3    ->f4.txt
                                                             ->d2
             ->user        ->Desktop    ->sbackup-test    ->d17    ->d3    ->f4.txt
-    
+
     We use for that this node :
     { 'file' : [ 'props', sonNode ] }
-    
-    Example : 
-    
+
+    Example :
+
     { 'home' : [ 'props', {
-         'wattazoum' : [ 'props', { 
-             'Desktop' : [ 'props', { 
-                 'sbackup-test' : [ 'props', { 
-                     'd17' : [ 'props', { 
-                         'd3' : [ 'props', { 
-                             'f4.txt' : [ 'props', None ] } ] ,
-                         'd2' : [ 'props', None ] } ] } ] } ] } ] , 
-         'user' : [ 'props', { 
+         'wattazoum' : [ 'props', {
              'Desktop' : [ 'props', {
-                 'sbackup-test' : [ 'props', { 
-                     'd17' : [ 'props', { 
-                         'd3' : [ 'props', { 
-                             'f4.txt' : [ 'props', None ] } ] } ] } ] } ] } ] 
-         } ] } 
-    
+                 'sbackup-test' : [ 'props', {
+                     'd17' : [ 'props', {
+                         'd3' : [ 'props', {
+                             'f4.txt' : [ 'props', None ] } ] ,
+                         'd2' : [ 'props', None ] } ] } ] } ] } ] ,
+         'user' : [ 'props', {
+             'Desktop' : [ 'props', {
+                 'sbackup-test' : [ 'props', {
+                     'd17' : [ 'props', {
+                         'd3' : [ 'props', {
+                             'f4.txt' : [ 'props', None ] } ] } ] } ] } ] } ]
+         } ] }
+
     We can save the memory for all subpathes but then, we might have a lost of speed when
     doing some search (comparing to putting the whole file in a Dictionary).
-    
+
     @note: And yes, this penalty in speed is notable!
            We should replace it or at least provide a faster alternative.
     """
@@ -117,10 +118,10 @@ class SBdict(dict) :
 
     def setSon(self, path, son):
         """
-        Set the son of a path 
+        Set the son of a path
         (/!\ the props of the path will be set to None if the key didn't exist )
         @param path: the path to set the son on
-        @param son: the son as a SBdict  
+        @param son: the son as a SBdict
         """
         if son != None and type(son) != SBdict :
             raise CorruptedSBdictException("You can't set '%s' as a son " % str(son))
@@ -153,9 +154,9 @@ class SBdict(dict) :
     def __setitem__(self, key, value) :
         """
         Add an item
-        @param key: a string 
+        @param key: a string
         @param value: Value must be None , a String or a 2 length list with None or an SBdict on the second member
-        @raise CorruptedSBdictException: 
+        @raise CorruptedSBdictException:
         """
         valIsSubtree = False
 
@@ -166,7 +167,7 @@ class SBdict(dict) :
         splited = key.split(os.sep, 1)
 
         if len(splited) == 1 or not splited[1] :
-            # we are at the end of a path 
+            # we are at the end of a path
             # we fallback to the normal behaviour
             if dict.has_key(self, splited[0]) :
                 # The key exists
@@ -187,7 +188,7 @@ class SBdict(dict) :
                     dict.__setitem__(self, splited[0], [value, None])
                 else :
                     dict.__setitem__(self, splited[0], value)
-        else : # path is composed , 
+        else : # path is composed ,
             # we check if the base dir exists and get the props infos
             if dict.has_key(self, splited[0]) :
                 item = dict.__getitem__(self, splited[0])
@@ -246,7 +247,7 @@ class SBdict(dict) :
 
     def iterkeys(self, _path = None) :
         """Returns an iterator that goes recursively through the full paths.
-        
+
         Should return fullpath (means what?)
         """
         if _path is None: # initialization
@@ -265,7 +266,7 @@ class SBdict(dict) :
     def iteritems(self, _path = None) :
         """Iterator that goes recursively through the whole dictionary and returns
         paths and their properties. Every sub-path is considered.
-        
+
         @return: (fullpath, props)
         """
         if _path is None: # initialization
@@ -322,7 +323,7 @@ class SBdict(dict) :
 
     def getEffectiveFileList(self, path = None):
         """Iterator that returns the effective files list. Effective means that all 'end-nodes' or
-        leafs of the tree are returned. Unlike method `iterkeys` are *not* all sub-paths returned.        
+        leafs of the tree are returned. Unlike method `iterkeys` are *not* all sub-paths returned.
         Paths are included in the effective list of files if their `props` are set (i.e. set to 0 or 1,
         not set to None) since this is not true for sub-paths. Moreover, paths can be 'disabled' (i.e.
         excluded from the effective list of files) by setting their `props` to None.
@@ -353,7 +354,7 @@ class SBdict(dict) :
 
     def contains_path(self, path):
         """Checks whether the given `path` is stored in this SBDict. Unlike `hasFile` this
-        will also match sub-directories. 
+        will also match sub-directories.
         """
         if self.has_key(path) :
             return True
@@ -362,7 +363,7 @@ class SBdict(dict) :
     def hasParentDirIncluded(self, path):
         """
         Checks for a path if we have an effective parent dir
-        @param path: The path to check 
+        @param path: The path to check
         @type path: like /d/d1/d2
         """
         if not path:

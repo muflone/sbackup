@@ -1,5 +1,6 @@
 #   Simple Backup - pathname manipulation on string basis
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -195,9 +196,9 @@ class UriParser(object):
         try:
             if splituri.port is not None:
                 self.__port = splituri.port
-        except ValueError:  
+        except ValueError:
             pass
-            
+
         if splituri.username is not None:
             self.__username = urllib.unquote(splituri.username)
 
@@ -316,7 +317,7 @@ def construct_remote_uri_from_tupel(scheme, hostname, port, path, username, pass
 #def _get_eff_uri_scheme(uri, uri_scheme):
 def _get_eff_uri_scheme(uri_scheme):
     """
-    :todo: can we construct the eff. scheme manually? aparently ssh is just hardlinked to sftp. 
+    :todo: can we construct the eff. scheme manually? aparently ssh is just hardlinked to sftp.
     """
 # following does not work as expected!
 #    _gfileobj = _GIOFILE(uri)
@@ -353,12 +354,12 @@ def append_time_to_filename(filename, filetype = ""):
 def append_str_to_filename(filename, str_to_append, filetype = ""):
     """If a file type (i.e. file extension) is specified, the string
     to append is put in front of the file type extension.
-    
+
     Example: string to append = 123
              filename = basename.log
-             result without specifying a filetype = basename.log.123 
-             result with specifying filetype '.log' = basename.123.log 
-             
+             result without specifying a filetype = basename.log.123
+             result with specifying filetype '.log' = basename.123.log
+
     """
     if not isinstance(filename, types.StringTypes):
         raise TypeError("Expected string as filename. Got %s instead." % type(filename))

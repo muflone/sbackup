@@ -1,5 +1,6 @@
 #   Simple Backup - snapshot handling
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2008-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -62,10 +63,10 @@ _EXT_CORRUPT_SNP = ".corrupt"
 
 class SnapshotManager(object):
     """Class responsible for handling and managing of several snapshots.
-     
+
     :todo: Remove instance variables 'status' and implement an observer\
-           pattern or progress function hooks! 
-    
+           pattern or progress function hooks!
+
     :note: Rebasing of snapshots is disabled due to severe performance issues.
     """
 
@@ -95,7 +96,7 @@ class SnapshotManager(object):
     def getStatus(self):
         """
         :return: [statusNumber,statusMessage,substatusMessage]
-        
+
         :todo: Remove/refactor this!
 
         """
@@ -104,9 +105,9 @@ class SnapshotManager(object):
     def get_snapshot_allformats(self, name):
         """Returns a certain snapshot, specified by its name, from the stored
         snapshots. If the snapshot could not be found, an exception is raised.
-        
+
         :param name: the snapshot that is to be returned
-        
+
         """
         for snp in self.get_snapshots_allformats() :
             if snp.getName() == name :
@@ -147,22 +148,22 @@ class SnapshotManager(object):
         """Returns a list with *all* found snapshots, according to the
         given parameters. All versions of snapshots were returned. The
         list is sorted from the latest snapshot to the earliest:
-        
-        - index 0  --- most recent snapshot 
+
+        - index 0  --- most recent snapshot
         - index -1 --- oldest snapshot.
-        
+
         :param fromDate: eg. 2007-02-17
         :param toDate:  2007-02-17
         :param byDate: 2007-02-17
         :param forceReload: True or false
-        :return: list of snapshots 
-        
+        :return: list of snapshots
+
         :todo: Re-factor this method using the CQS pattern and by simplifying!
                 (e.g. method `reload` + `get...`
         :todo: Separate into 'get_snapshots( force_reload=False )',\
                'get_snapshots_by_timespan' and 'get_snapshot_by_date'!
         :todo: Clarify whether to rename or to delete corrupt snapshots!
-               
+
         """
         snapshots = []    # list of found snapshots
 
@@ -186,7 +187,7 @@ class SnapshotManager(object):
     def _read_snps_from_disk_allformats(self, read_only = True):
         """Reads snapshots from the defined/set target directory and
         stores them in according class attribute.
-        
+
         Unreadable snapshots are being renamed.
         """
         self.__snapshots = []
@@ -227,16 +228,16 @@ class SnapshotManager(object):
         """Returns a list with found snapshots that matches the current
         snapshot format, according to the given parameters. The list is
         sorted from the latest snapshot to the earliest:
-        
-        - index 0  --- most recent snapshot 
+
+        - index 0  --- most recent snapshot
         - index -1 --- oldest snapshot.
-        
+
         :param fromDate: eg. 2007-02-17
         :param toDate:  2007-02-17
         :param byDate: 2007-02-17
         :param forceReload: True or false
         :return: list of snapshots
-        
+
         """
         snps = []
         snps_all = self.get_snapshots_allformats(fromDate, toDate, byDate,
@@ -257,10 +258,10 @@ class SnapshotManager(object):
         """Creates an empty SnapshotInfo-file with the name 'copydest'
         from the SnapshotInfo-file contained in given source snapshot. Empty
         means, that no content but the header is copied.
-        
+
         @todo: Review the self-creation of header in the case no was found.
                 Is this necessary at all?
-        
+
         """
         self.logger.debug("Create temporary SNARFILE to prepare merging")
         if not isinstance(snp_source, Snapshot):
@@ -270,7 +271,7 @@ class SnapshotManager(object):
             raise TypeError("Given parameter 'copydest' must be of string "\
                         "type! Got %s instead." % type(copydest))
 
-        # create a temporary snar file for merge result 
+        # create a temporary snar file for merge result
         _tmpfinal = copydest
         # get snar header from current snapshots
 #XXX: Why not use getHeader here???
@@ -316,19 +317,19 @@ class SnapshotManager(object):
                                src_snpfinfo, res_snpfinfo):
         """Covers all actions for merging 2 given snar files into a single
         one. This is quite TAR specific - think it over where to place it!
-        
+
         :Parameters:
         - `target_snpfinfo`: the resulting snapshot
         - `target_excludes`: set of the excludes file list of resulting snapshot
         - `src_snpfinfo`: the snapshot that should be merged into the target
-        - `res_snpfinfo`: the name of the resulting SNAR file  
-        
+        - `res_snpfinfo`: the name of the resulting SNAR file
+
         The method returns a list containing files that needs to be extracted
-        from the archive that was merged in. 
-        
+        from the archive that was merged in.
+
         :todo: Do we need to consider the order of the snar files?
         :todo: Needs more refactoring! (CQS)
-        
+
         """
         self.logger.info("Merging SNARFILEs to make the transfer")
 
@@ -404,7 +405,7 @@ class SnapshotManager(object):
 
                 if not _was_excluded:
                     _tmp_dumpdirs.append(_ddir_final)
-            # end of loop over dumpdirs 
+            # end of loop over dumpdirs
             _final_record = target_record[:SnapshotFile.REC_CONTENT]
             _final_record.append(_tmp_dumpdirs)
             # write to the SnarFile
@@ -413,17 +414,17 @@ class SnapshotManager(object):
 
     def __makeSnpFull(self, snapshot):
         """Make an inc snapshot to a full one.
-                
+
         :param snapshot: the snapshot to be converted
         :type snapshot: `Snapshot`
         :return: the new full snapshot
         :rtype: Snapshot
-                
+
         :todo: Is it really neccessary to create a new snapshot or is it enough to call `setPath`?
                 -> It is necessary since paths to e.g. snar file have changed.
-        
+
         :postcondition: The snapshot has the same childs as before.
-        
+
         """
         if snapshot.isfull():
             self.logger.info(_("Snapshot '%s' is already Full, nothing to do (not changing it to full).") % snapshot.getName())
@@ -459,7 +460,7 @@ class SnapshotManager(object):
     def _retrieve_childsnps(self, snapshot):
         """Retrieves all snapshots that rely on the given parent
         `snapshot` and returns a list containing all child snapshots.
-        
+
         """
         listing = self.get_snapshots(forceReload = False)
         child_snps = []
@@ -471,7 +472,7 @@ class SnapshotManager(object):
     def _retrieve_childsnps_names(self, snapshot):
         """Retrieves names of all snapshots that rely on the given parent
         `snapshot` and returns a list containing all child snapshot names.
-        
+
         """
         listing = self._retrieve_childsnps(snapshot)
         child_snps = []
@@ -497,10 +498,10 @@ class SnapshotManager(object):
         """Public method that removes a given snapshot safely. The removal
         of a snapshot is more complicated than just to remove the snapshot
         directory since a snapshots could be the base of other snapshots.
-        
+
         :param snapshot: the snapshot to be removed
         :type snapshot: `Snapshot`
-        
+
         :note; Currently removal of freestanding snapshots is supported only.
         """
         self._remove_standalone_snapshot(snapshot)
@@ -516,7 +517,7 @@ class SnapshotManager(object):
         """Compare 2 snapshots and return and SBdict with the
         differences between their files. The format is
         {"file" : ("propsnap1|propsnap2",sonsbdict)}.
-        
+
         """
         raise NotSupportedError
 
@@ -525,7 +526,7 @@ class SnapshotManager(object):
         gets the list of preceding snapshots till the last full one
         :param snapshot : the given snapshot
         :return: a list of Snapshots starting from the most recent one to the full one
-        :note: you'll need to reverse this list to make a revert 
+        :note: you'll need to reverse this list to make a revert
         """
         if not snapshot :
             raise SBException("Please provide a snapshot to process")
@@ -540,7 +541,7 @@ class SnapshotManager(object):
 
         # Just for DEBUG
         if self.logger.isEnabledFor(10) :
-            # get the history 
+            # get the history
             history = "\n[%s history]" % snapshot.getName()
             for snp in result :
                 history += "\n- %s" % snp.getName()
@@ -550,12 +551,12 @@ class SnapshotManager(object):
 
     def purge(self, purge, no_purge_snp):
         """Public method that processes purging of archive directory.
-        
+
         :param mode: for the moment, only "log" and "simple" are supported
-        :param no_purge: name of snapshot not being purged 
-        
+        :param no_purge: name of snapshot not being purged
+
         :todo: We should try to remove the snapshots from fresh to old to avoid multiple re-base operations!
-        
+
         """
         self.get_snapshots(forceReload = True)
         if purge == "log":
@@ -572,7 +573,7 @@ class SnapshotManager(object):
         Keep one backup per week from last month.
         Keep one backup per month from last year.
         Keep one backup per quarter from 2nd last year.
-        Keep one backup per year further in past.        
+        Keep one backup per year further in past.
         """
 
         self.logger.info("Logarithmic purging")
@@ -718,10 +719,10 @@ def _get_snapshots_older_than(snapshots, age):
 
 def debug_print_snarfile(filename):
     """Print function only for debugging.
-    
+
     :param filename: full path of snar to be printed out
     :type filename: string
-    
+
     """
     _fop = fam.get_file_operations_facade_instance()
     if _fop.path_exists(filename):
@@ -741,7 +742,7 @@ def debug_snarfile_to_list(filename):
     :param filename: full path of snar to be converted
     :type filename: string
     :return: list containing snar file entries
-    
+
     """
     _res = []
     _fop = fam.get_file_operations_facade_instance()

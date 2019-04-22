@@ -1,5 +1,6 @@
 #   Simple Backup - implementation of threaded worker tasks
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -37,7 +38,7 @@ class WorkerThread(object):
 
         @param task: a callable object that actually represents the worker task
         @type task:  callable object
-        
+
         @raise TypeError: in case of type mismatch of given parameters
         """
         self.__task = None
@@ -49,12 +50,12 @@ class WorkerThread(object):
     def __set_task(self, callback):
         """Private helper method that sets the callback function representing
         the actual worker task.
-        
+
         @param callback: callable object representing the task to perform
         @type callback:  callable object
-        
+
         @return: None
-        
+
         @raise TypeError: If the given parameter is not callable
         """
         if not callable(callback):
@@ -67,7 +68,7 @@ class WorkerThread(object):
         non-keyword parameters can be given. Since the worker task is
         performed in a separate thread one need to set a callback function
         e.g. for evaluating any results of the task.
-        
+
         The result of the worker task is given as last parameter
         to this callback function, this is even valid for tasks that
         return 'nothing', i.e. None.
@@ -76,7 +77,7 @@ class WorkerThread(object):
         @type callback: callable object
         @param args: arbritrary number of parameters given to the callback
                      function
-        
+
         @return: None
 
         @raise TypeError: If the given callback function is not callable
@@ -89,7 +90,7 @@ class WorkerThread(object):
     def __run_task(self, *args, **kwargs):
         """Private method that executes the worker task and afterwards
         calls the specified finish callback function (if any).
-        
+
         Any exception raised within the worker task is catched and returned
         as result of the task. If no exception occurs the result of the
         worker task is returned as result. To determine if an exception was
@@ -97,11 +98,11 @@ class WorkerThread(object):
 
         The given keyword and non-keyword parameters are given (as they are)
         to the worker task.
-        
+
         @param args:   non-keyword parameters given to the worker task
         @param kwargs: keyword parameters given to the worker task
-        
-        @return: None        
+
+        @return: None
         """
         try:
             result = self.__task(*args, **kwargs)
@@ -128,7 +129,7 @@ class WorkerThread(object):
 
         @param args:   non-keyword parameters given to the worker task
         @param kwargs: keyword parameters given to the worker task
-        
+
         @return: None
         """
         self.__thread = threading.Thread(target = self.__run_task,

@@ -1,6 +1,7 @@
 #
 # sbackup - legacy support for restore operation
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2005-2008: Aigars Mahinovs <aigarius@debian.org>
 #
@@ -46,7 +47,7 @@ try:
     import gnomevfs
 except ImportError:
     import gnome.vfs as gnomevfs
-    
+
 from sbackup.ui import misc
 sys.excepthook = misc.except_hook_threaded
 
@@ -64,7 +65,7 @@ class SRestore:
         spath to dpath (or to its old location).
         All existing files must be moved to a "*.before_restore_$time" files.
         """
-        
+
         if not dpath:
             dpath = spath
 
@@ -79,11 +80,11 @@ class SRestore:
         if not dname:
             dpath = dparent
             (dparent, dname) = os.path.split( dpath )
-        
+
         now = datetime.datetime.now().isoformat("_").replace( ":", "." )
         ver = str(gnomevfs.read_entire_file( backup+"/ver" ))
-        
-        try: 
+
+        try:
             if ver[:3] == "1.4":
                 self.childlist = [x[1:] for x in gnomevfs.read_entire_file( backup+"/flist" ).split( "\000" ) if x == "/"+spath or x[1:len(spath)+2]==spath+"/"]
             else:
@@ -129,7 +130,7 @@ class SRestore:
                 shutil.move( dpath, dpath+".before_restore_"+now )
                 shutil.move( os.path.join(tdir,spath), dpath )
                 shutil.rmtree( tdir )
-                
+
         else:
             tdir = tempfile.mkdtemp( dir=dparent )
             self.extract( backup, spath, tdir )
@@ -166,12 +167,12 @@ class SRestoreGTK:
     """
     Main GUI application class.
     """
-    
+
     default_target = "/var/backup"
     target = default_target
     versions = []
-    
-    
+
+
     def __init__(self):
         """
         Initializes the application.
@@ -191,34 +192,34 @@ class SRestoreGTK:
                 }
 
         self.widgets = gtk.glade.XML(_LEGACY_RESTOREGUI_GLADE)
-        
+
         self.widgets.signal_autoconnect(self.signals)
-        
+
         # Get handle to window
         self.window = self.widgets.get_widget("restore")
 
-        self.widgets.get_widget("labelDefaultSource").set_text(self.default_target)    
+        self.widgets.get_widget("labelDefaultSource").set_text(self.default_target)
 
         # Load the backup tree from the default location
         self.init_tree()
         self.sel = self.flist_widget.get_selection()
         self.sel.set_mode( gtk.SELECTION_SINGLE )
         self.load_tree(self.default_target)
-        
+
         gtk.gdk.threads_init()
         # Start the main loop
         gtk.main()
-    
+
     def init_tree(self):
         """
         Initalizes the tree structure
         """
-        
+
         self.flist_widget = self.widgets.get_widget("treeview1")
         self.treestore = gtk.TreeStore( str )
-        
+
         self.flist_widget.set_model( self.treestore )
-        
+
         acolumn = gtk.TreeViewColumn( "Path", gtk.CellRendererText(), text=0 )
         self.flist_widget.append_column( acolumn )
 
@@ -229,13 +230,13 @@ class SRestoreGTK:
         blist_widget.pack_start( cell, True )
         blist_widget.add_attribute( cell, "text", 0)
 
-        
+
     def load_tree(self, target):
         """
         Loads the tree information from the target backup directory
         """
         self.treestore.clear()
-        
+
         # Checking if the target directory is local or remote
         local = True
         try:
@@ -248,27 +249,27 @@ class SRestoreGTK:
 
         self.local = local
         self.target = target
-        
+
         # Checking if it is a readable directory
         if local:
-            if not (os.path.exists( target ) and os.path.isdir( target ) and os.access( target, os.R_OK | os.X_OK ) ):    
+            if not (os.path.exists( target ) and os.path.isdir( target ) and os.access( target, os.R_OK | os.X_OK ) ):
                 self.treestore.append( None, ["Error: backups directory does not exist!"])
                 self.target = False
         else:
             if not (gnomevfs.exists( target ) and gnomevfs.get_file_info(target).type == 2):
                 self.treestore.append( None, ["Error: backups directory does not exist!"])
                 self.target = False
-        
+
         # Get list of backup directories
         r = re.compile(r"^(\d{4})-(\d{2})-(\d{2})_(\d{2})[\:\.](\d{2})[\:\.](\d{2})\.\d+\..*?\.(.+)$")
-        
+
         listing = []
-    
+
         if local and self.target:
             listing = os.listdir( target )
             listing = filter( r.search, listing )
         elif self.target:
-            try:     
+            try:
                 d = gnomevfs.open_directory( target )
                 listing = []
                 for f in d:
@@ -300,17 +301,17 @@ class SRestoreGTK:
                     self.vtree[base] = str(gnomevfs.read_entire_file(target+"/"+base+"/flist")).split("\000")
                 else:
                     self.vtree[base] = str(gnomevfs.read_entire_file(target+"/"+base+"/flist")).split("\n")
-        
+
         self.blist.clear()
-        
+
         for base in listing:
             self.blist.append( [base] )
-        
+
         self.good = False
         self.on_selection_change()
         if self.target:
-            self.treestore.append( None, ["Select any of the available backups to see list of files that can be restored."])        
-        
+            self.treestore.append( None, ["Select any of the available backups to see list of files that can be restored."])
+
     def on_customFolderButton_clicked(self, *args):
         dialog = gtk.FileChooserDialog("Choose a source folder", None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         dialog.set_default_response(gtk.RESPONSE_OK)
@@ -343,7 +344,7 @@ class SRestoreGTK:
         self.treestore.clear()
         self.treestore.append( None, ["dummy"])
         self.show_dir( "", None )
-        
+
     def on_expand_row( self, tv, aiter, path, user_data=None):
         """
         When a row in the file tree view is expanded, we populate
@@ -365,20 +366,20 @@ class SRestoreGTK:
             p = "/" + self.treestore.get_value( i, 0 ) + p
             g = g[:-1]
         return p
-    
+
     def show_dir(self, path, rootiter):
         """
         Worker function - adds all files/directories from the filez list
         to the treestore at the rootiter.
         """
         dummy = self.treestore.iter_children(rootiter)
-        
+
         self.good = True
 
         base = self.get_active_text(self.widgets.get_widget("combobox1"))
         list2 = []
         list3 = []
-        
+
         escapedFullPath = re.escape(path)+"/([^/]+/?)"
         for item in self.vtree[base]:
             m = re.match( escapedFullPath, item )
@@ -394,21 +395,21 @@ class SRestoreGTK:
             self.treestore.append( aiter, ["Loading ..."] )
         for f in list2:
             self.treestore.append( rootiter, [f] )
-        
+
         self.treestore.remove( dummy )
-        
+
     def get_active_text(self, combobox):
         model = combobox.get_model()
         active = combobox.get_active()
         if active < 0:
             return None
         return model[active][0]
-    
+
     def on_custom_apply(self, *args):
         """
         Reload all backup info from a custom location
         """
-        
+
         self.load_tree(self.widgets.get_widget("entry1").get_text())
 
     def on_selection_change(self, *args):
@@ -422,7 +423,7 @@ class SRestoreGTK:
         else:
             self.widgets.get_widget("button2").set_sensitive(False)
             self.widgets.get_widget("button3").set_sensitive(False)
-    
+
     def _restore_init( self, *args):
         """
         Internal function to prepare for restorin a file
@@ -430,7 +431,7 @@ class SRestoreGTK:
         (store, aiter) = self.widgets.get_widget("treeview1").get_selection().get_selected()
         self.src = self.path_to_dir( store.get_path( aiter ) )
         return aiter
-    
+
     def _do_restore( self, src, dst):
         """ Internal function to ask for confirmation and call the real restore library func"""
         dialog = gtk.MessageDialog(parent=None, flags=0,

@@ -1,5 +1,6 @@
-#   Simple Backup - local fuse plugin 
+#   Simple Backup - local fuse plugin
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -38,7 +39,7 @@ class localFuseFAM (pluginFAM):
         """
         Try to match the scheme of the remoteSource.
         @param remoteSource: The remote path
-        @return: True if the scheme matches the one for this 
+        @return: True if the scheme matches the one for this
         @rtype: boolean
         """
         return remoteSource.startswith(local_file_utils.PATHSEP)

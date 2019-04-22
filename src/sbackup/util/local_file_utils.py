@@ -1,5 +1,6 @@
 #   Simple Backup - unified file handling using (Python's) native functions
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010,2013: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2009: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -77,13 +78,13 @@ is_mount = os.path.ismount
 
 def copyfile(src, dst):
     """Copies given file and metadata including file permissions.
-    If this fails a custom exception is raised. 
-    
+    If this fails a custom exception is raised.
+
     @param src: an existing file that should be copied
     @param dst: copy destination - an existing directory or full path to new file
-                
+
     @return: None
-    
+
     @raise CopyFileAttributesError: if the permissions could not be copied
     """
     # only absolute paths are supported
@@ -111,9 +112,9 @@ def copyfile(src, dst):
 def _prepare_copy(src, dst):
     """Helper function that prepares the given paths for copying
     using 'nssb_copy'.
-    
+
     Source must be a file or symbolic link to a file!
-    
+
     @todo: Implement test case for symbolic links!
     """
     _src_file = os.path.basename(src)
@@ -154,10 +155,10 @@ def path_writeable(path):
 def normpath(*args):
     """Normalizes the given paths (i.e. concatenates them and removes trailing
     separators).
-    
+
     @todo: Consistent handling of `normpath` (Quote: os.path.normpath - It should be understood
     that this may change the meaning of the path if it contains symbolic links!)
-    
+
     :note: Be careful when using `normpath`. Consider `joinpath` instead.
     """
     _path = os.path.join(*args)
@@ -175,7 +176,7 @@ def is_link(path):
 
 def get_link(path):
     """Returns the target of given link `path`. Relative links remain
-    unchanged (i.e. are not made absolute). 
+    unchanged (i.e. are not made absolute).
     """
     if not is_link(path):
         raise ValueError("Given path is not a symbolic link.")
@@ -184,7 +185,7 @@ def get_link(path):
 
 def get_link_abs(path):
     """Returns the absolute target of given link `path`. Relative links are
-    modified (i.e. are made absolute). 
+    modified (i.e. are made absolute).
     """
     _ln_target = get_link(path)
     if os.path.isabs(_ln_target):
@@ -282,7 +283,7 @@ def createfile(filepath):
     """
     Create an empty file
     @param filepath : The file path
-    
+
     :todo: Review and improve!
     """
     filepath = filepath.rstrip(os.sep)
@@ -299,7 +300,7 @@ def createfile(filepath):
 
 def readfile(path):
     """Read a file from a given URI and returns a string with the read content.
-    
+
     @rtype: String
     """
     fobj = open(path, "r")
@@ -339,7 +340,7 @@ def pickleload(path):
 
 def pickledump(datas, path):
     """
-    Dump the given datas into the file given 
+    Dump the given datas into the file given
     @param datas: any type of python datas/object
     @param file : a file path to the file in wich the dump will be made
     """
@@ -349,7 +350,7 @@ def pickledump(datas, path):
 
 def _add_write_permission(path, recursive = True):
     """Sets write permissions for user, group, and others for
-    given directory or file (recursive). 
+    given directory or file (recursive).
     """
     fstats = os.stat(path)
     fmode = fstats.st_mode
@@ -366,7 +367,7 @@ def _add_write_permission(path, recursive = True):
 
 def chmod_no_rwx_grp_oth(path):
     """Sets write permissions for user only for
-    given directory or file (*not* recursive). 
+    given directory or file (*not* recursive).
     """
     try:
         fstats = os.stat(path)

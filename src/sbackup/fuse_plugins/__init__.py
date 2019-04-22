@@ -1,5 +1,6 @@
-#   Simple Backup - fuse plugins framework (package) 
+#   Simple Backup - fuse plugins framework (package)
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2009-2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #   Copyright (c)2007-2008: Ouattara Oumar Aziz <wattazoum@gmail.com>
 #
@@ -50,21 +51,21 @@ class pluginFAM(object):
         """
         Try to match the scheme of the remoteSource.
         @param remoteSource: The remote path
-        @return: True if the scheme matches the one for this 
+        @return: True if the scheme matches the one for this
         @rtype: boolean
         """
         raise exceptions.SBException("'match_scheme_full' Not implemented for this plugin")
 
     def mount(self, source, mountbase):
         """
-        Mount the source intor the mountbase dir . This method should create a mount point to mount the source. 
+        Mount the source intor the mountbase dir . This method should create a mount point to mount the source.
         The name of the mount point should be very expressive so that we avoid collision with other mount points
         This method will return a tuple (baseRemoteSource, mountpoint, pathinside) where
         - baseRemoteSource is the substring that represent the mount source (usually at the start of the source). The match_scheme_full method should be able to match it
         - mountpoint is the mount point of this baseRemoteSource.
-        - pathinside is the path inside the remote source 
+        - pathinside is the path inside the remote source
         [Use case]
-        The mount function is called once with "sch://server/path/to/dir" and the plugin mounts "sch://server" to "/mnt/sch_server". 
+        The mount function is called once with "sch://server/path/to/dir" and the plugin mounts "sch://server" to "/mnt/sch_server".
         Then the return value would be ("sch://server","/mnt/sch_server","path/to/dir")
         @param source: The remote path
         @param mountbase: The mount points base dir
@@ -129,7 +130,7 @@ class PluginManager(object):
 
     def getPlugins(self):
         """Searches for plugins in the plugin directory and loads them.
-        
+
         @return : The plugins dictionary list {'name':class}.
         @note: Look at FuseFAM to know how it's used.
         """

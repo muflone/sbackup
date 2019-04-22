@@ -1,5 +1,6 @@
 #   Simple Backup - handling of preferences
 #
+#   Copyright (c)2019: Fabio Castelli (Muflone) <muflone@vbsimple.net>
 #   Copyright (c)2010: Jean-Peer Lorenz <peer.loz@gmx.net>
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -55,7 +56,7 @@ class Preferences(object):
 
         _value = self._get_value(key)
         if _value is None:
-            # return default and set default in database (if possible)                        
+            # return default and set default in database (if possible)
             self._set_value(key, _PREFS_DEFAULTS[key])
             _value = _PREFS_DEFAULTS[key]
 

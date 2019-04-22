@@ -1,0 +1,11 @@
+# Python compiled sources
+*.pyc
+
+# Locales
+/po/locale/
+
+# Temporary files
+/src/sbackup/metainfo
+/src/sbackup/metainfo.tmp
+/src/sbackup/resources
+/scripts/sbackup

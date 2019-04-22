@@ -234,7 +234,7 @@ class SBackupDbusConnectionObject(dbus.service.Object):
         _res = ""
         self.__logger.debug("Register connection: %s (pid=%s)" % (name, pid))
         _id = str(uuid.uuid4())
-        if self._listeners.has_key(_id):
+        if _id in self._listeners:
             raise SBDbusException("The generated id is already in use. This is a bug :( Please report the issue to the developers.")
         else:
             self._listeners[_id] = (name, pid)
@@ -252,7 +252,7 @@ class SBackupDbusConnectionObject(dbus.service.Object):
         _res = False
         self.__logger.debug("Unregister listener with id: %s" % connection_id)
 
-        if not self._listeners.has_key(connection_id):
+        if connection_id not in self._listeners:
             raise SBDbusException("The given id is not registered.")
         else:
             del self._listeners[connection_id]

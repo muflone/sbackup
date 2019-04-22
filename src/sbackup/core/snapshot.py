@@ -191,14 +191,14 @@ class Snapshot(object):
         """Searches for the given `path` in the list of excluded files and set
         the properties to None. Sub-paths are also considered.
         """
-        if self.__excludeFlist.has_key(path):
+        if path in self.__excludeFlist:
             self.__excludeFlist[path][0] = None
 
     def disable_path_in_incl_filelist(self, path):
         """Searches for the given `path` in the list of included files and set
         the properties to None. Sub-paths are also considered.
         """
-        if self.__includeFlist.has_key(path):
+        if path in self.__includeFlist:
             self.__includeFlist[path][0] = None
 
     def getExcludeFlist(self):

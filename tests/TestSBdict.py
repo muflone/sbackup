@@ -78,7 +78,7 @@ class TestSBdict(unittest.TestCase):
         self.assertFalse(self.sbd.hasFile("/home/usr1/usr2/test"))
         self.assertTrue(self.sbd.hasFile("/home/usr1/usr2"))
         self.assertFalse(self.sbd.hasFile("/home/usr1/usr2/test/dir/test/de"))
-        self.assertTrue(self.sbd.has_key("/home/usr1/usr2/test/dir/test/de"))
+        self.assertTrue("/home/usr1/usr2/test/dir/test/de" in self.sbd)
 
 
 def suite():

@@ -512,7 +512,7 @@ class ConfigManager(ConfigParser.ConfigParser):
                 if type(remotes) != dict :
                     raise exceptions.SBException(_("Unable to evaluate '%(parameter)s' as a dictionary (value got = '%(value)r').")\
                             % {'parameter': remotes, 'value': type(remotes)})
-                if not remotes.has_key(option) :
+                if option not in remotes:
                     # then it wasn't for us , fall back on the parent
                     return ConfigParser.ConfigParser.has_option(self, section,
                                                                 option)
@@ -594,7 +594,7 @@ class ConfigManager(ConfigParser.ConfigParser):
                     remotes = eval(remotes)
                 if type(remotes) != dict :
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
-                if not remotes.has_key(option) :
+                if option not in remotes:
                     # then it wasn't for us , fall back on the parent
                     ConfigParser.ConfigParser.remove_option(self, section, option)
                 else :
@@ -734,11 +734,11 @@ class ConfigManager(ConfigParser.ConfigParser):
         for section in self.sections():
             try:
                 for key in self.options(section):
-                    if (not self.valid_options.has_key(section)):
+                    if (section not in self.valid_options):
                         raise exceptions.NotValidSectionException (_("section [%(section)s] in '%(configfile)s' should not exist, aborting") % {'section': section, 'configfile' :self.conffile})
                     if key == 'stop_if_no_target':
                         self.logger.warning("Obsolete option `%s` in configuration found. Ignored." % key)
-                    if (self.valid_options[section].has_key(key) or self.valid_options[section].has_key('*')):
+                    if (key in self.valid_options[section] or '*' in self.valid_options[section]):
                         continue
                     raise exceptions.NonValidOptionException ("key '%s' in section '%s' in file '%s' is not known, a typo possibly?" % (key, section, self.conffile))
             except exceptions.SBException as e:

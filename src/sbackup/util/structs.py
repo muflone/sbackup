@@ -105,13 +105,13 @@ class SBdict(dict) :
 #            _out.append("%s" % _item)
 #        return "\n".join(_out)
 
-    def getSon(self, path) :
+    def getSon(self, path):
         """
         get the son SBdict of a path
         @param path: the path to get the son of
         @return: a SBdict or None if there were no son
         """
-        if self.has_key(path) :
+        if path in self :
             return self[path][1]
         else :
             raise SBException("'%s' not in SBdict" % path)
@@ -130,7 +130,7 @@ class SBdict(dict) :
         else :
             self.__setitem__(path, [self[path][0], son])
 
-    def has_key(self, key) :
+    def __contains__(self, key) :
         """
         Return True if the path have been found and false if not
         @param key: a path to search (/home/user/test/dir )
@@ -138,7 +138,7 @@ class SBdict(dict) :
 
         splited = key.split(os.sep, 1)
 
-        if not dict.has_key(self, splited[0]) :
+        if splited[0] not in dict(self):
             return False
         else : # base dir found, we look for the son
             # if the son is empty, we found our element
@@ -146,7 +146,7 @@ class SBdict(dict) :
                 return True
             if self[splited[0]][1] != None :
                 if type(self[splited[0]][1]) == SBdict :
-                    return self[splited[0]][1].has_key(splited[1])
+                    return splited[1] in self[splited[0]][1]
                 else :
                     raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(type(self[splited[0]][1])))
             else : return False
@@ -169,7 +169,7 @@ class SBdict(dict) :
         if len(splited) == 1 or not splited[1] :
             # we are at the end of a path
             # we fallback to the normal behaviour
-            if dict.has_key(self, splited[0]) :
+            if splited[0] in dict(self):
                 # The key exists
                 item = dict.__getitem__(self, splited[0])
                 if not valIsSubtree :
@@ -190,7 +190,7 @@ class SBdict(dict) :
                     dict.__setitem__(self, splited[0], value)
         else : # path is composed ,
             # we check if the base dir exists and get the props infos
-            if dict.has_key(self, splited[0]) :
+            if splited[0] in dict(self):
                 item = dict.__getitem__(self, splited[0])
                 prop = item[0]
                 if item[1] != None :
@@ -211,7 +211,7 @@ class SBdict(dict) :
     def __delitem__(self, key):
         """
         """
-        if not self.has_key(key) : return False
+        if key not in self : return False
 
         if key == os.sep :
             dict.__delitem__(self, "")
@@ -232,7 +232,7 @@ class SBdict(dict) :
         """
         splited = key.split(os.sep, 1)
 
-        if not dict.has_key(self, splited[0]) :
+        if splited[0] not in dict(self):
             return False
         else : # base dir found, we look for the son
             # if the son is empty, we found our element
@@ -342,9 +342,9 @@ class SBdict(dict) :
                 yield _file
 
     def hasFile(self, _file):
-        """Checks if the SBdict has a file. Unlike has_key, this will not match subdirectories name
+        """Checks if the SBdict has a file. Unlike __contains__, this will not match subdirectories name
         """
-        if not self.has_key(_file) :
+        if _file not in self:
             return False
         else :
             if self.__getitem__(_file)[0] is None :
@@ -356,7 +356,7 @@ class SBdict(dict) :
         """Checks whether the given `path` is stored in this SBDict. Unlike `hasFile` this
         will also match sub-directories.
         """
-        if self.has_key(path) :
+        if path in self:
             return True
         return False
 

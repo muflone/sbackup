@@ -292,7 +292,7 @@ class DBusProviderFacade(_DBusConnection):
     def __call_remote(self, func, *args, **kwargs):
         """Helper method for setter and signal emitter.
         """
-        if not kwargs.has_key(KWARG_DBUS_INTERFACE):
+        if KWARG_DBUS_INTERFACE not in kwargs:
             kwargs[KWARG_DBUS_INTERFACE] = constants.DBUS_INTERFACE
         res = False
         # we can not re-connect from this method since this would make given callable func invalid

@@ -525,13 +525,13 @@ class UpgradeSBackupConf_v010_011(object):
         _conf = _Config(self._conffile)
         for section in _conf.sections():
             for key in _conf.options(section):
-                if (not self._valid_opts.has_key(section)):
+                if (section not in self._valid_opts):
                     _conf.remove_section(section)
                     _mod = True
                     print "Section [%(section)s] in '%(configfile)s' should not exist. Removed."\
                           % {'section': section, 'configfile' : self._conffile}
 
-                if (self._valid_opts[section].has_key(key) or self._valid_opts[section].has_key('*')):
+                if (key in self._valid_opts[section] or '*' in self._valid_opts[section]):
                     continue
 
                 _conf.remove_option(section, key)

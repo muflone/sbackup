@@ -1263,7 +1263,7 @@ class MemSnapshotFile(SnapshotFileWrapper, SBdict):
         @return: True if the file is included, False otherwise
         @rtype: boolean
         """
-        return self.has_key(path)
+        return path in self
 
     def addRecord(self, record):
         """

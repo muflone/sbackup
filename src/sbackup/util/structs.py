@@ -92,7 +92,7 @@ class SBdict(dict):
         if not mapping:
             dict.__init__(self)
         else:
-            if type(mapping) == list and type(mapping[0]) == tuple and len(mapping[0]) == 2:
+            if isinstance(mapping, list) and isinstance(mapping[0], tuple) and len(mapping[0]) == 2:
                 dict.__init__(self)
                 for key, value in mapping:
                     self.__setitem__(key, value)
@@ -123,7 +123,7 @@ class SBdict(dict):
         @param path: the path to set the son on
         @param son: the son as a SBdict
         """
-        if son != None and type(son) != SBdict:
+        if son != None and not isinstance(son, SBdict):
             raise CorruptedSBdictException("You can't set '%s' as a son " % str(son))
         if not self[path] or self[path][0] == None:
             self.__setitem__(path, [None, son])
@@ -145,7 +145,7 @@ class SBdict(dict):
             if len(splited) == 1 or not splited[1]:
                 return True
             if self[splited[0]][1] != None:
-                if type(self[splited[0]][1]) == SBdict:
+                if isinstance(self[splited[0]][1], SBdict):
                     return splited[1] in self[splited[0]][1]
                 else:
                     raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(type(self[splited[0]][1])))
@@ -161,7 +161,7 @@ class SBdict(dict):
         valIsSubtree = False
 
         if value != None:
-            if type(value) == list and len(value) == 2 and (value[1] is None or (value[1] != None and type(value[1]) == SBdict)):
+            if isinstance(value, list) and len(value) == 2 and (value[1] is None or (value[1] != None and isinstance(value[1], SBdict))):
                 valIsSubtree = True
 
         splited = key.split(os.sep, 1)
@@ -194,7 +194,7 @@ class SBdict(dict):
                 item = dict.__getitem__(self, splited[0])
                 prop = item[0]
                 if item[1] != None:
-                    if type(item[1]) != SBdict:
+                    if not isinstance(item[1], SBdict):
                         raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(item[1]))
                     son = item[1]
                 else:
@@ -239,7 +239,7 @@ class SBdict(dict):
             if len(splited) == 1 or not splited[1]:
                 return dict.__getitem__(self, splited[0])
             if self[splited[0]][1] != None:
-                if type(self[splited[0]][1]) == SBdict:
+                if isinstance(self[splited[0]][1], SBdict):
                     return self[splited[0]][1].__getitem__(splited[1])
                 else:
                     raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(type(self[splited[0]][1])))

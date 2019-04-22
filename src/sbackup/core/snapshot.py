@@ -519,7 +519,7 @@ class Snapshot(object):
         @param size: The size in KiB to set
 
         """
-        if type(size) != int:
+        if not isinstance(size, int):
             raise TypeError("The size parameter must be an integer")
         self.__splitedSize = size
 
@@ -527,7 +527,7 @@ class Snapshot(object):
         """
         @param activate: boolean to activate symlinks follow up
         """
-        if type(activate) != bool:
+        if not isinstance(activate, bool):
             raise TypeError("the activate parameter must be a boolean")
         self.__followlinks = activate
 

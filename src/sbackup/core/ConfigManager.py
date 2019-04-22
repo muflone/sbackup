@@ -507,9 +507,9 @@ class ConfigManager(ConfigParser.ConfigParser):
             if ConfigParser.ConfigParser.has_option(self, "dirconfig",
                                                             'remote'):
                 remotes = self.get("dirconfig", "remote")
-                if type(remotes) == str:
+                if isinstance(remotes, str):
                     remotes = eval(remotes)
-                if type(remotes) != dict:
+                if not isinstance(remotes, dict):
                     raise exceptions.SBException(_("Unable to evaluate '%(parameter)s' as a dictionary (value got = '%(value)r').")\
                             % {'parameter': remotes, 'value': type(remotes)})
                 if option not in remotes:
@@ -533,17 +533,17 @@ class ConfigManager(ConfigParser.ConfigParser):
         if section == "dirconfig" and not option == 'remote' and self.has_option(section, option) and not ConfigParser.ConfigParser.has_option(self, section, option):
             #search through remote option to get the option
             remotes = ConfigParser.ConfigParser.get(self, "dirconfig", "remote", True)
-            if type(remotes) == str:
+            if isinstance(remotes, str):
                 remotes = eval(remotes)
-            if type(remotes) != dict:
+            if not isinstance(remotes, dict):
                 raise exceptions.SBException(_("Couldn't evaluate '%(parameter)s' as a dictionary (value got = '%(value)r' )") % {'parameter': remotes, 'value': type(remotes)})
             # we have that key
             return remotes[option]
         elif section == "dirconfig" and option == 'remote' and ConfigParser.ConfigParser.has_option(self, section, option):
             remotes = ConfigParser.ConfigParser.get(self, "dirconfig", "remote", True)
-            if type(remotes) == str:
+            if isinstance(remotes, str):
                 remotes = eval(remotes)
-            if type(remotes) != dict:
+            if not isinstance(remotes, dict):
                 raise exceptions.SBException(_("Unable to evaluate '%(parameter)s' as a dictionary (value got = '%(value)r').") % {'parameter': remotes, 'value': type(remotes)})
             return remotes
         else:
@@ -559,15 +559,15 @@ class ConfigManager(ConfigParser.ConfigParser):
         the 'remote' dict.
         """
         if section == "dirconfig" and option == "remote":
-            if type(value) != dict:
+            if not isinstance(value, dict):
                 raise exceptions.SBException(_("You must provide a dictionary."))
             if not self.has_option(section, option):
                 ConfigParser.ConfigParser.set(self, section, option, value)
             else:
                 remotes = ConfigParser.ConfigParser.get(self, section, option, True)
-                if type(remotes) == str:
+                if isinstance(remotes, str):
                     remotes = eval(remotes)
-                if type(remotes) != dict:
+                if not isinstance(remotes, dict):
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
                 for rsource, flag in value.items():
                     remotes[rsource] = flag
@@ -590,9 +590,9 @@ class ConfigManager(ConfigParser.ConfigParser):
             else:
                 self.logger.debug("search through remote option to get the option")
                 remotes = self.get("dirconfig", "remote")
-                if type(remotes) == str:
+                if isinstance(remotes, str):
                     remotes = eval(remotes)
-                if type(remotes) != dict:
+                if not isinstance(remotes, dict):
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
                 if option not in remotes:
                     # then it wasn't for us , fall back on the parent
@@ -1146,10 +1146,10 @@ class ConfigManager(ConfigParser.ConfigParser):
                     if not config.has_option(s, o):
                         return False
                     else:
-                        if type(self.get(s, o)) != type(config.get(s, o)):
-                            if type(self.get(s, o)) is not str:
+                        if not isinstance(self.get(s, o), type(config.get(s, o))):
+                            if not isinstance(self.get(s, o), str):
                                 self.set(s, o, repr(self.get(s, o)))
-                            if type(config.get(s, o)) is not str:
+                            if not isinstance(config.get(s, o), str):
                                 config.set(s, o, repr(config.get(s, o)))
                         if not self.get(s, o) == config.get(s, o):
                             return False
@@ -1157,10 +1157,10 @@ class ConfigManager(ConfigParser.ConfigParser):
                     if not self.has_option(s, o):
                         return False
                     else:
-                        if type(self.get(s, o)) != type(config.get(s, o)):
-                            if type(self.get(s, o)) is not str:
+                        if not isinstance(self.get(s, o), type(config.get(s, o))):
+                            if not isinstance(self.get(s, o), str):
                                 self.set(s, o, repr(self.get(s, o)))
-                            if type(config.get(s, o)) is not str:
+                            if not isinstance(config.get(s, o), str):
                                 config.set(s, o, repr(config.get(s, o)))
                         if not self.get(s, o) == config.get(s, o):
                             return False

@@ -177,7 +177,7 @@ def extract2(sourcear, fileslist, dest, bckupsuffix = None, additionalOpts = Non
     if bckupsuffix:
         options.append("--suffix=" + bckupsuffix)
 
-    if additionalOpts and type(additionalOpts) == list:
+    if additionalOpts and isinstance(additionalOpts, list):
         options.extend(additionalOpts)
 
     options.extend(['--file=' + sourcear, '--null',
@@ -212,7 +212,7 @@ def appendToTarFile(desttar, fileslist, workingdir, additionalOpts):
     else:
         raise SBException (_("Invalid archive type."))
 
-    if additionalOpts and type(additionalOpts) == list:
+    if additionalOpts and isinstance(additionalOpts, list):
         options.extend(additionalOpts)
 
     options.extend(['--file=' + desttar, '--null'])
@@ -1070,7 +1070,7 @@ class SnapshotFile(object):
         @param timeofBackup: The time to set in the snar file
         @type timeofBackup: datetime
         """
-        if type(timeofBackup) != datetime:
+        if not isinstance(timeofBackup, datetime):
             raise SBException("timeofBackup must be a datetime")
         fd = open(self.snpfile, 'w')
 
@@ -1104,7 +1104,7 @@ class SnapshotFile(object):
         @return: a string containing the computed content
         @rtype: string
         """
-        if type(contentList) != list:
+        if not isinstance(contentList, list):
             raise SBException("Contentlist must be a list : %r" % repr(contentList))
 
         result = ""

@@ -93,7 +93,7 @@ class BackupProfileHandler(object):
 
         """
         #LP #173490
-        import commands
+        import subprocess
         hooks = None
         if self.config.has_option('hooks', hookname):
             hooks = str(self.config.get('hooks', hookname)).split(",")
@@ -101,7 +101,7 @@ class BackupProfileHandler(object):
         if hooks is not None:
             self.logger.info(_("Running of hooks: %s") % hookname)
             for hook in hooks:
-                result = commands.getstatusoutput(hook)
+                result = subprocess.getstatusoutput(hook)
                 if( 0 != result[0]):
                     raise exceptions.HookedScriptError(\
                       "Hook %s returned error: '%s' (exit code=%s)" % (hookname,

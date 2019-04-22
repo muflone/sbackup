@@ -263,7 +263,7 @@ class ConfigManager(ConfigParser.ConfigParser):
 
     def __str__(self):
         retval = []
-        for section, sec_data in self._sections.iteritems():
+        for section, sec_data in self._sections.items():
             retval.append("[%s]" % section)
             [retval.append("%s = %s" % (o, repr(v)))
                 for o, v in sec_data.items() if o != '__name__']
@@ -569,7 +569,7 @@ class ConfigManager(ConfigParser.ConfigParser):
                     remotes = eval(remotes)
                 if type(remotes) != dict :
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
-                for rsource, flag in value.iteritems() :
+                for rsource, flag in value.items() :
                     remotes[rsource] = flag
                 ConfigParser.ConfigParser.set(self, section, option, remotes)
         else :
@@ -639,7 +639,7 @@ class ConfigManager(ConfigParser.ConfigParser):
 
         self.__clear_dirconfig()
         self.__dirconfig.update(dirconf)
-        for a, b in self.__dirconfig.iteritems() :
+        for a, b in self.__dirconfig.items() :
             self.set(_section, a, b)
 
     def __set_regex_excludes(self, aregex):

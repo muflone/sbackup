@@ -134,11 +134,11 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
         if self._is_initialized is True:
             try:
                 plugin_manager = PluginManager()
-                for src, dir in self.__mountedDirs.iteritems() :
+                for src, dir in self.__mountedDirs.items() :
                     self._logger.debug("Mounted dirs - %s - %s" % (src, dir))
                     if src is not os.sep :
                         _umounted = False
-                        for p_name, p_class in plugin_manager.getPlugins().iteritems():
+                        for p_name, p_class in plugin_manager.getPlugins().items():
                             #we got the plugin
                             self._logger.debug("Trying `%s` plugin to match `%s`" % (p_name, src))
                             plugin = p_class()
@@ -178,7 +178,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
         self.__check_mountdir()
 
         plugin_manager = PluginManager()
-        for p_name, p_class in plugin_manager.getPlugins().iteritems():
+        for p_name, p_class in plugin_manager.getPlugins().items():
             try :
                 #we got the plugin
                 plugin = p_class()
@@ -289,7 +289,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 #
 #        plugin_manager = PluginManager()
 #        _plugins = plugin_manager.getPlugins()
-#        _iterator = _plugins.iteritems()
+#        _iterator = _plugins.items()
 #        for p_name, p_class in _iterator:
 #            #we got the plugin
 #            self._logger.debug("Testing of plugin '%s'" % str(p_name))

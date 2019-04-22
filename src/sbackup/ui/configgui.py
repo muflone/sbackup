@@ -172,7 +172,7 @@ class SBconfigGTK(GladeGnomeApp):
         self.profiles.append([True,
             ConfigManagerStaticData.get_default_profilename(),
             self.__configFileHandler.get_default_conffile_fullpath()])
-        for i, v in self.configman.getProfiles().iteritems() :
+        for i, v in self.configman.getProfiles().items() :
             self.profiles.append([v[1], i, v[0]])
         self.profilestv = self.widgets['profilesListTreeView']
         self.profilestv.set_model(self.profiles)

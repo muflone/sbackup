@@ -252,7 +252,7 @@ class SBdict(dict) :
         """
         if _path is None: # initialization
             _path = []
-        for dirname, (props, son) in dict.iteritems(self):
+        for dirname, (props, son) in dict.items(self):
             _path.append(dirname)
             yield os.sep.join(_path)
             if son is None:
@@ -263,7 +263,7 @@ class SBdict(dict) :
         if len(_path) > 0 :
             _path.pop()
 
-    def iteritems(self, _path = None) :
+    def items(self, _path = None) :
         """Iterator that goes recursively through the whole dictionary and returns
         paths and their properties. Every sub-path is considered.
 
@@ -271,13 +271,13 @@ class SBdict(dict) :
         """
         if _path is None: # initialization
             _path = []
-        for dirname, (props, son) in dict.iteritems(self):
+        for dirname, (props, son) in dict.items(self):
             _path.append(dirname)
             yield (os.sep.join(_path), props)
             if son is None:
                 _path.pop()
             else:
-                for path, prop in son.iteritems(_path):
+                for path, prop in son.items(_path):
                     yield (path, prop)
         if len(_path) > 0 :
             _path.pop()
@@ -289,7 +289,7 @@ class SBdict(dict) :
         """
         if _path is None: # initialization
             _path = []
-        for dirname, (props, son) in dict.iteritems(self):
+        for dirname, (props, son) in dict.items(self):
             _path.append(dirname)
             yield props
             if son is None:
@@ -307,7 +307,7 @@ class SBdict(dict) :
         """
         if _path is None: # initialization
             _path = []
-        for dirname, (props, son) in dict.iteritems(self):
+        for dirname, (props, son) in dict.items(self):
             _path.append(dirname)
             if props != None :
                 yield os.sep.join(_path)
@@ -328,7 +328,7 @@ class SBdict(dict) :
         not set to None) since this is not true for sub-paths. Moreover, paths can be 'disabled' (i.e.
         excluded from the effective list of files) by setting their `props` to None.
         """
-        for _file, _prop in self.iteritems(path):
+        for _file, _prop in self.items(path):
             if _prop is not None:
                 yield _file
 

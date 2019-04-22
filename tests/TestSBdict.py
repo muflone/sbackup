@@ -38,10 +38,10 @@ class TestSBdict(unittest.TestCase):
         self.sbd["/home/usr1/usr2/test/dir/test/de/plus"] = ["7", None]
         self.sbd["/home/usr3/*"] = "1"
 
-    def testIteritems(self):
-        " IterItems () "
-        print " IterItems () \n"
-        for k, v in self.sbd.iteritems() :
+    def testItems(self):
+        " Items () "
+        print " Items () \n"
+        for k, v in self.sbd.items() :
             print k , v
 
     def testIterkeys(self):

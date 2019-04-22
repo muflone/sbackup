@@ -68,7 +68,7 @@ class CommentBlocker(object):
     def process_file(self, file):
         """ Process a file object.
         """
-        for token in tokenize.generate_tokens(file.next):
+        for token in tokenize.generate_tokens(file.__next__):
             self.process_token(*token)
         self.make_index()
 
@@ -95,7 +95,7 @@ class CommentBlocker(object):
 
     def new_comment(self, string, start, end, line):
         """ Possibly add a new comment.
-        
+
         Only adds a new comment if this comment is the only thing on the line.
         Otherwise, it extends the noncomment block.
         """

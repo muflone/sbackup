@@ -42,7 +42,7 @@ class LogFactory(object):
     def __init__(self):
         pass
 
-    def getLogger(name = None, logfile = None, level = 20) :
+    def getLogger(name = None, logfile = None, level = 20):
         """Returns last used logger instance. If no instance exists, a new
         one is created.
 
@@ -50,15 +50,15 @@ class LogFactory(object):
         @param logfile : default=False
         @param level: The level of the logger (default = logging.INFO(20) )
         """
-        if LogFactory.logger :
+        if LogFactory.logger:
             if name:
-                if LogFactory.logger.name == name :
+                if LogFactory.logger.name == name:
                     return LogFactory.logger
-                else :
+                else:
                     return LogFactory.__createLogger(name, logfile, level)
-            else :
+            else:
                 return LogFactory.logger
-        else :
+        else:
             return LogFactory.__createLogger(name, logfile, level)
 
     getLogger = staticmethod(getLogger)
@@ -91,13 +91,13 @@ class LogFactory(object):
 
             if logfile:
                 # create the logfile
-                if not os.path.exists(logfile) :
+                if not os.path.exists(logfile):
                     #make sure that the parent directory exist
                     parentdir = os.path.dirname(os.path.abspath(logfile))
                     if not os.path.exists(parentdir):
                         os.makedirs(parentdir)
                     _writetofile(logfile, "SBackup '%s' Logger\r\n==============\r\n" % name)
-                else :
+                else:
                     # clean the logfile
                     os.rename(logfile, logfile + ".old")
                     _writetofile(logfile, "SBackup '%s' Logger\r\n==============\r\n" % name)
@@ -110,7 +110,7 @@ class LogFactory(object):
     __createLogger = staticmethod(__createLogger)
 
 
-def _writetofile(path, content) :
+def _writetofile(path, content):
     _fobj = open(path, "w")
     _fobj.write(content)
     _fobj.close()

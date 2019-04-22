@@ -136,7 +136,7 @@ class FuseOperations(interfaces.IOperations):
         return local_file_utils.listdir(path)
 
     @classmethod
-    def listdir_fullpath(cls, path) :
+    def listdir_fullpath(cls, path):
         return local_file_utils.listdir_fullpath(path)
 
     @classmethod
@@ -144,11 +144,11 @@ class FuseOperations(interfaces.IOperations):
         local_file_utils.makedir(target)
 
     @classmethod
-    def makedirs(cls, target) :
+    def makedirs(cls, target):
         local_file_utils.makedirs(target) #, 0750)
 
     @classmethod
-    def writetofile(cls, path, content) :
+    def writetofile(cls, path, content):
         """
         Write a String to a file. You don't have to open and close the file.
         - File = path to the file

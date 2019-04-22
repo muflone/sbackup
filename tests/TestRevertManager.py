@@ -21,7 +21,7 @@ from sbackup.util.log import LogFactory
 import unittest
 import os
 
-class TestRestoreManager(unittest.TestCase) :
+class TestRestoreManager(unittest.TestCase):
 
     def setUp(self):
         LogFactory.getLogger("Test", level = 10)

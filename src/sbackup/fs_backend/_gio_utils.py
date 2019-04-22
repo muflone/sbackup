@@ -724,7 +724,7 @@ class GioOperations(interfaces.IOperations):
         return _res
 
     @classmethod
-    def listdir(cls, path) :
+    def listdir(cls, path):
         """List a directory. Returns basenames of entries.
         """
         listing = []
@@ -762,7 +762,7 @@ class GioOperations(interfaces.IOperations):
         return listing
 
     @classmethod
-    def listdir_fullpath(cls, path) :
+    def listdir_fullpath(cls, path):
         """List a directory. Returns full paths to entries.
         """
         _lst = cls.listdir(path)

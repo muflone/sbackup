@@ -174,7 +174,7 @@ class BackupProfileHandler(object):
         self.logger.info(_("Setting Excludes File."))
         if self.config.has_option("exclude", "regex"):
             gexclude = str(self.config.get("exclude", "regex")).split(",")
-        else :
+        else:
             gexclude = ""
         self.__snapshot.setExcludes(gexclude)
 
@@ -294,7 +294,7 @@ class BackupProfileHandler(object):
                                             % logf_target)
                         except (OSError, IOError) as error:
                             self.logger.warning(_("Unable to copy log file: %s") % error)
-                    else :
+                    else:
                         self.logger.warning(_("Unable to find logfile to copy into snapshot."))
             else:
                 self.logger.warning(_("No snapshot to copy logfile."))
@@ -309,7 +309,7 @@ class BackupProfileHandler(object):
         return _excode
 
     def finish(self, error = None):
-        """End SBackup session :
+        """End SBackup session:
 
         - copy the log file into the snapshot dir
 
@@ -407,7 +407,7 @@ class BackupProfileHandler(object):
                 self.logger.debug("Last (%s) was a full backup" % listing[0].getName())
                 d = listing[0].getDate()
                 age = (datetime.date.today() - datetime.date(d["year"], d["month"], d["day"])).days
-                if  age < agelimit :
+                if  age < agelimit:
                     # Less than maxincrement days passed since that -> make an increment
                     self.logger.info("Last full backup is %i days old < %s -> make inc backup" % (age, agelimit))
                     increment = True
@@ -416,11 +416,11 @@ class BackupProfileHandler(object):
                     increment = False      # Too old -> make full backup
             else: # Last backup was an increment - lets search for the last full one
                 self.logger.debug(" Last snapshot (%s) was incremental. Lookup of latest full snapshot." % listing[0].getName())
-                for i in listing :
+                for i in listing:
                     if i.isfull():
                         d = i.getDate()
                         age = (datetime.date.today() - datetime.date(d["year"], d["month"], d["day"])).days
-                        if  age < agelimit :
+                        if  age < agelimit:
                             # Last full backup is fresh -> make an increment
                             self.logger.info("Last full backup is fresh (%d days old )-> make an increment" % age)
                             increment = True

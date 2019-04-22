@@ -24,7 +24,7 @@ snapshot managing.
 Required tests related to snapshot managing:
 
 1. General instantiation
-2. Read operations from disk (loading of snapshots...) 
+2. Read operations from disk (loading of snapshots...)
 3. Re-basing of both incremental and full snapshots
 4. Removal of incremental and full snapshots, with and without
    dependencies
@@ -54,7 +54,7 @@ class _TestSnapshotManagerPathsBase(object):
     """Base class with the only purpose to provide pathnames to
     input/output test data from a single place to avoid multiple
     definitions of them.
-    
+
     Each test case derives a class from this one and overwrites the
     according paths.
     """
@@ -189,10 +189,10 @@ class _TestSnapshotRemoveV1Paths(_TestSnapshotManagerPathsBase):
     """Path definitions for test related to removal of snapshots.
     Version 1 (V1) uses 4 snapshots (3 incr., 1 full) with real
     life data.
-    
+
     @attention: The snapshots are apparently broken, so not all
                 of the tests can be applied.
-    
+
     @todo: Create a new real life scenario that fulfills following
            requirements:
            1. several types of files including *~ and *.bak
@@ -204,7 +204,7 @@ class _TestSnapshotRemoveV1Paths(_TestSnapshotManagerPathsBase):
            7. excluded files
            8. (apply these requirements to files and directories)
            9. more than 1 full snapshot
-           
+
     """
     _relpath_prefix = "manager"
     # relative paths to test input, working directory and (targeted) results
@@ -240,7 +240,7 @@ class _TestSnapshotRemoveV2Paths(_TestSnapshotManagerPathsBase):
 class TestSnapshotManager(unittest.TestCase):
     """Test case for testing basic functionality of the
     class 'SnapshotManager'. This test case covers tests that
-    neither read from disk nor write to it. 
+    neither read from disk nor write to it.
     """
     _path_class = _TestSnapshotManagerPaths
 
@@ -275,18 +275,18 @@ class _TestSnapshotManagerBase(unittest.TestCase):
     provides the unpacking of input data and reference results.
     Beside common preparation code, this class provides methods for
     result comparison. Use these in your own defined test methods.
-    
+
     Input data for the test cases are stored in directory 'input'. It is
     extracted into the 'working-dir' where the tests are proceeded. Reference
     values (the targeted results) are extracted into the according directory
     'reference-results' and then compared with the results from the tests.
-    
+
     It is supposed that:
     1. paths are stored in a class derived from `_TestSnapshotMergePaths`
     2. all working copies are packed in a single archive compressed with
        tar --lzma. Same holds for reference results.
     3. Reference values for the resulting snar file are provided in a separate
-       file.    
+       file.
     """
     _path_class = None
 
@@ -296,7 +296,7 @@ class _TestSnapshotManagerBase(unittest.TestCase):
         """
         LogFactory.getLogger(level = LOGLEVEL)
 
-        # sorting order is important!    
+        # sorting order is important!
         self.snpname = []
         self.res_snpname = []
         self.snppath = []
@@ -317,12 +317,12 @@ class _TestSnapshotManagerBase(unittest.TestCase):
     def _setup_workingdir_paths(self):
         """Retrieves names of existing snapshots in the working directory.
         In order to reduce maintenance effort this is done automatically.
-        
+
         :attention: The retrieval is done in a brute and dumb way! Take
                     care what files/directories are present in the working
                     directory when calling this method.
-                    
-        :result: The object variable `snpname` and `snppath` are updated.  
+
+        :result: The object variable `snpname` and `snppath` are updated.
         """
         self.snpname = []
         self.snppath = []
@@ -342,13 +342,13 @@ class _TestSnapshotManagerBase(unittest.TestCase):
     def _setup_resultdir_paths(self):
         """Retrieves names of existing snapshots in the result directory.
         In order to reduce maintenance effort this is done automatically.
-        
+
         :attention: The retrieval is done in a brute and dumb way! Take
                     care what files/directories are present in the working
                     directory when calling this method.
-                    
+
         :result: The object variable `res_snpname` and `res_snppath` are
-                 updated.  
+                 updated.
         """
         self.res_snpname = []
         self.res_snppath = []
@@ -416,10 +416,10 @@ class _TestSnapshotManagerBase(unittest.TestCase):
     def _compare_snar_files(self, snapshot, snarfile):
         """Compares the snar file of the given `snapshot` and the given
         (result) `snarfile`.
-        
+
         The header of the snar files (i.e. the tar version, time of backup)
         is not compared. Any following records (mtime, inode, filenames) are
-        compared and must be identical to pass the comparison.        
+        compared and must be identical to pass the comparison.
         """
         # only for debugging
         if LogFactory.getLogger().isEnabledFor(10):
@@ -450,7 +450,7 @@ class _TestSnapshotManagerBase(unittest.TestCase):
     def _compare_tar_archives(self, snapshot_path, result_path):
         """Compares the content of the `files.tar.gz` archive that are
         stored in the given locations (`snapshot_path` and `result_path`).
-        
+
         The archives are not extracted. The content of the archives using
         the tar option `--list` is compared. The content must be completely
         identical (same file owners, same dates, same files) to pass
@@ -494,13 +494,13 @@ class _TestSnapshotManagerBase(unittest.TestCase):
 class TestSnapshotManagerFromDisk(_TestSnapshotManagerBase):
     """Test case for testing 'read-only' functionality of the
     class 'SnapshotManager'. This test case covers tests that
-    read from disk but do not write to the disk. 
+    read from disk but do not write to the disk.
     """
     _path_class = _TestSnapshotManagerPaths
 
     def test_get_snapshots_all(self):
         """Getting list of snapshots in the target directory. Force reload
-        
+
         It is checked against number of returned values and the names
         of the snapshots. Additional for full snapshots it is checked whether
         the stored base is correct.
@@ -529,7 +529,7 @@ class TestSnapshotManagerFromDisk(_TestSnapshotManagerBase):
 
 #    def test_get_snapshots_by_timespan(self):
 #        raise NotImplementedError
-#    
+#
 #    def test_get_snapshots_by_date(self):
 #        raise NotImplementedError
 #
@@ -584,12 +584,12 @@ class TestSnapshotRemoveV1(_TestSnapshotRemoveBase):
 #        snp_list = self.snpman.get_snapshots_allformats(forceReload=True)
 #        snp = snp_list[3]
 #        snp_child = snp_list[2]
-#        
+#
 #        self.assertTrue(snp.isfull())
 #        self.assertEqual(snp_child.getBase(), snp.getName())
 #        self.assertNotEqual(snp_list[1].getBase(), snp.getName())
 #        self.assertNotEqual(snp_list[0].getBase(), snp.getName())
-#        
+#
 #        # only for debugging
 #        if LogFactory.getLogger().isEnabledFor(10):
 #            LogFactory.logger.debug("Snapshot file parent:")
@@ -600,8 +600,8 @@ class TestSnapshotRemoveV1(_TestSnapshotRemoveBase):
 #
 #        _snar1 = debug_snarfile_to_list(snp.getSnarFile())
 #        _snar2 = debug_snarfile_to_list(snp_child.getSnarFile())
-#        
-#        
+#
+#
 ##        self.snpman.removeSnapshot(snapshot=snp)
 
     def test_remove_latest_incr_snapshot(self):

@@ -99,22 +99,22 @@ def extract(sourcear, eff_local_sourcear, restore_file, dest , bckupsuffix = Non
 
     archType = getArchiveType(sourcear)
     _logger.debug("Archive type: %s" % archType)
-    if archType == "tar" :
+    if archType == "tar":
         pass
-    elif archType == "gzip" :
+    elif archType == "gzip":
         options.insert(1, "--gzip")
-    elif archType == "bzip2" :
+    elif archType == "bzip2":
         options.insert(1, "--bzip2")
-    else :
+    else:
         raise SBException (_("Invalid archive type."))
 
     if system.is_superuser():
         options.append("--same-owner")
-    if dest :
+    if dest:
         options.append("--directory=" + dest)
-    else :
+    else:
         options.append("--directory=" + _FOP.pathsep)
-    if bckupsuffix :
+    if bckupsuffix:
         options.append("--suffix=" + bckupsuffix)
 
     if splitsize > 0:
@@ -157,13 +157,13 @@ def extract2(sourcear, fileslist, dest, bckupsuffix = None, additionalOpts = Non
     options = ["-xp", "--ignore-failed-read", '--backup=existing']
 
     archType = getArchiveType(sourcear)
-    if archType == "tar" :
+    if archType == "tar":
         pass
-    elif archType == "gzip" :
+    elif archType == "gzip":
         options.insert(1, "--gzip")
-    elif archType == "bzip2" :
+    elif archType == "bzip2":
         options.insert(1, "--bzip2")
-    else :
+    else:
         raise SBException (_("Invalid archive type."))
 
     if system.is_superuser():
@@ -184,7 +184,7 @@ def extract2(sourcear, fileslist, dest, bckupsuffix = None, additionalOpts = Non
                     '--files-from=' + _FOP.normpath(fileslist)])
 
     outStr, errStr, retval = util.launch("tar", options)
-    if retval != 0 :
+    if retval != 0:
         LogFactory.getLogger().debug("output was : " + outStr)
         raise SBException("Error when extracting : " + errStr)
     if outStr.strip() == "":
@@ -203,16 +203,16 @@ def appendToTarFile(desttar, fileslist, workingdir, additionalOpts):
     options = ["--append", "--ignore-failed-read"]
 
     archType = getArchiveType(desttar)
-    if archType == "tar" :
+    if archType == "tar":
         pass
-    elif archType == "gzip" :
+    elif archType == "gzip":
         options.insert(1, "--gzip")
-    elif archType == "bzip2" :
+    elif archType == "bzip2":
         options.insert(1, "--bzip2")
-    else :
+    else:
         raise SBException (_("Invalid archive type."))
 
-    if additionalOpts and type(additionalOpts) == list :
+    if additionalOpts and type(additionalOpts) == list:
         options.extend(additionalOpts)
 
     options.extend(['--file=' + desttar, '--null'])
@@ -223,7 +223,7 @@ def appendToTarFile(desttar, fileslist, workingdir, additionalOpts):
     options.append('--files-from=' + _FOP.normpath(fileslist))
 
     outStr, errStr, retval = util.launch("tar", options)
-    if retval != 0 :
+    if retval != 0:
         LogFactory.getLogger().debug("output was : " + outStr)
         raise SBException("Error when extracting : " + errStr)
     if outStr.strip() == "":
@@ -270,7 +270,7 @@ def __prepare_common_opts(snapshot, targethandler, publish_progress, use_io_pipe
     options.append('--files-from=%s' % tmp_incl)
     options.append('--exclude-from=%s' % tmp_excl)
 
-    if snapshot.isFollowLinks() :
+    if snapshot.isFollowLinks():
         options.append("--dereference")
 
     archivename = "files.tar"
@@ -340,7 +340,7 @@ def __add_split_opts(snapshot, options, size):
     @type size: int
     @raise SBException: if the snapshot format is other than none
     """
-    if snapshot.getFormat() != "none" :
+    if snapshot.getFormat() != "none":
         raise SBException(_("For the moment split functionality is not compatible with compress option."))
     options.extend(["-L %s" % str(size), "-F %s" % util.get_resource_file("multipleTarScript")])
     return options
@@ -403,7 +403,7 @@ def _mk_tar_incr(snapshot, targethandler, publish_progress, supports_publish):
     LogFactory.getLogger().debug("Temporary snarfile: %s" % tmp_snarfile)
 
     # For an INC backup the base SNAR file should exists
-    if not _FOP.path_exists(base_snarfile) :
+    if not _FOP.path_exists(base_snarfile):
         LogFactory.getLogger().error(_("Unable to find the SNAR file to make an incremental backup."))
         LogFactory.getLogger().error(_("Falling back to full backup."))
         _mk_tar_full(snapshot, targethandler, publish_progress, _use_io_pipe)
@@ -473,9 +473,9 @@ def _mk_tar_full(snapshot, targethandler, publish_progress, supports_publish):
     LogFactory.getLogger().debug("Temporary snarfile: %s" % tmp_snarfile)
 
     # For a full backup the SNAR file shouldn't exists
-    if _FOP.path_exists(snarfile) :
+    if _FOP.path_exists(snarfile):
         _FOP.delete(snarfile)
-    if _FOP.path_exists(tmp_snarfile) :
+    if _FOP.path_exists(tmp_snarfile):
         _FOP.delete(tmp_snarfile)
 
     options.append("--listed-incremental=%s" % tmp_snarfile)
@@ -798,9 +798,9 @@ class Dumpdir(object):
         @return: finename
         @raise Exception: if the filename is null
         """
-        if self.filename :
+        if self.filename:
             return self.filename
-        else :
+        else:
             raise SBException(_("Dumpdir inconsistancy : 'filename' is empty"))
 
     def getControl(self):
@@ -813,7 +813,7 @@ class Dumpdir(object):
         """
         if self.control:
             return self.control
-        else :
+        else:
             raise SBException(_("Dumpdir inconsistancy : 'control' is empty"))
 
     def getHumanReadableControl(self):
@@ -881,12 +881,12 @@ class SnapshotFile(object):
 
         if _FOP.path_exists(filename):
             self.snpfile = filename
-        else :
-            if writeFlag :
+        else:
+            if writeFlag:
                 self.snpfile = filename
                 fd = _FOP.openfile_for_append(self.snpfile)
                 fd.close()
-            else :
+            else:
                 raise SBException(_("File '%s' does not exist.") % filename)
 
     def __str__(self):
@@ -911,16 +911,16 @@ class SnapshotFile(object):
 #        @return: the version
 #        @rtype: int
 #        """
-#        if self.version :
+#        if self.version:
 #            return self.version
 #
 #        self.header = self.__getHeaderInfos()
 #        m = self.versionRE.match(self.header)
-#        if m :
+#        if m:
 #            # we are version 1 or 2
 #            # check for version 2 first
 #            self.version = m.group(2)
-#        else :
+#        else:
 #            # we are version 0
 #            self.version = 0
 #
@@ -969,7 +969,7 @@ class SnapshotFile(object):
 #        fd.readline()
 #        fd.readline()
 #
-#        for line in fd.readlines() :
+#        for line in fd.readlines():
 #            line = line.rstrip()
 #
 #            nfs = line[0] # can be a + or a single white space
@@ -996,9 +996,9 @@ class SnapshotFile(object):
             Subroutine to format a content into dump dirs
             """
             result = []
-            if content :
+            if content:
                 for d in content.rstrip('\0').split('\0'):
-                    if d :
+                    if d:
                         result.append(Dumpdir(d))
             return result
 
@@ -1014,7 +1014,7 @@ class SnapshotFile(object):
         # skip header which is the first line and 2 entries separated with NULL in this case
 #TODO: Handle empty files properly
         n = 0
-        while n < 2 :
+        while n < 2:
             c = fd.read(1)
             if len(c) != 1:
                 raise SBException(_("The snarfile header is incomplete."))
@@ -1027,13 +1027,13 @@ class SnapshotFile(object):
 
         while c:
             currentline += c
-            if c == '\0' and last_c == '\0' :
+            if c == '\0' and last_c == '\0':
                 # we got a line
                 yield format(currentline)
 
                 currentline = ''
                 last_c = ''
-            else :
+            else:
                 last_c = c
             c = fd.read(1)
         fd.close
@@ -1048,7 +1048,7 @@ class SnapshotFile(object):
 #TODO: Handle empty files properly
         header = ""
         n = 0
-        while n < 2 :
+        while n < 2:
             c = fd.read(1)
             if len(c) != 1:
                 raise SBException(_("The snarfile header is incomplete."))
@@ -1070,7 +1070,7 @@ class SnapshotFile(object):
         @param timeofBackup: The time to set in the snar file
         @type timeofBackup: datetime
         """
-        if type(timeofBackup) != datetime :
+        if type(timeofBackup) != datetime:
             raise SBException("timeofBackup must be a datetime")
         fd = open(self.snpfile, 'w')
 
@@ -1104,7 +1104,7 @@ class SnapshotFile(object):
         @return: a string containing the computed content
         @rtype: string
         """
-        if type(contentList) != list :
+        if type(contentList) != list:
             raise SBException("Contentlist must be a list : %r" % repr(contentList))
 
         result = ""
@@ -1148,7 +1148,7 @@ class SnapshotFile(object):
 #TODO: Handle empty files properly
         header = ""
         n = 0
-        while n < 2 :
+        while n < 2:
             c = fd.read(1)
             if len(c) != 1:
                 raise SBException(_("The snarfile header is incomplete."))
@@ -1163,7 +1163,7 @@ class SnapshotFile(object):
         c = fd.read(1)
         while c:
             currentline += c
-            if c == '\0' and last_c == '\0' :
+            if c == '\0' and last_c == '\0':
                 # we got a line
                 nfs, mtime_sec, mtime_nano, dev_no, i_no, _dirname, \
                     _content = currentline.lstrip("\0").split("\0", 6)
@@ -1177,7 +1177,7 @@ class SnapshotFile(object):
 
                 currentline = ''
                 last_c = ''
-            else :
+            else:
                 last_c = c
             c = fd.read(1)
 
@@ -1242,7 +1242,7 @@ class MemSnapshotFile(SnapshotFileWrapper, SBdict):
         @param snapshotFile: a SnapshotFile to convert in MemSnapshotFile
         @type snapshotFile: sbackup.util.tar.SnapshotFile
         """
-        if not isinstance(snapshotFile, SnapshotFile) :
+        if not isinstance(snapshotFile, SnapshotFile):
             raise Exception("A SnapshotFile is required")
 
         SnapshotFileWrapper.__init__(self)
@@ -1319,7 +1319,7 @@ class ProcSnapshotFile(SnapshotFileWrapper):
         @param snapshotFile: a SnapshotFile to convert in MemSnapshotFile
         @type snapshotFile: sbackup.util.tar.SnapshotFile
         """
-        if not isinstance(snapshotFile, SnapshotFile) :
+        if not isinstance(snapshotFile, SnapshotFile):
             raise TypeError(_("A SnapshotFile is required"))
 
         SnapshotFileWrapper.__init__(self)
@@ -1374,8 +1374,8 @@ class ProcSnapshotFile(SnapshotFileWrapper):
         """
         for l in self.__snapshotFile.parseFormat2():
             dir = l[-2]
-            if l[-1] :
-                for dumpdir in l[-1] :
+            if l[-1]:
+                for dumpdir in l[-1]:
                     yield dir + _FOP.pathsep + dumpdir.getFilename()
 
     def iterRecords(self):
@@ -1444,12 +1444,12 @@ class ProcSnapshotFile(SnapshotFileWrapper):
         for f in self.__snapshotFile.parseFormat2():
             found = False
 
-            for i in range(0, len(result)) :
-                if result[i] == f[-2] or f[-2].startswith(result[i]) :
-                    if found :
+            for i in range(0, len(result)):
+                if result[i] == f[-2] or f[-2].startswith(result[i]):
+                    if found:
                         # then we are trying to overide
                         continue
-                    else :
+                    else:
                         found = True
                         break
                 elif result[i].startswith(f[-2]):
@@ -1458,9 +1458,9 @@ class ProcSnapshotFile(SnapshotFileWrapper):
                     found = True
                     # don't break cause it's possible that some others entries need to be overiden
 
-            if not found :
+            if not found:
                 result.append(f[-2])
-            else :
+            else:
                 cleanDupl()
 
         return result

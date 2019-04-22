@@ -41,19 +41,19 @@ class TestSBdict(unittest.TestCase):
     def testItems(self):
         " Items () "
         print " Items () \n"
-        for k, v in self.sbd.items() :
+        for k, v in self.sbd.items():
             print k , v
 
     def testKeys(self):
         " Keys () "
         print "Keys\n"
-        for k in self.sbd.keys() :
+        for k in self.sbd.keys():
             print k
 
     def testValues(self):
         ""
         print "Values\n"
-        for v in self.sbd.values() :
+        for v in self.sbd.values():
             print v
 
     def testGetSon(self):
@@ -61,7 +61,7 @@ class TestSBdict(unittest.TestCase):
 
     def testiterFirstItems(self):
         " Get the list of first items "
-        for f in self.sbd.iterFirstItems() :
+        for f in self.sbd.iterFirstItems():
             print f
 
 
@@ -70,7 +70,7 @@ class TestSBdict(unittest.TestCase):
 
     def testGetEffectiveFileList(self):
         "Get Effective FileList"
-        for v in self.sbd.getEffectiveFileList() :
+        for v in self.sbd.getEffectiveFileList():
             print v
 
     def testHasFile(self):

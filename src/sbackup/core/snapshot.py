@@ -129,16 +129,16 @@ class Snapshot(object):
         return self.__space_required
 
     # Public Methods
-    def getName(self) :
+    def getName(self):
         " return the name of the snapshot (ie the dir name)"
-        if not self.__name :
+        if not self.__name:
             raise SBException(_("Snapshot is inconsistent: __name is not set "))
-        else :
+        else:
             return self.__name
 
     def getDate(self):
         """
-        You can get from the dictionary returned the following keys :
+        You can get from the dictionary returned the following keys:
         year, month, day, hour, minute, second
         @return : a dictionary with the date time this snapshot has been taken.
         """
@@ -212,7 +212,7 @@ class Snapshot(object):
         """
         @return: the path to the exclude file list file
         """
-        if not self.__excludeFlistFile :
+        if not self.__excludeFlistFile:
             self.__excludeFlistFile = self._fop.joinpath(self.getPath(), "excludes.list")
 
         return self.__excludeFlistFile
@@ -221,7 +221,7 @@ class Snapshot(object):
         """
         @return: the path to the include file list file
         """
-        if not self.__includeFlistFile :
+        if not self.__includeFlistFile:
             self.__includeFlistFile = self._fop.joinpath(self.getPath(), "includes.list")
 
         return self.__includeFlistFile
@@ -230,15 +230,15 @@ class Snapshot(object):
         """
         @return: the path to the TAR SNAR file
         """
-        if not self.__snarfile :
+        if not self.__snarfile:
             self.__snarfile = self._fop.joinpath(self.getPath(), "files.snar")
         return self.__snarfile
 
-    def getPath(self) :
+    def getPath(self):
         "return the complete path of the snapshot"
-        if not self.__snapshotpath :
+        if not self.__snapshotpath:
             raise SBException(_("Snapshot is inconsistent: __snapshotpath is not set "))
-        else :
+        else:
             return self.__snapshotpath
 
     def getFormat(self):
@@ -250,7 +250,7 @@ class Snapshot(object):
             self.__format = self._fop.readfile(_formatf).split('\n')[0]
         return self.__format
 
-    def getBase(self) :
+    def getBase(self):
         """Returns the name of the base snapshot of this snapshot. If this
         is a full dump, None is returned. Please note that, if a base name
         was successful read from the snapshot directory once, this name is
@@ -295,30 +295,30 @@ class Snapshot(object):
             _arn = self._fop.joinpath(self.getPath(), "files.tar")
             if self._fop.path_exists(_arn):
                 return _arn
-            else :
+            else:
                 problem = True
 
         elif self.getFormat() == "gzip":
             _arn = self._fop.joinpath(self.getPath(), "files.tar.gz")
             if self._fop.path_exists(_arn):
                 return _arn
-            else :
+            else:
                 problem = True
 
         elif self.getFormat() == "bzip2":
             _arn = self._fop.joinpath(self.getPath(), "files.tar.bz2")
-            if self._fop.path_exists(_arn) :
+            if self._fop.path_exists(_arn):
                 return _arn
-            else :
+            else:
                 problem = True
 
         else:
             problem = True
 
-        if problem :
+        if problem:
             raise NotValidSnapshotException(_("The snapshot compression format is supposed to be '%s' but the corresponding well named file wasn't found") % self.getFormat())
 
-    def getVersion(self) :
+    def getVersion(self):
         """Retrieves and returns the version of the snapshot.
 
         """
@@ -331,10 +331,10 @@ class Snapshot(object):
             verfile = self._fop.joinpath(self.getPath(), "ver")
             if not self._fop.path_exists(verfile):
                 return False
-            else :
+            else:
                 ver = self._fop.readfile(verfile)
 #                self.logger.debug("Version read from snapshot: `%s`" % ver)
-                try :
+                try:
                     # major =
                     int(ver[0])
                     # minor =
@@ -344,25 +344,25 @@ class Snapshot(object):
                 self.__version = ver[:3]
                 return self.__version
 
-    def getExcludes(self) :
+    def getExcludes(self):
         "Return the content of excludes (the list of Regex excludes)"
         if self.__excludes : return self.__excludes
-        else :
+        else:
             excludefile = self._fop.joinpath(self.getPath(), "excludes")
             if not self._fop.path_exists(excludefile):
                 return False
-            else :
+            else:
                 self.__excludes = self._fop.pickleload(excludefile)
                 return self.__excludes
 
-    def getPackages(self) :
+    def getPackages(self):
         "Return the packages"
         if self.__packages : return self.__packages
-        else :
+        else:
             packagesfile = self._fop.joinpath(self.getPath(), "packages")
             if not self._fop.path_exists(packagesfile):
                 return False
-            else :
+            else:
                 self.__packages = self._fop.readfile(packagesfile)
                 return self.__packages
 
@@ -384,7 +384,7 @@ class Snapshot(object):
 
         if useMem:
             snpfileinfo = tar.MemSnapshotFile(snpfile)
-        else :
+        else:
             snpfileinfo = tar.ProcSnapshotFile(snpfile)
 
         return snpfileinfo
@@ -428,7 +428,7 @@ class Snapshot(object):
         self.__commit_archive(targethandler, publish_progress, supports_publish)
         self.commitverfile()
 
-    def addToIncludeFlist (self, item) :
+    def addToIncludeFlist (self, item):
         """
         Add an item to be backup into the snapshot.
         Usage :  addToIncludeFlist(item) where
@@ -439,7 +439,7 @@ class Snapshot(object):
         """
         self.__includeFlist[item] = "1"
 
-    def addToExcludeFlist (self, item) :
+    def addToExcludeFlist (self, item):
         """
         Add an item to not be backup into the snapshot.
         Usage :  addToExcludeFlist(item) where
@@ -467,20 +467,20 @@ class Snapshot(object):
         Sets the backup compression format
         cformat : the format to set
         """
-        if cformat in AVAIL_SNP_FORMATS :
+        if cformat in AVAIL_SNP_FORMATS:
             self.logger.debug("Set the compression format to %s" % cformat)
             self.__format = cformat
 
-    def setPath(self, path) :
+    def setPath(self, path):
         "Set the complete path of the snapshot. That path will be used to get the name of the snapshot"
         self.__snapshotpath = self._fop.normpath(str(path))
         name = self._fop.get_basename(self.__snapshotpath)
-        if not self.__isValidName(name) :
+        if not self.__isValidName(name):
             raise NotValidSnapshotNameException(_("Name of Snapshot not valid : %s") % self.__name)
-        else :
+        else:
             self.__name = name
 
-    def setBase(self, baseName) :
+    def setBase(self, baseName):
         """Sets `baseName` as the name of the base snapshot of this
         snapshot and clears the reference to base snapshot object.
         It is not possible to set the base for a full backup, this
@@ -493,21 +493,21 @@ class Snapshot(object):
             self.__base = None
             self.__baseSnapshot = None
             raise SBException("Base cannot be set for full snapshot.")
-        if not self.__isValidName(baseName) :
+        if not self.__isValidName(baseName):
             raise SBException (_("Name of base not valid : %s") % self.__name)
         # set the name and clean the baseSnapshot
         self.__base = baseName
         self.__baseSnapshot = None
 
-    def setVersion(self, ver = "1.5") :
+    def setVersion(self, ver = "1.5"):
         "Set the version of the snapshot"
         self.__version = ver
 
-    def setExcludes(self, excludes) :
+    def setExcludes(self, excludes):
         "Set the content of excludes (the list of Regex excludes)"
         self.__excludes = excludes
 
-    def setPackages(self, packages = "") :
+    def setPackages(self, packages = ""):
         """
         set the packages list for debian based distros
         @param packages: Must be the results of the 'dpkg - -get - selections' command . default = ''
@@ -527,7 +527,7 @@ class Snapshot(object):
         """
         @param activate: boolean to activate symlinks follow up
         """
-        if type(activate) != bool :
+        if type(activate) != bool:
             raise TypeError("the activate parameter must be a boolean")
         self.__followlinks = activate
 
@@ -539,14 +539,14 @@ class Snapshot(object):
         @param name : the snapshot name
         """
         # validate the name
-        if not self.__isValidName(self.__name) :
+        if not self.__isValidName(self.__name):
             raise NotValidSnapshotNameException(_("Invalid name of snapshot: %s") % self.__name)
 
         _verf = self._fop.joinpath(self.getPath(), "ver")
         if  not self._fop.path_exists(_verf):
             raise NotValidSnapshotException(_("Unable to read mandatory file `ver`"))
 
-    def __isValidName(self, name) :
+    def __isValidName(self, name):
         " Check if the snapshot name is valid "
         _res = False
         if re.match(self.__validname_re , name) is not None:
@@ -564,7 +564,7 @@ class Snapshot(object):
         _formatf = self._fop.joinpath(self.getPath(), "format")
         self._fop.writetofile(_formatf, formatInfos)
 
-    def commitverfile(self) :
+    def commitverfile(self):
         """Commit ver file on the disk.
         """
         if not self.getVersion():
@@ -629,7 +629,7 @@ class Snapshot(object):
     def commitpackagefile(self):
         " Commit packages file on the disk"
         _packf = self._fop.joinpath(self.getPath(), "packages")
-        if not self.getPackages() :
+        if not self.getPackages():
             self._fop.writetofile(_packf, "")
         else:
             self._fop.writetofile(_packf, self.getPackages())

@@ -36,14 +36,14 @@ class Singleton(type):
         return self.instance
 
 
-class SBdict(dict) :
+class SBdict(dict):
     """
     This is a structure used by sbackup to store flist and fprops .
-    The structure is in fact a tree meant to :
+    The structure is in fact a tree meant to:
     - ease the retrieval of the content of a folder
     - to optimise the use of memory to store the flist file by avoiding to store identical subpath.
 
-    The flist file has this contents :
+    The flist file has this contents:
 
     /home
     /home/wattazoum
@@ -61,10 +61,10 @@ class SBdict(dict) :
                                                             ->d2
             ->user        ->Desktop    ->sbackup-test    ->d17    ->d3    ->f4.txt
 
-    We use for that this node :
+    We use for that this node:
     { 'file' : [ 'props', sonNode ] }
 
-    Example :
+    Example:
 
     { 'home' : [ 'props', {
          'wattazoum' : [ 'props', {
@@ -89,14 +89,14 @@ class SBdict(dict) :
            We should replace it or at least provide a faster alternative.
     """
     def __init__(self, mapping = None):
-        if not mapping :
+        if not mapping:
             dict.__init__(self)
-        else :
-            if type(mapping) == list and type(mapping[0]) == tuple and len(mapping[0]) == 2 :
+        else:
+            if type(mapping) == list and type(mapping[0]) == tuple and len(mapping[0]) == 2:
                 dict.__init__(self)
-                for key, value in mapping :
+                for key, value in mapping:
                     self.__setitem__(key, value)
-            else :
+            else:
                 raise Exception ("Not implemented yet")
 
 #    def __str__(self):
@@ -111,9 +111,9 @@ class SBdict(dict) :
         @param path: the path to get the son of
         @return: a SBdict or None if there were no son
         """
-        if path in self :
+        if path in self:
             return self[path][1]
-        else :
+        else:
             raise SBException("'%s' not in SBdict" % path)
 
     def setSon(self, path, son):
@@ -123,14 +123,14 @@ class SBdict(dict) :
         @param path: the path to set the son on
         @param son: the son as a SBdict
         """
-        if son != None and type(son) != SBdict :
+        if son != None and type(son) != SBdict:
             raise CorruptedSBdictException("You can't set '%s' as a son " % str(son))
-        if not self[path] or self[path][0] == None :
+        if not self[path] or self[path][0] == None:
             self.__setitem__(path, [None, son])
-        else :
+        else:
             self.__setitem__(path, [self[path][0], son])
 
-    def __contains__(self, key) :
+    def __contains__(self, key):
         """
         Return True if the path have been found and false if not
         @param key: a path to search (/home/user/test/dir )
@@ -142,16 +142,16 @@ class SBdict(dict) :
             return False
         else : # base dir found, we look for the son
             # if the son is empty, we found our element
-            if len(splited) == 1 or not splited[1] :
+            if len(splited) == 1 or not splited[1]:
                 return True
-            if self[splited[0]][1] != None :
-                if type(self[splited[0]][1]) == SBdict :
+            if self[splited[0]][1] != None:
+                if type(self[splited[0]][1]) == SBdict:
                     return splited[1] in self[splited[0]][1]
-                else :
+                else:
                     raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(type(self[splited[0]][1])))
             else : return False
 
-    def __setitem__(self, key, value) :
+    def __setitem__(self, key, value):
         """
         Add an item
         @param key: a string
@@ -160,44 +160,44 @@ class SBdict(dict) :
         """
         valIsSubtree = False
 
-        if value != None :
-            if type(value) == list and len(value) == 2 and (value[1] is None or (value[1] != None and type(value[1]) == SBdict))  :
+        if value != None:
+            if type(value) == list and len(value) == 2 and (value[1] is None or (value[1] != None and type(value[1]) == SBdict)):
                 valIsSubtree = True
 
         splited = key.split(os.sep, 1)
 
-        if len(splited) == 1 or not splited[1] :
+        if len(splited) == 1 or not splited[1]:
             # we are at the end of a path
             # we fallback to the normal behaviour
             if splited[0] in dict(self):
                 # The key exists
                 item = dict.__getitem__(self, splited[0])
-                if not valIsSubtree :
+                if not valIsSubtree:
                     prop = value
                     dict.__setitem__(self, splited[0], [prop, item[1]])
-                else :
+                else:
                     prop = value[0]
-                    if value[1] == None :
+                    if value[1] == None:
                         dict.__setitem__(self, splited[0], [prop, item[1]])
-                    else :
+                    else:
                         dict.__setitem__(self, splited[0], value)
 
-            else :
+            else:
                 #the key doesn't exist
-                if not valIsSubtree :
+                if not valIsSubtree:
                     dict.__setitem__(self, splited[0], [value, None])
-                else :
+                else:
                     dict.__setitem__(self, splited[0], value)
         else : # path is composed ,
             # we check if the base dir exists and get the props infos
             if splited[0] in dict(self):
                 item = dict.__getitem__(self, splited[0])
                 prop = item[0]
-                if item[1] != None :
-                    if type(item[1]) != SBdict :
+                if item[1] != None:
+                    if type(item[1]) != SBdict:
                         raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(item[1]))
                     son = item[1]
-                else :
+                else:
                     son = SBdict()
             else:
                 # get the properties of the base dir
@@ -213,10 +213,10 @@ class SBdict(dict) :
         """
         if key not in self : return False
 
-        if key == os.sep :
+        if key == os.sep:
             dict.__delitem__(self, "")
             return True
-        else :
+        else:
             spl = key.rstrip(os.sep).split(os.sep)
             nkey = os.sep.join(spl[:len(spl) - 1])
             last = spl[len(spl) - 1]
@@ -224,7 +224,7 @@ class SBdict(dict) :
             return True
 
 
-    def __getitem__(self, key) :
+    def __getitem__(self, key):
         """
         Return the item Value
         @param key: a path to search (/home/user/test/dir )
@@ -236,16 +236,16 @@ class SBdict(dict) :
             return False
         else : # base dir found, we look for the son
             # if the son is empty, we found our element
-            if len(splited) == 1 or not splited[1] :
+            if len(splited) == 1 or not splited[1]:
                 return dict.__getitem__(self, splited[0])
-            if self[splited[0]][1] != None :
-                if type(self[splited[0]][1]) == SBdict :
+            if self[splited[0]][1] != None:
+                if type(self[splited[0]][1]) == SBdict:
                     return self[splited[0]][1].__getitem__(splited[1])
-                else :
+                else:
                     raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(type(self[splited[0]][1])))
             else : return False
 
-    def keys(self, _path = None) :
+    def keys(self, _path = None):
         """Returns an iterator that goes recursively through the full paths.
 
         Should return fullpath (means what?)
@@ -260,10 +260,10 @@ class SBdict(dict) :
             else:
                 for path in son.keys(_path):
                     yield path
-        if len(_path) > 0 :
+        if len(_path) > 0:
             _path.pop()
 
-    def items(self, _path = None) :
+    def items(self, _path = None):
         """Iterator that goes recursively through the whole dictionary and returns
         paths and their properties. Every sub-path is considered.
 
@@ -279,10 +279,10 @@ class SBdict(dict) :
             else:
                 for path, prop in son.items(_path):
                     yield (path, prop)
-        if len(_path) > 0 :
+        if len(_path) > 0:
             _path.pop()
 
-    def values(self, _path = None) :
+    def values(self, _path = None):
         """
         an Iterator that gets recursively the full path
         Should return props
@@ -297,7 +297,7 @@ class SBdict(dict) :
             else:
                 for prop in son.values(_path):
                     yield prop
-        if len(_path) > 0 :
+        if len(_path) > 0:
             _path.pop()
 
     def iterFirstItems(self, _path = None):
@@ -309,16 +309,16 @@ class SBdict(dict) :
             _path = []
         for dirname, (props, son) in dict.items(self):
             _path.append(dirname)
-            if props != None :
+            if props != None:
                 yield os.sep.join(_path)
                 _path.pop()
             else:
-                if son is not None :
+                if son is not None:
                     for path in son.iterFirstItems(_path):
                         yield path
-                else :
+                else:
                     raise SBException("getting to an ending file without properties")
-        if len(_path) > 0 :
+        if len(_path) > 0:
             _path.pop()
 
     def getEffectiveFileList(self, path = None):
@@ -338,7 +338,7 @@ class SBdict(dict) :
         This means, some files won't appear because they are part of an included sub directory
         """
         for _file in self.getEffectiveFileList(path):
-            if not self.hasParentDirIncluded(_file) :
+            if not self.hasParentDirIncluded(_file):
                 yield _file
 
     def hasFile(self, _file):
@@ -346,10 +346,10 @@ class SBdict(dict) :
         """
         if _file not in self:
             return False
-        else :
-            if self.__getitem__(_file)[0] is None :
+        else:
+            if self.__getitem__(_file)[0] is None:
                 return False
-            else :
+            else:
                 return True
 
     def contains_path(self, path):

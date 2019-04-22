@@ -279,10 +279,10 @@ class SRestoreGTK:
 
         # Check if these directories are complete and remove from the list those that are not
         for adir in listing[:]:
-            if not gnomevfs.exists(self.target+"/"+adir+"/ver") :
+            if not gnomevfs.exists(self.target+"/"+adir+"/ver"):
                 listing.remove( adir )
                 continue
-            else :
+            else:
                 if str(gnomevfs.read_entire_file( self.target+"/"+adir+"/ver"))[:3] != "1.4":
                     listing.remove( adir )
                     continue

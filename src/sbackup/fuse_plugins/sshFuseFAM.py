@@ -37,7 +37,7 @@ except ImportError:
 ssh_re = "^ssh://"
 ssh_url_re = ssh_re + "([^:]+?)(:([^@]+?))?@([^/^:^@]+?)(:([0-9]+?))?/(.*)"
 
-class sshFuseFAM (pluginFAM)  :
+class sshFuseFAM (pluginFAM):
     """
     The fuseFAM plugin for ssh
     @requires: sshfs, python-pexpect
@@ -78,9 +78,9 @@ class sshFuseFAM (pluginFAM)  :
         """
         exp = re.compile(ssh_url_re)
         match = exp.search(source)
-        if not match :
+        if not match:
             raise FuseFAMException(_("Error matching the schema 'ssh://user:pass@example.com/home/' with '%s' (The '/' after server is mandatory)") % source)
-        else :
+        else:
             remoteSource = "ssh://" + match.group(1)
             if match.group(3):
                 remoteSource += ":" + match.group(3)
@@ -91,13 +91,13 @@ class sshFuseFAM (pluginFAM)  :
 
             user = match.group(1)
             mountpoint = local_file_utils.joinpath(mountbase, self._defineMountDirName(source))
-            if match.group(7) :
+            if match.group(7):
                 pathinside = match.group(7)
-            else :
+            else:
                 pathinside = ""
 
         #If the path is already mounted No need to retry
-        if self.checkifmounted(source, mountbase) :
+        if self.checkifmounted(source, mountbase):
             return (remoteSource, mountpoint, pathinside)
 
         cmd = "sshfs " + user + "@" + match.group(4) + ":/"
@@ -106,7 +106,7 @@ class sshFuseFAM (pluginFAM)  :
         port = match.group(6)
         if port:
             cmd += " -p " + port
-        if not local_file_utils.path_exists(mountpoint) :
+        if not local_file_utils.path_exists(mountpoint):
             local_file_utils.makedir(mountpoint)
 
         if system.is_superuser():
@@ -124,7 +124,7 @@ class sshFuseFAM (pluginFAM)  :
 
         if i == 1 or i == 2:
             self.logger.debug("Expecting password.")
-            if not password :
+            if not password:
                 sshfsp.sendline("fake")
                 local_file_utils.delete(mountpoint)
                 raise SBException("sshfs is requesting a password and none has been passed.")
@@ -155,9 +155,9 @@ class sshFuseFAM (pluginFAM)  :
         """
         exp = re.compile(ssh_url_re)
         match = exp.search(remote)
-        if not match :
+        if not match:
             raise FuseFAMException(_("Error matching the schema 'ssh://user:pass@example.com:21/home/' with '%s' (The '/' after server is mandatory)") % remote)
-        else :
+        else:
             user = match.group(1)
             dirname = "ssh_" + user + "@" + match.group(4)
             if match.group(6):

@@ -49,17 +49,17 @@ class RestoreManager(object):
         file to its old location.
         All existing files must be moved to a "*.before_restore_$time" files.
         @param snapshot:
-        @param file :
+        @param file:
         """
         self.restoreAs(snapshot, _file, None)
 
-    def restoreAs(self, snapshot, _file, target, backupFlag = True, failOnNotFound = True) :
+    def restoreAs(self, snapshot, _file, target, backupFlag = True, failOnNotFound = True):
         """
         Restore one file or directory from the backup tdir with name
         file to target (or to its old location if None if given to target).
         All existing files must be moved to a "*.before_restore_$time" files.
         @param snapshot:
-        @param file :
+        @param file:
         @param target: where to restore given file/dir (not the backup destination/snapshot dir)
         @param backupFlag: Set to false to make no backup when restoring (default = True)
         @param failOnNotFound: set to False if we don't want to fail if a file is not found (default is True)
@@ -90,7 +90,7 @@ class RestoreManager(object):
         self.logger.debug("eff. local path to archive: %s" % _larpath)
 
         suffix = None
-        if backupFlag :
+        if backupFlag:
             now = datetime.datetime.now().isoformat("_").replace(":", ".")
             suffix = ".before_restore_" + now
 
@@ -125,18 +125,18 @@ class RestoreManager(object):
                             bckupsuffix = suffix, splitsize = snapshot.getSplitedSize())
         else:
             # target is set to None or target not exists
-            if target and not self._fop.path_exists(target) :
+            if target and not self._fop.path_exists(target):
                 #target != None but target doesn't exists
                 self._fop.makedirs(target)
                 tar.extract(snapshot.getArchive(), _larpath, _file, target,
                             splitsize = snapshot.getSplitedSize())
-            else :
+            else:
                 # Target = None , extract at the place it belongs
-                if self._fop.path_exists(_file) :
+                if self._fop.path_exists(_file):
                     # file exist:
                     tar.extract(snapshot.getArchive(), _larpath, _file, target,
                                 bckupsuffix = suffix, splitsize = snapshot.getSplitedSize())
-                else :
+                else:
                     # file doesn't exist nothing to move, just extract
                     tar.extract(snapshot.getArchive(), _larpath, _file, target,
                                 splitsize = snapshot.getSplitedSize())

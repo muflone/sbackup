@@ -514,7 +514,7 @@ def _readline_nullsep(fd):
         currentline = ''
 
         while c:
-            if c == '\0'  :
+            if c == '\0':
                 # we got a line
                 break
             currentline += c

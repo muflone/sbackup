@@ -56,7 +56,7 @@ class TestSnapshotfile(unittest.TestCase):
 #        mb = _size / (1000*1000)
 #        kb = ( _size % (1000*1000) ) / 1000
 #        b = ( _size % (1000*1000) ) % 1000
-#        print "Size: %s MB %s kB %s" % (mb, kb, b) 
+#        print "Size: %s MB %s kB %s" % (mb, kb, b)
 
 
 def suite():

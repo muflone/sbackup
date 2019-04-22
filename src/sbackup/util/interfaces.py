@@ -164,11 +164,11 @@ class IOperations(object):
         raise NotImplementedError(_get_notimplemented_msg("IOperations", "copyfile"))
 
     @classmethod
-    def listdir(cls, target) :
+    def listdir(cls, target):
         raise NotImplementedError(_get_notimplemented_msg("IOperations", "listdir"))
 
     @classmethod
-    def listdir_fullpath(cls, target) :
+    def listdir_fullpath(cls, target):
         raise NotImplementedError(_get_notimplemented_msg("IOperations", "listdir_fullpath"))
 
     @classmethod

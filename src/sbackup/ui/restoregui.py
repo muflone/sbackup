@@ -320,7 +320,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             toDate = "-".join([str(date[0]), "%02d" % (int(date[1]) + 1), "31"])
             snplist = self.snpman.get_snapshots_allformats_by_timespan_ro(fromDate, toDate)
 
-            for snapshot in snplist :
+            for snapshot in snplist:
                 self.widgets["calendar"].mark_day(int(snapshot.getDate()["day"]))
 
             self.snplisttreestore.clear()
@@ -347,7 +347,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                     self.__fam_target_hdl.set_terminate_callback(self._custom_fam_term_cb)
                     self.__fam_target_hdl.terminate()
 
-        elif self.widgets['customradiob'].get_active() :
+        elif self.widgets['customradiob'].get_active():
             if self._defaultdest_active:
                 self._defaultdest_active = False
 
@@ -452,12 +452,12 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         dummy = self.flisttreestore.iter_children(rootiter)
 
         son = self.currentsbdict.getSon(self.__fop.joinpath(path))
-        if son :
+        if son:
             for d in dict.keys(self.currentsbdict.getSon(self.__fop.joinpath(path))):
                 iter = self.flisttreestore.append(rootiter, [d])
                 if self.currentsbdict.getSon(self.__fop.joinpath(path), d):
                     self.flisttreestore.append(iter, [_("Loading ...")])
-        if dummy :
+        if dummy:
             self.flisttreestore.remove(dummy)
 
     def on_filelisttreeview_cursor_changed(self, *args): #IGNORE:W0613
@@ -466,7 +466,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.widgets['buttonspool'].set_sensitive(True)
             # deactivate restore buttons if the selection is not included in
             state = tstore.get_value(iter, 1)
-            if state == Dumpdir.getHRCtrls()['N'] :
+            if state == Dumpdir.getHRCtrls()['N']:
                 self.widgets['restore'].set_sensitive(False)
                 self.widgets['restoreas'].set_sensitive(False)
             else:
@@ -487,15 +487,15 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
 
         content = self.currSnpFilesInfos.getContent(path)
         # content is a list of Dumpdirs
-        if not content :
+        if not content:
             # content is empty, do nothing
             pass
-        else :
-            for f in content :
+        else:
+            for f in content:
                 iter = self.flisttreestore.append(rootiter, [f.getFilename(), f.getHumanReadableControl()])
-                if f.getControl() == TAR.Dumpdir.DIRECTORY :
+                if f.getControl() == TAR.Dumpdir.DIRECTORY:
                     self.flisttreestore.append(iter, [_("Loading ..."), None])
-        if dummy :
+        if dummy:
             self.flisttreestore.remove(dummy)
         self._make_topwin_busy(False)
 
@@ -557,9 +557,9 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.flisttreestore.append(None,
                                     [_("This snapshot seems empty."), None])
             self.widgets['snpdetails'].set_sensitive(False)
-        else :
+        else:
             self.widgets['snpdetails'].set_sensitive(True)
-            for k in items :
+            for k in items:
                 # add k and append the content if not empty
                 _iter = self.flisttreestore.append(None,
                             [k, TAR.Dumpdir.getHRCtrls()[TAR.Dumpdir.DIRECTORY]])
@@ -767,7 +767,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                 if _ver == Infos.SNPCURVERSION:
                     self.widgets["txt_current_base"].set_text(str(self.currentSnp.getBase()))
                     self.widgets["deleteBox"].show()
-                else :
+                else:
                     self.widgets["deleteBox"].hide()
                     message = _("Snapshot version is not supported (Only %(supportedversion)s is supported). Version '%(currentversion)s' found.") % {'supportedversion': Infos.SNPCURVERSION, 'currentversion':self.currentSnp.getVersion() }
                     self.logger.warning(message)

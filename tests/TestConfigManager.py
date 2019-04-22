@@ -38,14 +38,14 @@ class TestConfigManager(unittest.TestCase):
     #===========================================================================
     # def testsetDefaultForRoot(self):
     #    "Set the default config for root user"
-    #    if os.geteuid() != 0 :
+    #    if os.geteuid() != 0:
     #        self.assertRaises(IOError, self.config.setDefaultForRoot )
-    #    else :
+    #    else:
     #        self.config.setDefaultForRoot()
     #        self.assertTrue(os.path.exists("/var/log/sbackup.log"))
-    # 
+    #
     # def testsetDefaultForUsers(self):
-    #    "Set the default config for normal users"    
+    #    "Set the default config for normal users"
     #    self.config.setDefaultForUsers()
     #===========================================================================
 
@@ -53,7 +53,7 @@ class TestConfigManager(unittest.TestCase):
         """Testing of default settings.
         """
         self.config._set_defaults()
-        if os.geteuid() == 0 :
+        if os.geteuid() == 0:
             self.assertTrue(os.path.exists("/var/log/sbackup.log"))
 
 

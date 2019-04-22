@@ -34,7 +34,7 @@ ftp_re = "^ftp://"
 ftpUrlRegex = ftp_re + "(([^:]+):([^@]+)@)?" + "([^/^:^@]+?)" + "(:([0-9]+))?" + "/(.*)"
 
 
-class ftpFuseFAM (pluginFAM)  :
+class ftpFuseFAM (pluginFAM):
     """The fuseFAM plugin for ftp
 
     @requires: curlftpfs
@@ -84,7 +84,7 @@ class ftpFuseFAM (pluginFAM)  :
             os.mkdir(mountpoint)
 
         # check if it is already mounted first
-        if not self.checkifmounted(source, mountbase) :
+        if not self.checkifmounted(source, mountbase):
             # Create output log file
             outptr, outFile = mkstemp(prefix = "ftpFuseFAMmount_output_")
             # Create error log file
@@ -156,7 +156,7 @@ class ftpFuseFAM (pluginFAM)  :
         Helper method that builds the name of the mount directory.
         """
         dirname = "ftp_"
-        if spliturl.user :
+        if spliturl.user:
             dirname += spliturl.user + "@"
         dirname += spliturl.server
         if spliturl.port:

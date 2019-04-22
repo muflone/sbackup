@@ -96,7 +96,7 @@ class pluginFAM(object):
 
             self.logger.debug("fusermount output:\n%s\n%s" % (outStr, errStr))
 
-            if retval != 0 :
+            if retval != 0:
                 raise exceptions.SBException("Unable to unmount `%s`: %s" % (mounteddir, errStr))
             else:
                 self.logger.info("Successfully unmounted: `%s`" % mounteddir)

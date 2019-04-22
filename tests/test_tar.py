@@ -163,13 +163,13 @@ class TestSnapshotFile(unittest.TestCase):
         """Parse the SNAR file"""
         for f in self.snarSNPfile.parseFormat2():
             print f[-2] + "\t"
-            for d in f[-1] :
+            for d in f[-1]:
                 print str(d)
 
     def testMemSnasphotFile(self):
         " Create and read a MemSnapshotFile "
         msnpf = MemSnapshotFile(self.snarSNPfile)
-        for i in msnpf.getContent("/home/wattazoum/Images/camescope/2007-04-08--09.09.05") :
+        for i in msnpf.getContent("/home/wattazoum/Images/camescope/2007-04-08--09.09.05"):
             print str(i)
         print msnpf
 
@@ -448,18 +448,18 @@ class TestProcSnapshotFile(unittest.TestCase):
     def testProcSnapshotFile(self):
         " Create and read a ProcSnapshotFile "
         psnpf = ProcSnapshotFile(self.snarSNPfile)
-        for i in psnpf.getContent("/home/wattazoum/Images/camescope/2007-04-08--09.09.05") :
+        for i in psnpf.getContent("/home/wattazoum/Images/camescope/2007-04-08--09.09.05"):
             print str(i)
         print psnpf
 
         psnpf = ProcSnapshotFile(self.snarSNPfile2)
         self.assertRaises(SBException, psnpf.getContent, "/home/wattazoum/Images/camescope/2007-04-08--09.09.05")
-        for i in psnpf.getContent("/home/wattazoum/Images") :
+        for i in psnpf.getContent("/home/wattazoum/Images"):
             print str(i)
         print psnpf
 
 
-class TestTarUtilsArchiveType(unittest.TestCase) :
+class TestTarUtilsArchiveType(unittest.TestCase):
     """Test case for function 'getArchiveType' defined in module 'tar'.
     """
 
@@ -487,7 +487,7 @@ class TestTarUtilsArchiveType(unittest.TestCase) :
             self.assertEqual(_res, _data["type"])
 
 
-class TestTarUtilsGetDumpdir(unittest.TestCase) :
+class TestTarUtilsGetDumpdir(unittest.TestCase):
     """Test case for function 'get_dumpdir_from_list' defined in module 'tar'.
     """
 
@@ -561,7 +561,7 @@ class TestTarUtilsGetDumpdir(unittest.TestCase) :
             self.assertTrue(_res is _data["list"][_data["result"]])
 
 
-class TestTarUtilsAppendTar(unittest.TestCase) :
+class TestTarUtilsAppendTar(unittest.TestCase):
     """Test case for functions 'appendToTar..' defined in module 'tar'.
     """
 

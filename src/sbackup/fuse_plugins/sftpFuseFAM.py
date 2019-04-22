@@ -32,7 +32,7 @@ from sbackup.util import local_file_utils
 sftp_re = "^sftp://"
 sftpUrlRegex = sftp_re + "(([^:]+):([^@]+)@)?" + "([^/^:^@]+?)" + "(:([0-9]+))?" + "/(.*)"
 
-class sftpFuseFAM (pluginFAM)  :
+class sftpFuseFAM (pluginFAM):
     """
     The fuseFAM plugin for sftp
     @requires: curlftpfs
@@ -77,11 +77,11 @@ class sftpFuseFAM (pluginFAM)  :
         spliturl = SplittedURL(source)
         mountpoint = self.__get_mount_dir(mountbase, spliturl)
 
-        if not os.path.exists(mountpoint) :
+        if not os.path.exists(mountpoint):
             os.mkdir(mountpoint)
 
         #If the path is already mounted No need to retry
-        if not self.checkifmounted(source, mountbase) :
+        if not self.checkifmounted(source, mountbase):
             # Create output log file
             outptr, outFile = mkstemp(prefix = "sftpFuseFAMmount_output_")
             # Create error log file
@@ -153,7 +153,7 @@ class sftpFuseFAM (pluginFAM)  :
         Helper method that builds the name of the mount directory.
         """
         dirname = "sftp_"
-        if spliturl.user :
+        if spliturl.user:
             dirname += spliturl.user + "@"
         dirname += spliturl.server
         if spliturl.port:

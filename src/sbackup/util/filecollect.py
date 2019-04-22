@@ -490,7 +490,7 @@ class FileCollector(object):
                 else:
                     # if it's a directory, enter inside
                     try:
-                        for _dir_item in local_file_utils.listdir(path) :
+                        for _dir_item in local_file_utils.listdir(path):
                             _dir_item = local_file_utils.joinpath(path, _dir_item)
                             self._check_for_excludes(path = _dir_item)
                         self.__collect_stats.count_dir()    # the directory `path`

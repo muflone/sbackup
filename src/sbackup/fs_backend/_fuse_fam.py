@@ -117,10 +117,10 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
         """check if the mount dir is valid
         :todo: Do not create dir here? Use makedirs?
         """
-        if not os.path.exists(self.__mountdir) :
+        if not os.path.exists(self.__mountdir):
             os.mkdir(self.__mountdir)
         else:
-            if not os.path.isdir(self.__mountdir) :
+            if not os.path.isdir(self.__mountdir):
                 raise SBException("The mount base dir should be a directory")
 
     def terminate(self):
@@ -134,9 +134,9 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
         if self._is_initialized is True:
             try:
                 plugin_manager = PluginManager()
-                for src, dir in self.__mountedDirs.items() :
+                for src, dir in self.__mountedDirs.items():
                     self._logger.debug("Mounted dirs - %s - %s" % (src, dir))
-                    if src is not os.sep :
+                    if src is not os.sep:
                         _umounted = False
                         for p_name, p_class in plugin_manager.getPlugins().items():
                             #we got the plugin
@@ -179,7 +179,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 
         plugin_manager = PluginManager()
         for p_name, p_class in plugin_manager.getPlugins().items():
-            try :
+            try:
                 #we got the plugin
                 plugin = p_class()
                 if plugin.match_scheme_full(uri):
@@ -273,18 +273,18 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 #
 #        @todo: Customize the raised exception to provided more informations!
 #        """
-#        if remotedir.startswith(os.sep) :
+#        if remotedir.startswith(os.sep):
 #            raise SBException("Nothing to do for localpath '%s'." % remotedir)
 #
 ##TODO: inconsistent path handling!
 #        # set the defaults
-#        if os.getuid() == 0 :
+#        if os.getuid() == 0:
 #            mountdir = "/mnt/sbackup/"
-#        else :
+#        else:
 #            mountdir = self._configFileHandler.get_user_datadir() + "mountdir"
 #
 #        # check if the mount dir is valid
-#        if not os.path.exists(mountdir) :
+#        if not os.path.exists(mountdir):
 #            os.mkdir(mountdir)
 #
 #        plugin_manager = PluginManager()

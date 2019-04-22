@@ -137,10 +137,10 @@ class TestSnapshot(unittest.TestCase):
             self.assertRaises(NotValidSnapshotNameException,
                               snapshot.Snapshot, tdir)
 
-    # test the setter methods    
+    # test the setter methods
     def test_set_splitted_size(self):
         """Test setting of split size
-        
+
         @todo: Wrong parameter type should raise a TypeError!
         """
         snp = self.__create_full_snapshot()
@@ -181,7 +181,7 @@ class TestSnapshot(unittest.TestCase):
             self.assertEqual(name, snp.getBase())
 
 
-#    def testaddFile(self) :
+#    def testaddFile(self):
 #        """
 #        Add an item to be backup into the snapshot.
 #        Usage :  addFile(item, props) where
@@ -189,7 +189,7 @@ class TestSnapshot(unittest.TestCase):
 #        - props is this item properties
 #        """
 
-#    def testsetExcludes(self) :
+#    def testsetExcludes(self):
 #        """
 #        Set the content of excludes
 #        """
@@ -252,11 +252,11 @@ class TestSnapshotFromDisk(unittest.TestCase):
                   "-f", "%s" % _TestSnapshotPaths.get_tar_path()]
         subprocess.call(tarcmd)
 
-    def testgetName(self) :
+    def testgetName(self):
         """get the right name of a snapshot"""
         self.assertEqual(self.snapshot_ful.getName(), self.snp_ful_name)
 
-    def testgetPath(self) :
+    def testgetPath(self):
         """get the right path of a snapshot"""
         self.assertEqual(self.snapshot_ful.getPath(), self.snappath_ful)
 
@@ -274,7 +274,7 @@ class TestSnapshotFromDisk(unittest.TestCase):
                                 _date['hour'], _date['minute'], _date['second'])
         self.assertEqual(_date_templ, _date_str)
 
-    def testsetPath(self) :
+    def testsetPath(self):
         """set another path/name after the snapshot creation"""
         self.snapshot_inc.setPath("/home/a_directory/2007-05-03_21.58.59.109550.SetPath.inc")
         self.assertEqual(self.snapshot_inc.getPath(),
@@ -287,20 +287,20 @@ class TestSnapshotFromDisk(unittest.TestCase):
         self.assertRaises(SBException , self.snapshot_ful.setPath,
                         "/xyz/xyz/xyz-hopefully this path does not exist")
 
-    def testgetBase_inc(self) :
+    def testgetBase_inc(self):
         """base snapshot of this Inc snapshot"""
         self.assertEqual(self.snapshot_inc.getBase(), self.snp_ful_name)
 
-    def testgetBase_ful(self) :
+    def testgetBase_ful(self):
         """Full backups got no base file"""
         self.assertFalse(self.snapshot_ful.getBase())
 
-    def testgetVersion(self) :
+    def testgetVersion(self):
         """Test if we get the correct version"""
         self.assertEqual(self.snapshot_ful.getVersion(), self.version)
         self.assertEqual(self.snapshot_inc.getVersion(), self.version)
 
-    def testgetExcludes(self) :
+    def testgetExcludes(self):
         """get the exclude file content"""
         f = open(os.path.join(self.snappath_ful, "excludes"))
         toget = pickle.load(f)
@@ -317,12 +317,12 @@ class TestSnapshotFromDisk(unittest.TestCase):
     # Setters
 
 
-#    def testsetBase(self) :
+#    def testsetBase(self):
 #        """
 #        Set the name of the base snapshot of this snapshot
 #        """
-#            
-#    def testaddFile(self) :
+#
+#    def testaddFile(self):
 #        """
 #        Add an item to be backup into the snapshot.
 #        Usage :  addFile(item, props) where
@@ -330,17 +330,17 @@ class TestSnapshotFromDisk(unittest.TestCase):
 #        - props is this item properties
 #        """
 
-    def testsetVersion(self) :
+    def testsetVersion(self):
         " Set the version of the snapshot "
         self.snapshot_ful.setVersion("1.9")
         self.assertEqual(self.snapshot_ful.getVersion(), "1.9")
 
-#    def testsetExcludes(self) :
+#    def testsetExcludes(self):
 #        """
 #        Set the content of excludes
 #        """
 
-    def testsetPackages(self) :
+    def testsetPackages(self):
         " set the packages list for debian based distros "
         p = os.popen("dpkg --get-selections")
         pack = p.read()
@@ -348,7 +348,7 @@ class TestSnapshotFromDisk(unittest.TestCase):
         p.close()
         self.assertEqual(self.snapshot_ful.getPackages(), pack)
 
-    def testgetPackages(self) :
+    def testgetPackages(self):
         """get the packages"""
         f = open(os.path.join(self.snappath_ful, "packages"))
         toget = f.read()
@@ -421,12 +421,12 @@ class TestSnapshotCreateToDisk(unittest.TestCase):
     # Setters
 
 
-#    def testsetBase(self) :
+#    def testsetBase(self):
 #        """
 #        Set the name of the base snapshot of this snapshot
 #        """
-#            
-#    def testaddFile(self) :
+#
+#    def testaddFile(self):
 #        """
 #        Add an item to be backup into the snapshot.
 #        Usage :  addFile(item, props) where
@@ -434,7 +434,7 @@ class TestSnapshotCreateToDisk(unittest.TestCase):
 #        - props is this item properties
 #        """
 
-#    def testsetExcludes(self) :
+#    def testsetExcludes(self):
 #        """
 #        Set the content of excludes
 #        """

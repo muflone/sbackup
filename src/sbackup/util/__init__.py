@@ -183,17 +183,17 @@ def readlineNULSep(fd, fd1):
     """
     _continue = 0
 
-    while _continue < 2 :
+    while _continue < 2:
         c = fd.read(1)
         currentline = ''
 
-        while c :
-            if c == '\0'  :
+        while c:
+            if c == '\0':
                 # we got a line
                 break
             currentline += c
             c = fd.read(1)
-        else :
+        else:
             # c is None
             # This else correspond to the while statement
             _continue += 1
@@ -201,18 +201,18 @@ def readlineNULSep(fd, fd1):
         c1 = fd1.read(1)
         currentline1 = ''
 
-        while c1 :
-            if c1 == '\0'  :
+        while c1:
+            if c1 == '\0':
                 # we got a line
                 break
             c1 = fd1.read(1)
             currentline1 += c1
-        else :
+        else:
             # c1 is None
             # This else correspond to the while statement
             _continue += 1
 
-        if _continue == 1 :
+        if _continue == 1:
             raise exceptions.SBException(\
                                 "The length of flist and Fprops are not equals")
         yield (currentline, currentline1)

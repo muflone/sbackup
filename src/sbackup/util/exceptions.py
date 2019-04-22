@@ -41,7 +41,7 @@ class ErrorDescription(object):
         return res
 
 
-class SigTerminatedError(Exception) :
+class SigTerminatedError(Exception):
     """This Exception is thrown if the backup process receives a
     SIGTERM/SIGKILL signal.
     """
@@ -55,32 +55,32 @@ class SBException(Exception):
 SBackupError = SBException
 
 
-class ResourceFileNotFoundError(SBackupError) :
+class ResourceFileNotFoundError(SBackupError):
     """This Exception is thrown if another application instance is
     already running.
     """
 
-class InstanceRunningError(SBException) :
+class InstanceRunningError(SBException):
     """This Exception is thrown if another application instance is
     already running.
     """
 
-class ApplicationLockError(SBException) :
+class ApplicationLockError(SBException):
     """This Exception is thrown if another application instance is
     already running.
     """
 
-class BackupCanceledError(SBException) :
+class BackupCanceledError(SBException):
     """This Exception is thrown if the backup process is canceled from
     the indicator gui.
     """
 
-class HookedScriptError(SBException) :
+class HookedScriptError(SBException):
     """This Exception is thrown if a script run pre/post backup returns
     exitcodes != 0.
     """
 
-class NotValidSnapshotException(SBException) :
+class NotValidSnapshotException(SBException):
     """
     This Exception is thrown by Snapshot validation.
     """
@@ -91,7 +91,7 @@ class NotValidSnapshotNameException(NotValidSnapshotException):
     """
 
 
-class NotValidSectionException(SBException) :
+class NotValidSectionException(SBException):
     """This Exception is thrown by Config Section validation.
 
     """
@@ -125,17 +125,17 @@ class NotSupportedError(Exception):
 
     """
 
-class NotifyException(SBException) :
+class NotifyException(SBException):
     """This Exception is thrown by notifiers and listeners.
 
     """
 
-class DBusException(SBException) :
+class DBusException(SBException):
     """This Exception is thrown when problems with DBus occurs.
 
     """
 
-class FileAccessException(SBException) :
+class FileAccessException(SBException):
     """This Exception is thrown when problems with remote paths occur.
 
     """
@@ -160,7 +160,7 @@ class RemoteUmountFailedError(FileAccessException):
 
     """
 
-class FileAlreadyClosedError(SBException) :
+class FileAlreadyClosedError(SBException):
     """This Exception is thrown when a file or stream cannot be closed because it is already closed.
 
     """

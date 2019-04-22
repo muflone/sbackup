@@ -77,7 +77,7 @@ class SBackupProc(object):
     """This class is intended to be a wrapper of the process of backups of
     multiple profiles.
 
-    It manages :
+    It manages:
     - the full backup process : creation of instances of the BackupProfileHandler
       with the corresponding config file
     - the logging of exception not handled by BackupProfileHandler
@@ -159,13 +159,13 @@ class SBackupProc(object):
 
         """
         self.logger.debug("Send email report")
-        if self.__bprofilehdl.config.has_option("report", "from") :
+        if self.__bprofilehdl.config.has_option("report", "from"):
             _from = self.__bprofilehdl.config.get("report", "from")
-        else :
+        else:
             hostname = socket.gethostname()
-            if "." in hostname :
+            if "." in hostname:
                 mailsuffix = hostname
-            else :
+            else:
                 mailsuffix = hostname + ".ext"
             _from = _("SBackup Daemon <%(login)s@%(hostname)s>")\
                     % {'login' : str(system.get_user_from_env()), 'hostname': mailsuffix}
@@ -180,7 +180,7 @@ class SBackupProc(object):
         else:
             if local_file_utils.path_exists(logf):
                 _content = local_file_utils.readfile(logf)
-            else :
+            else:
                 _content = _("Unable to find log file.")
 
         server = smtplib.SMTP()
@@ -200,22 +200,22 @@ class SBackupProc(object):
         msg.attach(msg_content)
 
         # getting the connection
-        if self.__bprofilehdl.config.has_option("report", "smtpserver") :
-            if self.__bprofilehdl.config.has_option("report", "smtpport") :
+        if self.__bprofilehdl.config.has_option("report", "smtpserver"):
+            if self.__bprofilehdl.config.has_option("report", "smtpport"):
                 server.connect(self.__bprofilehdl.config.get("report", "smtpserver"),
                                self.__bprofilehdl.config.get("report", "smtpport"))
-            else :
+            else:
                 server.connect(self.__bprofilehdl.config.get("report", "smtpserver"))
         if self.__bprofilehdl.config.has_option("report", "smtptls") and\
                     self.__bprofilehdl.config.get("report", "smtptls") == "1":
             if self.__bprofilehdl.config.has_option("report", "smtpcert") and\
-                    self.__bprofilehdl.config.has_option("report", "smtpkey") :
+                    self.__bprofilehdl.config.has_option("report", "smtpkey"):
                 server.starttls(self.__bprofilehdl.config.get("report", "smtpkey"),
                                 self.__bprofilehdl.config.get("report", "smtpcert"))
-            else :
+            else:
                 server.starttls()
         if self.__bprofilehdl.config.has_option("report", "smtpuser") and\
-                self.__bprofilehdl.config.has_option("report", "smtppassword") :
+                self.__bprofilehdl.config.has_option("report", "smtppassword"):
             server.login(self.__bprofilehdl.config.get("report", "smtpuser"),
                          self.__bprofilehdl.config.get("report", "smtppassword"))
 
@@ -325,7 +325,7 @@ class SBackupProc(object):
         try:
             if self.__bprofilehdl and self.__bprofilehdl.config:
                 # send the mail
-                if self.__bprofilehdl.config.has_section("report") and self.__bprofilehdl.config.has_option("report", "to") :
+                if self.__bprofilehdl.config.has_section("report") and self.__bprofilehdl.config.has_option("report", "to"):
                     self.__sendEmail()
         except Exception as error:
             self.__notify_error(error, _("Error when sending email:"))

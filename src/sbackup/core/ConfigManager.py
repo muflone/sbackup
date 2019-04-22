@@ -254,7 +254,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         if _conffile_used:
             self.logger.info(_("Profile settings are being read from file '%s'.")\
                               % self.conffile)
-        else :
+        else:
             self.logger.info(_("Profile settings are being set to default values. Configuration file is set to '%s'.")\
                             % self.conffile)
 
@@ -365,7 +365,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         self.set("log", "level", str(defaults.get_loglevel()))
         self.set_logdir(defaults.get_logdir())
         self.set_logfile_templ_to_config()
-        if not local_file_utils.path_exists(self.get("log", "file")) :
+        if not local_file_utils.path_exists(self.get("log", "file")):
             local_file_utils.createfile(self.get("log", "file"))
 
         # report settings
@@ -500,29 +500,29 @@ class ConfigManager(ConfigParser.ConfigParser):
         """
         if section == "dirconfig" and \
                 not ConfigParser.ConfigParser.has_option(self, section, option):
-            if option == "remote" :
+            if option == "remote":
                 return ConfigParser.ConfigParser.has_option(self, section,
                                                             option)
             #search through remote option to get the option
             if ConfigParser.ConfigParser.has_option(self, "dirconfig",
                                                             'remote'):
                 remotes = self.get("dirconfig", "remote")
-                if type(remotes) == str :
+                if type(remotes) == str:
                     remotes = eval(remotes)
-                if type(remotes) != dict :
+                if type(remotes) != dict:
                     raise exceptions.SBException(_("Unable to evaluate '%(parameter)s' as a dictionary (value got = '%(value)r').")\
                             % {'parameter': remotes, 'value': type(remotes)})
                 if option not in remotes:
                     # then it wasn't for us , fall back on the parent
                     return ConfigParser.ConfigParser.has_option(self, section,
                                                                 option)
-                else :
+                else:
                     # we have this key
                     return True
-            else :
+            else:
                 return ConfigParser.ConfigParser.has_option(self, section,
                                                             option)
-        else :
+        else:
             #fall back in parent behaviour
             return ConfigParser.ConfigParser.has_option(self, section, option)
 
@@ -533,20 +533,20 @@ class ConfigManager(ConfigParser.ConfigParser):
         if section == "dirconfig" and not option == 'remote' and self.has_option(section, option) and not ConfigParser.ConfigParser.has_option(self, section, option):
             #search through remote option to get the option
             remotes = ConfigParser.ConfigParser.get(self, "dirconfig", "remote", True)
-            if type(remotes) == str :
+            if type(remotes) == str:
                 remotes = eval(remotes)
-            if type(remotes) != dict :
+            if type(remotes) != dict:
                 raise exceptions.SBException(_("Couldn't evaluate '%(parameter)s' as a dictionary (value got = '%(value)r' )") % {'parameter': remotes, 'value': type(remotes)})
             # we have that key
             return remotes[option]
         elif section == "dirconfig" and option == 'remote' and ConfigParser.ConfigParser.has_option(self, section, option):
             remotes = ConfigParser.ConfigParser.get(self, "dirconfig", "remote", True)
-            if type(remotes) == str :
+            if type(remotes) == str:
                 remotes = eval(remotes)
-            if type(remotes) != dict :
+            if type(remotes) != dict:
                 raise exceptions.SBException(_("Unable to evaluate '%(parameter)s' as a dictionary (value got = '%(value)r').") % {'parameter': remotes, 'value': type(remotes)})
             return remotes
-        else :
+        else:
             #fall back in parent behaviour
             return ConfigParser.ConfigParser.get(self, section, option, True)
 
@@ -558,21 +558,21 @@ class ConfigManager(ConfigParser.ConfigParser):
         You can set one at a time, the value will be append to
         the 'remote' dict.
         """
-        if section == "dirconfig" and option == "remote" :
-            if type(value) != dict :
+        if section == "dirconfig" and option == "remote":
+            if type(value) != dict:
                 raise exceptions.SBException(_("You must provide a dictionary."))
-            if not self.has_option(section, option) :
+            if not self.has_option(section, option):
                 ConfigParser.ConfigParser.set(self, section, option, value)
-            else :
+            else:
                 remotes = ConfigParser.ConfigParser.get(self, section, option, True)
-                if type(remotes) == str :
+                if type(remotes) == str:
                     remotes = eval(remotes)
-                if type(remotes) != dict :
+                if type(remotes) != dict:
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
-                for rsource, flag in value.items() :
+                for rsource, flag in value.items():
                     remotes[rsource] = flag
                 ConfigParser.ConfigParser.set(self, section, option, remotes)
-        else :
+        else:
             #fall back in normal bahaviour
             ConfigParser.ConfigParser.set(self, section, option, value)
 
@@ -582,27 +582,27 @@ class ConfigManager(ConfigParser.ConfigParser):
         If option is in remote dict, section ='dirconfig' and
         option='ssh://test/me' then the entry in the remote dict will be removed.
         """
-        if section == "dirconfig" and not ConfigParser.ConfigParser.has_option(self, section, option) :
+        if section == "dirconfig" and not ConfigParser.ConfigParser.has_option(self, section, option):
             #search through remote option to get the option
             if not self.has_option("dirconfig", "remote"):
                 #fall back in parent behaviour
                 ConfigParser.ConfigParser.remove_option(self, section, option)
-            else :
+            else:
                 self.logger.debug("search through remote option to get the option")
                 remotes = self.get("dirconfig", "remote")
-                if type(remotes) == str :
+                if type(remotes) == str:
                     remotes = eval(remotes)
-                if type(remotes) != dict :
+                if type(remotes) != dict:
                     raise exceptions.SBException("Couldn't eval '%s' as a dict (value got = '%r' )" % (remotes, type(remotes)))
                 if option not in remotes:
                     # then it wasn't for us , fall back on the parent
                     ConfigParser.ConfigParser.remove_option(self, section, option)
-                else :
+                else:
                     # we have that key
                     remotes.pop(option)
                     self.logger.debug("remote is now '%r'" % remotes)
                     ConfigParser.ConfigParser.set(self, section, "remote", remotes)
-        else :
+        else:
             #fall back in parent behaviour
             ConfigParser.ConfigParser.remove_option(self, section, option)
 
@@ -639,7 +639,7 @@ class ConfigManager(ConfigParser.ConfigParser):
 
         self.__clear_dirconfig()
         self.__dirconfig.update(dirconf)
-        for a, b in self.__dirconfig.items() :
+        for a, b in self.__dirconfig.items():
             self.set(_section, a, b)
 
     def __set_regex_excludes(self, aregex):
@@ -669,11 +669,11 @@ class ConfigManager(ConfigParser.ConfigParser):
             curr_logf = pathparse.append_time_to_filename(logf_templ, ".log")
             self.__logfile_dir = os.path.dirname(curr_logf)
 
-            if self.has_option("log", "level") :
+            if self.has_option("log", "level"):
                 self.logger = log.LogFactory.getLogger(self.getProfileName(),
                                                    curr_logf,
                                                    self.getint("log", "level"))
-            else :
+            else:
                 self.logger = log.LogFactory.getLogger(self.getProfileName(),
                                                    curr_logf)
 
@@ -722,7 +722,7 @@ class ConfigManager(ConfigParser.ConfigParser):
             self.conffile = filename
         retValue = ConfigParser.ConfigParser.read(self, self.conffile)
 
-        if len(retValue) == 0 :
+        if len(retValue) == 0:
             raise exceptions.SBException(_("The config file '%s' couldn't be read!")\
                                 % self.conffile)
         return retValue
@@ -785,7 +785,7 @@ class ConfigManager(ConfigParser.ConfigParser):
             self.add_section("schedule")
 
         if isCron == SCHEDULE_TYPE_ANACRON:     # (simple scheduling)
-            if value in _ANACRON_SERVICES :
+            if value in _ANACRON_SERVICES:
                 if self.has_option("schedule", "cron"):
                     _logger.debug("Removing Cron config to set Anacron config.")
                     self.remove_option("schedule", "cron")
@@ -906,7 +906,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         @todo: Implement Command-Query Separation Principle (CQS)!
 
         """
-        if self.__profileName :
+        if self.__profileName:
             return self.__profileName
 
         if not self.conffile:
@@ -961,7 +961,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         extended by the current time if a logfile is actually created.
         """
         logf = self.__get_logfile_template()
-        if not self.has_section("log") :
+        if not self.has_section("log"):
             self.add_section("log")
         self.set("log", "file", logf)
 
@@ -1044,7 +1044,7 @@ class ConfigManager(ConfigParser.ConfigParser):
             _anacrpath = _CRON_PATH_TEMPLATE % (_anacr, _LAUNCHER_NAME_CRON)
             if _anacr in _ANACRON_SERVICES:
                 os.symlink(self.__servicefile, _anacrpath)
-            else :
+            else:
                 self.logger.warning("Anacron entry `%s` is invalid" % _anacr)
 
     def __make_cronfile_content(self):
@@ -1086,7 +1086,7 @@ class ConfigManager(ConfigParser.ConfigParser):
         """
         if not self.has_option("report", "to"):
             raise exceptions.SBException (_("No receiver set."))
-        if not self.has_option("report", "smtpserver") :
+        if not self.has_option("report", "smtpserver"):
             raise exceptions.SBException (_("No SMTP server set."))
 
         if (self.has_option("report", "smtpuser") and not self.has_option("report", "smtppassword")):
@@ -1095,27 +1095,27 @@ class ConfigManager(ConfigParser.ConfigParser):
         if (not self.has_option("report", "smtpuser") and self.has_option("report", "smtppassword")):
             raise exceptions.SBException (_("Password set but no username specified."))
 
-        if not self.has_option("report", "smtptls") and (self.has_option("report", "smtpcert") or self.has_option("report", "smtpkey)")) :
+        if not self.has_option("report", "smtptls") and (self.has_option("report", "smtpcert") or self.has_option("report", "smtpkey)")):
             raise exceptions.SBException (_("A certificate and key file is given while SSL option (smtptls=1) is not set.\nSelect SSL in order to use Certificate and Key."))
 
         if self.has_option("report", "smtptls") and ((self.has_option("report", "smtpcert") and not self.has_option("report", "smtpkey")) \
             or (not self.has_option("report", "smtpcert") and self.has_option("report", "smtpkey"))):
             raise exceptions.SBException (_("When specifying a SSL certificate or key file, a key file resp. certificate is mandatory."))
 
-        try :
+        try:
             server = smtplib.SMTP()
             # getting the connection
-            if self.has_option("report", "smtpport") :
+            if self.has_option("report", "smtpport"):
                 server.connect(self.get("report", "smtpserver"), self.get("report", "smtpport"))
-            else :
+            else:
                 server.connect(self.get("report", "smtpserver"))
 
             if self.has_option("report", "smtptls") and self.get("report", "smtptls") == "1":
-                if self.has_option("report", "smtpcert") and self.has_option("report", "smtpkey") :
+                if self.has_option("report", "smtpcert") and self.has_option("report", "smtpkey"):
                     server.starttls(self.get("report", "smtpkey"), self.get("report", "smtpcert"))
-                else :
+                else:
                     server.starttls()
-            if self.has_option("report", "smtpuser") and self.has_option("report", "smtppassword") :
+            if self.has_option("report", "smtpuser") and self.has_option("report", "smtppassword"):
                 server.login(self.get("report", "smtpuser"), self.get("report", "smtppassword"))
 
             server.helo()
@@ -1138,31 +1138,31 @@ class ConfigManager(ConfigParser.ConfigParser):
         if config is None:
             return False
 
-        for s in self.sections() :
-            if not config.has_section(s) :
+        for s in self.sections():
+            if not config.has_section(s):
                 return False
-            else :
-                for o in self.options(s) :
+            else:
+                for o in self.options(s):
                     if not config.has_option(s, o):
                         return False
-                    else :
-                        if type(self.get(s, o)) != type(config.get(s, o)) :
-                            if type(self.get(s, o)) is not str :
+                    else:
+                        if type(self.get(s, o)) != type(config.get(s, o)):
+                            if type(self.get(s, o)) is not str:
                                 self.set(s, o, repr(self.get(s, o)))
-                            if type(config.get(s, o)) is not str :
+                            if type(config.get(s, o)) is not str:
                                 config.set(s, o, repr(config.get(s, o)))
-                        if not self.get(s, o) == config.get(s, o) :
+                        if not self.get(s, o) == config.get(s, o):
                             return False
-                for o in config.options(s) :
+                for o in config.options(s):
                     if not self.has_option(s, o):
                         return False
-                    else :
-                        if type(self.get(s, o)) != type(config.get(s, o)) :
-                            if type(self.get(s, o)) is not str :
+                    else:
+                        if type(self.get(s, o)) != type(config.get(s, o)):
+                            if type(self.get(s, o)) is not str:
                                 self.set(s, o, repr(self.get(s, o)))
-                            if type(config.get(s, o)) is not str :
+                            if type(config.get(s, o)) is not str:
                                 config.set(s, o, repr(config.get(s, o)))
-                        if not self.get(s, o) == config.get(s, o) :
+                        if not self.get(s, o) == config.get(s, o):
                             return False
         return True
 
@@ -1227,7 +1227,7 @@ class ConfigurationFileHandler(object):
             confdir = local_file_utils.normpath("/etc")
         else:
             confdir = local_file_utils.normpath(system.get_user_config_dir(), "sbackup")
-        if not local_file_utils.path_exists(confdir) :
+        if not local_file_utils.path_exists(confdir):
             local_file_utils.makedirs(confdir)
         return confdir
 
@@ -1235,7 +1235,7 @@ class ConfigurationFileHandler(object):
         """Get the user datas dir using the XDG specification.
         """
         datadir = local_file_utils.normpath(system.get_user_data_dir(), "sbackup")
-        if not local_file_utils.path_exists(datadir) :
+        if not local_file_utils.path_exists(datadir):
             local_file_utils.makedirs(datadir)
         return datadir
 
@@ -1255,7 +1255,7 @@ class ConfigurationFileHandler(object):
         else:
             tempdir = os.path.join(self.get_user_datadir(), "tmp/")
 
-        if not os.path.exists(tempdir) :
+        if not os.path.exists(tempdir):
             os.mkdir(tempdir)
 
         #LP #785495: make the temp directory RWX only by owner
@@ -1270,11 +1270,11 @@ class ConfigurationFileHandler(object):
 
         if cfile == ConfigManagerStaticData.get_default_conffile():
             profilename = ConfigManagerStaticData.get_default_profilename()
-        else :
+        else:
             m = ConfigManagerStaticData.get_profilename_re().match(cfile)
             if not m:
                 profilename = ConfigManagerStaticData.get_unknown_profilename()
-            else :
+            else:
                 profilename = m.group(1)
 
         return profilename

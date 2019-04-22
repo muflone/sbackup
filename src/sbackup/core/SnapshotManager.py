@@ -109,8 +109,8 @@ class SnapshotManager(object):
         :param name: the snapshot that is to be returned
 
         """
-        for snp in self.get_snapshots_allformats() :
-            if snp.getName() == name :
+        for snp in self.get_snapshots_allformats():
+            if snp.getName() == name:
                 return snp
         raise SBException(_("Snapshot '%s' not found ") % name)
 
@@ -193,7 +193,7 @@ class SnapshotManager(object):
         self.__snapshots = []
         listing = self._fop.listdir_fullpath(self.__dest_path)
 
-        for _snppath in listing :
+        for _snppath in listing:
             _snpname = self._fop.get_basename(_snppath)
             try:
                 self._fop.test_dir_access(_snppath)
@@ -206,8 +206,8 @@ class SnapshotManager(object):
                 continue
             try:
                 self.__snapshots.append(Snapshot(_snppath))
-            except NotValidSnapshotException as error :
-                if isinstance(error, NotValidSnapshotNameException) :
+            except NotValidSnapshotException as error:
+                if isinstance(error, NotValidSnapshotNameException):
                     self.logger.info(_("Invalid snapshot `%(name)s` found: Name of snapshot not valid.")\
                                         % { 'name': str(_snpname) })
                 else: # rename only if name was valid but snapshot was invalid
@@ -308,7 +308,7 @@ class SnapshotManager(object):
             snpif = open(_tmpfinal, 'w')
             snpif.write(_header)
             snpif.close()
-        else :
+        else:
             finalsnar.setHeader(_datet)
             _header = finalsnar.getHeader()
         return finalsnar
@@ -464,8 +464,8 @@ class SnapshotManager(object):
         """
         listing = self.get_snapshots(forceReload = False)
         child_snps = []
-        for snp in listing :
-            if snp.getBase() == snapshot.getName() :
+        for snp in listing:
+            if snp.getBase() == snapshot.getName():
                 child_snps.append(snp)
         return child_snps
 
@@ -528,22 +528,22 @@ class SnapshotManager(object):
         :return: a list of Snapshots starting from the most recent one to the full one
         :note: you'll need to reverse this list to make a revert
         """
-        if not snapshot :
+        if not snapshot:
             raise SBException("Please provide a snapshot to process")
 
         result = []
         # add the first snapshot
         result.append(snapshot)
         current = snapshot
-        while (current.getBaseSnapshot()) :
+        while (current.getBaseSnapshot()):
             current = current.getBaseSnapshot()
             result.append(current)
 
         # Just for DEBUG
-        if self.logger.isEnabledFor(10) :
+        if self.logger.isEnabledFor(10):
             # get the history
             history = "\n[%s history]" % snapshot.getName()
-            for snp in result :
+            for snp in result:
                 history += "\n- %s" % snp.getName()
             self.logger.debug(history)
 

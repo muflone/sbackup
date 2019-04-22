@@ -13,8 +13,8 @@ setup(name = '@pkgname@',
 
       packages = ['sbackup', 'sbackup.core', 'sbackup.util', 'sbackup.fs_backend', 'sbackup.ar_backend',
                   'sbackup.fuse_plugins', 'sbackup.ui'],
-      package_dir = {'' : 'src'},
-      package_data = {'' : ['resources', 'metainfo']},
+      package_dir = {'': 'src'},
+      package_data = {'': ['resources', 'metainfo']},
 
       data_files = [('share/sbackup', ['data/ui/sbackup-restore.glade',
                                        'data/ui/sbackup-legacy-restore.glade',

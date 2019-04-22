@@ -138,7 +138,7 @@ def _prepare_copy(src, dst):
 
     return retval
 
-def listdir_fullpath(path) :
+def listdir_fullpath(path):
     """List a directory. Returns full paths to entries.
     """
     _lst = listdir(path)
@@ -251,7 +251,7 @@ def _copytree(src, dst, symlinks = False):
 
     """
     names = os.listdir(src)
-    if not os.path.exists(dst) :
+    if not os.path.exists(dst):
         os.makedirs(dst)
     errors = []
     for name in names:
@@ -288,7 +288,7 @@ def createfile(filepath):
     """
     filepath = filepath.rstrip(os.sep)
     spl = filepath.split(os.sep)
-    if len(spl) == 1 :
+    if len(spl) == 1:
         writetofile(filepath, "")
     else:
         _dir = filepath[:-len(spl[len(spl) - 1])]
@@ -308,7 +308,7 @@ def readfile(path):
     fobj.close()
     return value
 
-def writetofile(path, content) :
+def writetofile(path, content):
     """
     Write a String to a file. You don't have to open and close the file.
     - File = path to the file

@@ -172,7 +172,7 @@ class SBconfigGTK(GladeGnomeApp):
         self.profiles.append([True,
             ConfigManagerStaticData.get_default_profilename(),
             self.__configFileHandler.get_default_conffile_fullpath()])
-        for i, v in self.configman.getProfiles().items() :
+        for i, v in self.configman.getProfiles().items():
             self.profiles.append([v[1], i, v[0]])
         self.profilestv = self.widgets['profilesListTreeView']
         self.profilestv.set_model(self.profiles)
@@ -264,7 +264,7 @@ class SBconfigGTK(GladeGnomeApp):
         _invalid_regex = ""
         self.ex_ftype.clear()
         self.ex_regex.clear()
-        if self.configman.has_option("exclude", "regex") :
+        if self.configman.has_option("exclude", "regex"):
             r = self.configman.get("exclude", "regex")
             if not Util.is_empty_regexp(r):
                 _list = str(r).split(",")
@@ -345,7 +345,7 @@ class SBconfigGTK(GladeGnomeApp):
                 self.widgets['logpurgeradiobutton'].set_active(True)
                 self.widgets["purgecheckbox"].set_active(True)
             else:
-                try :
+                try:
                     purge = int(self.configman.get("general", "purge"))
                 except Exception as e:
                     self.logger.error("Purge value '%s' is invalid: '%s'" \
@@ -450,7 +450,7 @@ class SBconfigGTK(GladeGnomeApp):
                 if self.configman.has_option("report", "smtpkey"):
                     _key = self.configman.get("report", "smtpkey")
                     self.widgets['keyfilechooser'].set_filename(_key)
-            else :
+            else:
                 self.widgets["TLSradiobutton"].set_active(True)
                 self.__enable_ssl_options(enable = False)
 
@@ -503,10 +503,10 @@ class SBconfigGTK(GladeGnomeApp):
             self.__enable_schedule_page(enable = False)
 
     def __fill_splitsize_widgets_from_config(self):
-        if self.configman.has_option("general", "splitsize") :
+        if self.configman.has_option("general", "splitsize"):
             model = self.widgets["splitsizeCB"].get_model()
             custom = True
-            for i in range(0, len(model)) :
+            for i in range(0, len(model)):
                 if model[i][1] == int(self.configman.get("general",
                                                         "splitsize")) / 1024:
                     self.widgets["splitsizeCB"].set_active(i)
@@ -687,8 +687,8 @@ class SBconfigGTK(GladeGnomeApp):
 
         @return: True if the dir is already included, False if not
         """
-        for i, v in configlist :
-            if v == "1" and i == toInclude :
+        for i, v in configlist:
+            if v == "1" and i == toInclude:
                 # the chosen item match an included one
                 dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = _("Already included item !"))
                 dialog.run()
@@ -702,8 +702,8 @@ class SBconfigGTK(GladeGnomeApp):
 
         @return: True if the dir is already excluded, False if not
         """
-        for i, v in configlist :
-            if v == "0" and i == toExclude :
+        for i, v in configlist:
+            if v == "0" and i == toExclude:
                 # the chosen item match an included one
                 dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = _("Already excluded item !"))
                 dialog.run()
@@ -785,7 +785,7 @@ class SBconfigGTK(GladeGnomeApp):
                                           gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         dialog.set_default_response(gtk.RESPONSE_OK)
         response = dialog.run()
-        if response == gtk.RESPONSE_OK :
+        if response == gtk.RESPONSE_OK:
             self.configman.saveConf(dialog.get_filename())
         elif response == gtk.RESPONSE_CANCEL:
             pass
@@ -860,13 +860,13 @@ class SBconfigGTK(GladeGnomeApp):
         cformats = ConfigManagerStaticData.get_compr_formats()
         if 0 <= selected < len(cformats):
             self.configman.set("general", "format", cformats[selected])
-        else :
+        else:
             self.configman.remove_option("general", "format")
 
         if selected == cformats.index("none"):
             # 'none' -> activate split functionality
             self.widgets['splitsizevbox'].set_sensitive(True)
-        else :
+        else:
             self.widgets["splitsizeCB"].set_active(1)
             self.widgets['splitsizevbox'].set_sensitive(False)
             if self.configman.has_option("general", "splitsize"):
@@ -904,10 +904,10 @@ class SBconfigGTK(GladeGnomeApp):
         """
         model = self.widgets["splitsizeCB"].get_model()
         label, value = model[self.widgets["splitsizeCB"].get_active()]
-        if value != -1 :
+        if value != -1:
             self.__enable_splitsize_custom_option(enable = False)
             self.configman.set("general", "splitsize", value * 1024)
-        else :
+        else:
             # activate Spin box
             self.__enable_splitsize_custom_option(enable = True)
             val = self.widgets['splitsizeSB'].get_value_as_int()
@@ -1241,7 +1241,7 @@ class SBconfigGTK(GladeGnomeApp):
                     headline_str = _("Configuration has changed"),
                     message_str = _("There are unsaved modifications. Please save the configuration or revert these changes before testing the mail settings."))
         else:
-            try :
+            try:
                 testmail_res = self.configman.testMail()
             except SBException as _exc:
                 misc.show_warndialog(parent = self.__get_application_widget(),
@@ -1260,14 +1260,14 @@ class SBconfigGTK(GladeGnomeApp):
             if self.widgets['smtplogin'].get_text():
                 self.configman.set("report", "smtpuser",
                                     self.widgets['smtplogin'].get_text())
-            if self.widgets['smtppassword'].get_text() :
+            if self.widgets['smtppassword'].get_text():
                 self.configman.set("report", "smtpuser",
                                     self.widgets['smtppassword'].get_text())
         else:
             self.widgets['smtplogininfo'].set_sensitive(False)
-            if self.configman.has_option("report", "smtpuser") :
+            if self.configman.has_option("report", "smtpuser"):
                 self.configman.remove_option("report", "smtpuser")
-            if self.configman.has_option("report", "smtppassword") :
+            if self.configman.has_option("report", "smtppassword"):
                 self.configman.remove_option("report", "smtppassword")
         self.isConfigChanged()
 
@@ -1285,11 +1285,11 @@ class SBconfigGTK(GladeGnomeApp):
         else:
             # *NO* secure connection
             self.__enable_secure_email_options(enable = False)
-            if self.configman.has_option("report", "smtptls") :
+            if self.configman.has_option("report", "smtptls"):
                 self.configman.remove_option("report", "smtptls")
-            if self.configman.has_option("report", "smtpcert") :
+            if self.configman.has_option("report", "smtpcert"):
                 self.configman.remove_option("report", "smtpcert")
-            if self.configman.has_option("report", "smtpkey") :
+            if self.configman.has_option("report", "smtpkey"):
                 self.configman.remove_option("report", "smtpkey")
         self.isConfigChanged()
 
@@ -1303,9 +1303,9 @@ class SBconfigGTK(GladeGnomeApp):
                 self.configman.remove_option("report", "smtpkey")
         elif self.widgets['SSLradiobutton'].get_active():
             self.__enable_ssl_options(enable = True)
-            if self.widgets['crtfilechooser'].get_filename() :
+            if self.widgets['crtfilechooser'].get_filename():
                 self.on_crtfilechooser_selection_changed()
-            if self.widgets['keyfilechooser'].get_filename() :
+            if self.widgets['keyfilechooser'].get_filename():
                 self.on_keyfilechooser_selection_changed()
         else:
             raise ValueError("Unexpected signal received.")
@@ -1416,19 +1416,19 @@ class SBconfigGTK(GladeGnomeApp):
             store.remove(iter)
 
     def on_includetv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete :
+        if event.keyval == gtk.keysyms.Delete:
             self.on_inc_del_clicked()
 
     def on_ex_pathstv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete :
+        if event.keyval == gtk.keysyms.Delete:
             self.on_ex_delpath_clicked()
 
     def on_ex_ftypetv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete :
+        if event.keyval == gtk.keysyms.Delete:
             self.on_ex_delftype_clicked()
 
     def on_ex_regextv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete :
+        if event.keyval == gtk.keysyms.Delete:
             self.on_ex_delregex_clicked()
 
     def on_ex_max_toggled(self, *args): #IGNORE:W0613
@@ -1457,7 +1457,7 @@ class SBconfigGTK(GladeGnomeApp):
     def on_followlinks_toggled(self, *args): #IGNORE:W0613
         if self.widgets['followlinks'].get_active():
             self.configman.set("general", "followlinks", 1)
-        else :
+        else:
             self.configman.remove_option("general", "followlinks")
         self.isConfigChanged()
 
@@ -1715,19 +1715,19 @@ class SBconfigGTK(GladeGnomeApp):
         self.logger.debug("Log file set: " + self.configman.get("log", "file"))
 
     def on_loglevelcombobox_changed(self, *args): #IGNORE:W0613
-        if self.widgets['loglevelcombobox'].get_active_text() == "Info" :
+        if self.widgets['loglevelcombobox'].get_active_text() == "Info":
             self.configman.set("log", "level", "20")
             self.isConfigChanged()
             self.logger.debug("Log level : " + self.configman.get("log", "level"))
-        elif self.widgets['loglevelcombobox'].get_active_text() == "Debug" :
+        elif self.widgets['loglevelcombobox'].get_active_text() == "Debug":
             self.configman.set("log", "level", "10")
             self.isConfigChanged()
             self.logger.debug("Log level : " + self.configman.get("log", "level"))
-        elif self.widgets['loglevelcombobox'].get_active_text() == "Error" :
+        elif self.widgets['loglevelcombobox'].get_active_text() == "Error":
             self.configman.set("log", "level", "40")
             self.isConfigChanged()
             self.logger.debug("Log level : " + self.configman.get("log", "level"))
-        elif self.widgets['loglevelcombobox'].get_active_text() == "Warning" :
+        elif self.widgets['loglevelcombobox'].get_active_text() == "Warning":
             self.configman.set("log", "level", "30")
             self.isConfigChanged()
             self.logger.debug("Log level : " + self.configman.get("log", "level"))
@@ -1737,7 +1737,7 @@ class SBconfigGTK(GladeGnomeApp):
         if self.widgets['smtpfrom'].get_text() != "":
             self.configman.set("report", "from", self.widgets['smtpfrom'].get_text())
             self.isConfigChanged()
-        else :
+        else:
             self.configman.remove_option("report", "from")
             self.isConfigChanged()
 
@@ -1746,7 +1746,7 @@ class SBconfigGTK(GladeGnomeApp):
         if self.widgets['smtpto'].get_text() != "":
             self.configman.set("report", "to", self.widgets['smtpto'].get_text())
             self.isConfigChanged()
-        else :
+        else:
             self.configman.remove_option("report", "to")
             self.isConfigChanged()
 
@@ -1755,7 +1755,7 @@ class SBconfigGTK(GladeGnomeApp):
         if self.widgets['smtpserver'].get_text() != "":
             self.configman.set("report", "smtpserver", self.widgets['smtpserver'].get_text())
             self.isConfigChanged()
-        else :
+        else:
             self.configman.remove_option("report", "smtpserver")
             self.isConfigChanged()
 
@@ -1764,7 +1764,7 @@ class SBconfigGTK(GladeGnomeApp):
         if self.widgets['smtpport'].get_text() != "":
             self.configman.set("report", "smtpport", self.widgets['smtpport'].get_text())
             self.isConfigChanged()
-        else :
+        else:
             self.configman.remove_option("report", "smtpport")
             self.isConfigChanged()
 
@@ -1773,7 +1773,7 @@ class SBconfigGTK(GladeGnomeApp):
         if self.widgets['smtplogin'].get_text() != "":
             self.configman.set("report", "smtpuser", self.widgets['smtplogin'].get_text())
             self.isConfigChanged()
-        else :
+        else:
             self.configman.remove_option("report", "smtpuser")
             self.isConfigChanged()
 
@@ -1782,7 +1782,7 @@ class SBconfigGTK(GladeGnomeApp):
         if self.widgets['smtppassword'].get_text() != "":
             self.configman.set("report", "smtppassword", self.widgets['smtppassword'].get_text())
             self.isConfigChanged()
-        else :
+        else:
             self.configman.remove_option("report", "smtppassword")
             self.isConfigChanged()
 
@@ -1856,7 +1856,7 @@ class SBconfigGTK(GladeGnomeApp):
             response = dialog.run()
             dialog.hide()
 
-            if response == gtk.RESPONSE_OK :
+            if response == gtk.RESPONSE_OK:
                 enable = self.widgets['enableNewPrfCB'].get_active()
                 prfName = self.widgets['newPrfNameEntry'].get_text()
                 prfName = prfName.strip()
@@ -1904,20 +1904,20 @@ class SBconfigGTK(GladeGnomeApp):
         prfName, prfConf = tm.get_value(iter, 1), tm.get_value(iter, 2)
         if prfName == ConfigManagerStaticData.get_default_profilename():
             _forbid_default_profile_removal()
-        else :
+        else:
             warning = _("<b>Delete configuration profile?</b>\n\nYou are trying to remove a configuration profile. You will not be able to restore it. If you are not sure, use the 'enable|disable' functionality instead.\n\nDo you really want to delete the profile '%(name)s'?") % {'name': glib.markup_escape_text(prfName)}
             dialog = gtk.MessageDialog(type = gtk.MESSAGE_WARNING, flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_YES_NO)
             dialog.set_markup(warning)
             response = dialog.run()
             dialog.destroy()
 
-            if response == gtk.RESPONSE_YES :
+            if response == gtk.RESPONSE_YES:
                 self.logger.debug("Remove Profile '%s' configuration" % prfName)
-                if os.path.exists(prfConf) :
+                if os.path.exists(prfConf):
                     os.remove(prfConf)
                 self.profiles.remove(iter)
 
-            elif response == gtk.RESPONSE_NO :
+            elif response == gtk.RESPONSE_NO:
                 pass
 
     def on_editProfileButton_clicked(self, *args):
@@ -1950,18 +1950,18 @@ class SBconfigGTK(GladeGnomeApp):
 
         if prfName == ConfigManagerStaticData.get_default_profilename():
             _forbid_default_profile_disable()
-        else :
+        else:
             dir, file = prfConf.rsplit(os.sep, 1)
 
             # rename the file
-            if enable :
+            if enable:
                 # then disable
                 self.logger.debug("Disabling %s " % prfName)
                 os.rename(prfConf, prfConf + "-disable")
                 self.profiles.set_value(iter, 0, False)
                 self.profiles.set_value(iter, 2, prfConf + "-disable")
 
-            else :
+            else:
                 # enable it
                 self.logger.debug("Enabling %s " % prfName)
                 os.rename(prfConf, prfConf.rstrip("-disable"))

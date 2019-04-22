@@ -45,9 +45,7 @@ _PREFS_DEFAULTS = { PREFS_FS_BACKEND : FS_BACKEND_GIO }
 _PREFS_TYPES = { PREFS_FS_BACKEND : gconf.VALUE_STRING }
 
 
-class Preferences(object):
-    __metaclass__ = structs.Singleton
-
+class Preferences(object, metaclass=structs.Singleton):
     def __init__(self):
         self._client = gconf.client_get_default ()
 

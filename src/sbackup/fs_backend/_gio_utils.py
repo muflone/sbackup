@@ -433,11 +433,9 @@ class GioMountHandler(object):
         return (_size, _free)
 
 
-class GioOperations(interfaces.IOperations):
+class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
     """Collects simple operations
     """
-    __metaclass__ = structs.Singleton
-
     pathsep = system.PATHSEP
 
     def __init__(self):

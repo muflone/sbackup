@@ -579,9 +579,7 @@ def get_dumpdir_from_list(lst_dumpdirs, filename):
     return _res
 
 
-class TarBackendLauncherSingleton(object):
-    __metaclass__ = structs.Singleton
-
+class TarBackendLauncherSingleton(object, metaclass=structs.Singleton):
     _cmd = "/bin/tar"
 
     def __init__(self):

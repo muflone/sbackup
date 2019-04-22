@@ -235,7 +235,7 @@ class _DBusConnection(object):
         return res
 
 
-class DBusProviderFacade(_DBusConnection):
+class DBusProviderFacade(_DBusConnection, metaclass=structs.Singleton):
     """This class provides functionality for sending signals
     and calling methods over the dbus.
 
@@ -247,8 +247,6 @@ class DBusProviderFacade(_DBusConnection):
 
     :todo: Singleton!
     """
-    __metaclass__ = structs.Singleton
-
     def __init__(self, name):
         """Default constructor.
 

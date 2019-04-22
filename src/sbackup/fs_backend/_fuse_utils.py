@@ -57,11 +57,9 @@ URI_SCHEME_TO_REMOTE_SERVICE = { REMOTE_SERVICE_TO_URI_SCHEME[REMOTE_SERVICE_FTP
                                }
 
 
-class FuseOperations(interfaces.IOperations):
+class FuseOperations(interfaces.IOperations, metaclass=structs.Singleton):
     """Collects simple operations
     """
-    __metaclass__ = structs.Singleton
-
     pathsep = local_file_utils.PATHSEP
 
     def __init__(self):

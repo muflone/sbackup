@@ -73,7 +73,7 @@ class TestDumpdir(unittest.TestCase):
 
     def test_getter(self):
         """Getting control and filename that should partially fail.
-        
+
         @todo: More checks need to be implemented in class!
         """
         line = "testline"
@@ -98,7 +98,7 @@ class TestSnapshotFile(unittest.TestCase):
 
     def setUp(self):
         """This method is called before processing of each test.
-        
+
         @todo: Modify setting of file paths!
         """
         self.snarfile = _TestTarPaths.get_path("test-snapshotfile.snar")
@@ -178,7 +178,7 @@ class TestSnapshotFile(unittest.TestCase):
         psnpf = ProcSnapshotFile(self.snarSNPfile)
         #print psnpf.getFirstItems()
         self.assertEqual(len(psnpf.getFirstItems()), 1)
-        self.assertEquals(psnpf.getFirstItems(), ['/home/wattazoum/Images/camescope'])
+        self.assertEqual(psnpf.getFirstItems(), ['/home/wattazoum/Images/camescope'])
 
         psnpf = ProcSnapshotFile(self.snarSNPfile2)
         #print psnpf.getFirstItems()
@@ -249,7 +249,7 @@ class TestSnapshotFile(unittest.TestCase):
 
     def test_parse_format2(self):
         """Parse existing SNAR-file and checks its content
-        
+
         @todo: Check what exactly happens to the leading slashes!
         """
         dumpdir1_name = "/home/peer/backups/testdocs/docs"
@@ -387,13 +387,13 @@ class TestSnapshotFile(unittest.TestCase):
 
 class TestProcSnapshotFile(unittest.TestCase):
     """
-    
+
     @todo: Shared code for test preparing must be put in PATH class!
     """
 
     def setUp(self):
         """This method is called before processing of each test.
-        
+
         @todo: Modify setting of file paths!
         """
         self.snarfile = _TestTarPaths.get_path("test-snapshotfile.snar")
@@ -569,7 +569,7 @@ class TestTarUtilsAppendTar(unittest.TestCase) :
 
     def test_append_to_tar(self):
 #        rel_dir = "archivetype"
-#        
+#
 #        input_data = [{ "file" : "test-tar.tar", "type" : "tar" },
 #                      { "file" : "test-tar.tar.gz", "type" : "gzip" },
 #                      { "file" : "test-tar.tar.bz2", "type" : "bzip2" },
@@ -578,7 +578,7 @@ class TestTarUtilsAppendTar(unittest.TestCase) :
 #                      { "file" : "test-tar.archive.lzma", "type" : "bzip2" },
 #                      { "file" : "test-tar.fake.tar", "type" : None },
 #                      { "file" : "test-tar.fake.tar.gz", "type" : None },
-#                      { "file" : "test-tar.fake.tar.bz2", "type" : None } 
+#                      { "file" : "test-tar.fake.tar.bz2", "type" : None }
 #                     ]
 #        for _data in input_data:
 #            _res = getArchiveType(_TestTarPaths.get_path(rel_dir +

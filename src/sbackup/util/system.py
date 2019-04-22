@@ -517,7 +517,7 @@ def _readline_nullsep(fd):
             if c == '\0':
                 # we got a line
                 break
-            currentline += c
+            currentline += c.decode('utf-8')
             c = fd.read(1)
         else:
             # c is None

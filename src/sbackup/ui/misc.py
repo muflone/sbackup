@@ -63,8 +63,7 @@ def set_model(widget, values):
             raise TypeError
 
     _model = gtk.ListStore(_valtype, _keytype)
-    _keys = values.keys()
-    _keys.sort()
+    _keys = sorted(values.keys())
 
     for _key in _keys:
         _model.append([values[_key], _key])

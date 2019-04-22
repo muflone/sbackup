@@ -52,13 +52,13 @@ def main():
     for name, path in sorted(names.items()):
         if options.output_dir is not None:
             path = options.output_dir
-        
+
         if not os.path.isdir(path):
             os.makedirs(path)
 
         try:
             obj, name = import_by_name(name)
-        except ImportError, e:
+        except ImportError as e:
             print "Failed to import '%s': %s" % (name, e)
             continue
 
@@ -104,7 +104,7 @@ def format_classmember(name, directive):
 def get_documented(filenames):
     """
     Find out what items are documented in source/*.rst
-    
+
     Returns
     -------
     documented : dict of list of (filename, title, keyword, toctree)
@@ -121,9 +121,9 @@ def get_documented(filenames):
     module_re = re.compile(r'^\.\.\s+(current)?module::\s*([a-zA-Z0-9_.]+)\s*$')
     autosummary_item_re = re.compile(r'^\s+([_a-zA-Z][a-zA-Z0-9_.]*)\s*')
     toctree_arg_re = re.compile(r'^\s+:toctree:\s*(.*?)\s*$')
-    
+
     documented = {}
-    
+
     for filename in filenames:
         current_title = []
         last_line = None
@@ -154,12 +154,12 @@ def get_documented(filenames):
                     if line.strip() == '':
                         continue
                     in_autosummary = False
-                
+
                 m = autosummary_re.match(line)
                 if m:
                     in_autosummary = True
                     continue
-                
+
                 m = autodoc_re.search(line)
                 if m:
                     name = m.group(2).strip()
@@ -182,7 +182,7 @@ def get_documented(filenames):
                     continue
             finally:
                 last_line = line
-    
+
     return documented
 
 if __name__ == "__main__":

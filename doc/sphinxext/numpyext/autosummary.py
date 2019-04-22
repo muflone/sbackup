@@ -17,7 +17,7 @@ The autosummary directive has the form::
     .. autosummary::
        :nosignatures:
        :toctree: generated/
-       
+
        module.function_1
        module.function_2
        ...
@@ -67,7 +67,7 @@ def setup(app):
                       toctree=directives.unchanged,
                       nosignatures=directives.flag)
     app.add_role('autolink', autolink_role)
-    
+
     app.add_node(autosummary_toc,
                  html=(autosummary_toc_visit_html, autosummary_toc_depart_noop),
                  latex=(autosummary_toc_visit_latex, autosummary_toc_depart_noop))
@@ -176,10 +176,10 @@ def get_autosummary(names, state, no_signatures=False):
         Names of Python objects to be imported and added to the table.
     document : document
         Docutils document object
-    
+
     """
     document = state.document
-    
+
     real_names = {}
     warnings = []
 
@@ -221,7 +221,7 @@ def get_autosummary(names, state, no_signatures=False):
             title = " ".join(doc['Summary'])
         else:
             title = ""
-        
+
         col1 = ":obj:`%s <%s>`" % (name, real_name)
         if doc['Signature']:
             sig = re.sub('^[a-zA-Z_0-9.-]*', '',
@@ -260,7 +260,7 @@ def import_by_name(name, prefixes=[None]):
         The imported object
     name
         Name of the imported object (useful if `prefixes` was used)
-    
+
     """
     for prefix in prefixes:
         try:
@@ -296,7 +296,7 @@ def _import_by_name(name):
             return obj
         else:
             return sys.modules[modname]
-    except (ValueError, ImportError, AttributeError, KeyError), e:
+    except (ValueError, ImportError, AttributeError, KeyError) as e:
         raise ImportError(e)
 
 #------------------------------------------------------------------------------

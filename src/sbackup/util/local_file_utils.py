@@ -345,7 +345,7 @@ def pickledump(datas, path):
     @param file : a file path to the file in wich the dump will be made
     """
     f = openfile(path, True)
-    pickle.dump(datas , f)
+    pickle.dump(datas, f)
     f.close()
 
 def _add_write_permission(path, recursive = True):

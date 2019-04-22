@@ -118,7 +118,7 @@ def extract(sourcear, eff_local_sourcear, restore_file, dest , bckupsuffix = Non
         options.append("--suffix=" + bckupsuffix)
 
     if splitsize > 0:
-        options.extend(["-L %s" % splitsize , "-F %s" % util.get_resource_file("multipleTarScript")])
+        options.extend(["-L %s" % splitsize, "-F %s" % util.get_resource_file("multipleTarScript")])
         if eff_local_sourcear is None:
             raise exceptions.FileAccessException(_("Effective path for `%s` is not available") % sourcear)
 

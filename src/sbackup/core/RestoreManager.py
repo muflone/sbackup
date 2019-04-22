@@ -150,7 +150,7 @@ class RestoreManager(object):
         self.revertAs(snapshot, directory, None)
 
 
-    def __cleanBackupedFiles(self, directory , suffix):
+    def __cleanBackupedFiles(self, directory, suffix):
         """
         clean the backuped copies in the directory (dir) that ends with suffix
         @param dir: directory to clean up

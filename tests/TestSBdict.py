@@ -42,7 +42,7 @@ class TestSBdict(unittest.TestCase):
         " Items () "
         print(" Items () \n")
         for k, v in self.sbd.items():
-            print(k , v)
+            print(k, v)
 
     def testKeys(self):
         " Keys () "

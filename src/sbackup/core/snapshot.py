@@ -142,7 +142,7 @@ class Snapshot(object):
         year, month, day, hour, minute, second
         @return : a dictionary with the date time this snapshot has been taken.
         """
-        m = re.match(self.__validname_re , self.getName())
+        m = re.match(self.__validname_re, self.getName())
         if not m : raise NotValidSnapshotNameException(_("Name of snapshot '%s' doesn't match requirement") % self.getName())
         date = {"year" : int(m.group(1)), "month":int(m.group(2)), "day":int(m.group(3)),
             "hour":int(m.group(4)), "minute":int(m.group(5)), "second":int(m.group(6))}
@@ -549,7 +549,7 @@ class Snapshot(object):
     def __isValidName(self, name):
         " Check if the snapshot name is valid "
         _res = False
-        if re.match(self.__validname_re , name) is not None:
+        if re.match(self.__validname_re, name) is not None:
             if name.endswith(".ful") or name.endswith(".inc"):
                 _res = True
         return _res

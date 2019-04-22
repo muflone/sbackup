@@ -306,7 +306,7 @@ def remove_conf_entry(confline, entry, separator = ","):
     __conf_entry_func_type_check(confline, entry, separator)
     _line = r"%s%s%s" % (separator, confline, separator)
     _mentry = r"%s%s%s" % (separator, re.escape(entry), separator)
-    _line = re.sub(_mentry , separator, _line)
+    _line = re.sub(_mentry, separator, _line)
     _line = _line.strip(separator)
     return _line
 

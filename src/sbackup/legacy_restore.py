@@ -128,13 +128,13 @@ class SRestore:
                 tdir = tempfile.mkdtemp( dir=dparent )
                 self.extract( backup, spath, tdir )
                 shutil.move( dpath, dpath+".before_restore_"+now )
-                shutil.move( os.path.join(tdir,spath), dpath )
+                shutil.move( os.path.join(tdir, spath), dpath )
                 shutil.rmtree( tdir )
 
         else:
             tdir = tempfile.mkdtemp( dir=dparent )
             self.extract( backup, spath, tdir )
-            shutil.move( os.path.join(tdir,spath), dpath )
+            shutil.move( os.path.join(tdir, spath), dpath )
             shutil.rmtree( tdir )
 
         return True
@@ -466,8 +466,8 @@ class SRestoreGTK:
             # is a directory
             dialog = gtk.FileChooserDialog(title="Select restore location",
                                 action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,
-                                         gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+                                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
             dialog.set_filename( self.src )
             result = dialog.run()
             filename = dialog.get_filename()
@@ -478,8 +478,8 @@ class SRestoreGTK:
         else:
             dialog = gtk.FileChooserDialog(title="Select restore location",
                                 action=gtk.FILE_CHOOSER_ACTION_SAVE,
-                                buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,
-                                         gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+                                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
             dialog.set_filename( self.src )
             dialog.set_current_name( self.src )
             result = dialog.run()

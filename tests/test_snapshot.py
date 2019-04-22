@@ -284,7 +284,7 @@ class TestSnapshotFromDisk(unittest.TestCase):
 
     def testsetFalsePath(self):
         """an exception is raised if the path is not valid"""
-        self.assertRaises(SBException , self.snapshot_ful.setPath,
+        self.assertRaises(SBException, self.snapshot_ful.setPath,
                         "/xyz/xyz/xyz-hopefully this path does not exist")
 
     def testgetBase_inc(self):

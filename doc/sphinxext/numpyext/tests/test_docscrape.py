@@ -106,7 +106,7 @@ def test_extended_summary():
 
 def test_parameters():
     assert_equal(len(doc['Parameters']), 3)
-    assert_equal([n for n,_,_ in doc['Parameters']], ['mean','cov','shape'])
+    assert_equal([n for n, _, _ in doc['Parameters']], ['mean', 'cov', 'shape'])
 
     arg, arg_type, desc = doc['Parameters'][1]
     assert_equal(arg_type, '(N,N) ndarray')
@@ -139,14 +139,14 @@ def test_index():
     assert_equal(len(doc['index']), 2)
     assert_equal(len(doc['index']['refguide']), 2)
 
-def non_blank_line_by_line_compare(a,b):
+def non_blank_line_by_line_compare(a, b):
     a = [l for l in a.split('\n') if l.strip()]
     b = [l for l in b.split('\n') if l.strip()]
-    for n,line in enumerate(a):
+    for n, line in enumerate(a):
         if not line == b[n]:
             raise AssertionError("Lines %s of a and b differ: "
                                  "\n>>> %s\n<<< %s\n" %
-                                 (n,line,b[n]))
+                                 (n, line, b[n]))
 def test_str():
     non_blank_line_by_line_compare(str(doc),
 """numpy.multivariate_normal(mean, cov, shape=None)
@@ -373,9 +373,9 @@ doc5 = NumpyDocString(
 
 def test_raises():
     assert_equal(len(doc5['Raises']), 1)
-    name,_,desc = doc5['Raises'][0]
-    assert_equal(name,'LinAlgException')
-    assert_equal(desc,['If array is singular.'])
+    name, _, desc = doc5['Raises'][0]
+    assert_equal(name, 'LinAlgException')
+    assert_equal(desc, ['If array is singular.'])
 
 def test_see_also():
     doc6 = NumpyDocString(

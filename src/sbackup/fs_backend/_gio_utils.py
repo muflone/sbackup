@@ -828,7 +828,7 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
     @classmethod
     def pickledump(cls, datas, path):
         _ostr = cls.openfile_for_write(path)
-        pickle.dump(datas , _ostr)
+        pickle.dump(datas, _ostr)
         _ostr.close()
 
     @classmethod

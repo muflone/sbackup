@@ -282,7 +282,7 @@ class SBdict(dict) :
         if len(_path) > 0 :
             _path.pop()
 
-    def itervalues(self, _path = None) :
+    def values(self, _path = None) :
         """
         an Iterator that gets recursively the full path
         Should return props
@@ -295,7 +295,7 @@ class SBdict(dict) :
             if son is None:
                 _path.pop()
             else:
-                for prop in son.itervalues(_path):
+                for prop in son.values(_path):
                     yield prop
         if len(_path) > 0 :
             _path.pop()

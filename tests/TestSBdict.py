@@ -50,10 +50,10 @@ class TestSBdict(unittest.TestCase):
         for k in self.sbd.keys() :
             print k
 
-    def testItervalues(self):
+    def testValues(self):
         ""
-        print "IterValues\n"
-        for v in self.sbd.itervalues() :
+        print "Values\n"
+        for v in self.sbd.values() :
             print v
 
     def testGetSon(self):

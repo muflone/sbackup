@@ -44,10 +44,10 @@ class TestSBdict(unittest.TestCase):
         for k, v in self.sbd.items() :
             print k , v
 
-    def testIterkeys(self):
-        " Iterkeys () "
-        print "Iterkeys\n"
-        for k in self.sbd.iterkeys() :
+    def testKeys(self):
+        " Keys () "
+        print "Keys\n"
+        for k in self.sbd.keys() :
             print k
 
     def testItervalues(self):

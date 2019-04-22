@@ -453,7 +453,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
 
         son = self.currentsbdict.getSon(self.__fop.joinpath(path))
         if son :
-            for d in dict.iterkeys(self.currentsbdict.getSon(self.__fop.joinpath(path))):
+            for d in dict.keys(self.currentsbdict.getSon(self.__fop.joinpath(path))):
                 iter = self.flisttreestore.append(rootiter, [d])
                 if self.currentsbdict.getSon(self.__fop.joinpath(path), d):
                     self.flisttreestore.append(iter, [_("Loading ...")])

@@ -245,7 +245,7 @@ class SBdict(dict) :
                     raise CorruptedSBdictException("The value stored in the SBdict is Invalid : " + str(type(self[splited[0]][1])))
             else : return False
 
-    def iterkeys(self, _path = None) :
+    def keys(self, _path = None) :
         """Returns an iterator that goes recursively through the full paths.
 
         Should return fullpath (means what?)
@@ -258,7 +258,7 @@ class SBdict(dict) :
             if son is None:
                 _path.pop()
             else:
-                for path in son.iterkeys(_path):
+                for path in son.keys(_path):
                     yield path
         if len(_path) > 0 :
             _path.pop()
@@ -323,7 +323,7 @@ class SBdict(dict) :
 
     def getEffectiveFileList(self, path = None):
         """Iterator that returns the effective files list. Effective means that all 'end-nodes' or
-        leafs of the tree are returned. Unlike method `iterkeys` are *not* all sub-paths returned.
+        leafs of the tree are returned. Unlike method `keys` are *not* all sub-paths returned.
         Paths are included in the effective list of files if their `props` are set (i.e. set to 0 or 1,
         not set to None) since this is not true for sub-paths. Moreover, paths can be 'disabled' (i.e.
         excluded from the effective list of files) by setting their `props` to None.

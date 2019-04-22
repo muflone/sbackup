@@ -15,10 +15,10 @@ Example Makefile rule::
 
 """
 import glob, re, inspect, os, optparse
-from autosummary import import_by_name
+from .autosummary import import_by_name
 
 try:
-    from phantom_import import import_phantom_module
+    from .phantom_import import import_phantom_module
 except ImportError:
     import_phantom_module = lambda x: x
 

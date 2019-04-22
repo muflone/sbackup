@@ -59,7 +59,7 @@ from docutils import nodes
 import sphinx.addnodes, sphinx.roles, sphinx.builder
 from sphinx.util import patfilter
 
-from docscrape_sphinx import get_doc_object
+from .docscrape_sphinx import get_doc_object
 
 
 def setup(app):

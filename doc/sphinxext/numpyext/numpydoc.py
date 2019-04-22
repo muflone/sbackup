@@ -17,7 +17,7 @@ It will:
 """
 
 import os, re, pydoc
-from docscrape_sphinx import get_doc_object, SphinxDocString
+from .docscrape_sphinx import get_doc_object, SphinxDocString
 import inspect
 
 def mangle_docstrings(app, what, name, obj, options, lines,

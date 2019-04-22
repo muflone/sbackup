@@ -41,8 +41,8 @@ import gobject
 import glib
 
 
-from GladeWindow import GladeWindow
-from GladeWindow import ProgressbarMixin
+from .GladeWindow import GladeWindow
+from .GladeWindow import ProgressbarMixin
 
 from sbackup.fs_backend import fam
 

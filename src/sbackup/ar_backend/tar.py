@@ -418,7 +418,7 @@ def _mk_tar_incr(snapshot, targethandler, publish_progress, supports_publish):
         # does not support user rights (e.g. some FTP servers, file systems...)
 #FIXME: use generalized File operations here!
         if not local_file_utils.path_writeable(tmp_snarfile):
-            local_file_utils.chmod(tmp_snarfile, 0644)
+            local_file_utils.chmod(tmp_snarfile, 0o644)
         # create the snarfile within a local directory; necessary if the
         # backup target does not support 'open' within the TAR process and
         # would fail

@@ -187,7 +187,7 @@ def switch_user(uid_name):
         print('Could not set effective user id: %s' % e)
 
     # Ensure a very convervative umask
-    new_umask = 077
+    new_umask = 0o077
     old_umask = os.umask(new_umask)
 #    print 'drop_privileges: Old umask: %s, new umask: %s' % \
     (oct(old_umask), oct(new_umask))

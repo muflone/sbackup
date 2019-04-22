@@ -58,7 +58,7 @@ class ApplicationLock(object):
         if not local_file_utils.path_exists(_dir):
             try:
                 os.mkdir(_dir)
-                os.chmod(_dir, 0777)
+                os.chmod(_dir, 0o777)
             except (OSError, IOError) as error:
                 self.__logger.error("Unable to make lock directory: %s" % error)
                 raise exceptions.ApplicationLockError

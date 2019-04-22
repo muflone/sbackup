@@ -1259,8 +1259,8 @@ class ConfigurationFileHandler(object):
             os.mkdir(tempdir)
 
         #LP #785495: make the temp directory RWX only by owner
-        if (os.stat(tempdir).st_mode & 0777) != 0700:
-            os.chmod(tempdir, 0700)
+        if (os.stat(tempdir).st_mode & 0o777) != 0o700:
+            os.chmod(tempdir, 0o700)
 
         return tempdir
 

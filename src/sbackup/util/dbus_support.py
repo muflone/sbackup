@@ -369,7 +369,7 @@ class DBusProviderFacade(_DBusConnection):
     def set_space_required(self, space):
         if not isinstance(space, (types.IntType, types.LongType)):
             raise TypeError("Parameter of string type expected. Got %s instead." % str(type(space)))
-        space = long(space)
+        space = int(space)
         self.ensure_connectivity()
         res = self.__call_remote(self._backup_obj.set_space_required, space)
         assert isinstance(res, types.BooleanType)

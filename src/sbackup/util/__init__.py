@@ -416,7 +416,7 @@ def get_humanreadable_size(size_in_bytes, binary_prefixes = False):
     @note: Have also a look at function `get_humanreadable_size_str`.
     """
     if isinstance(size_in_bytes, types.StringTypes):
-        size_in_bytes = long(size_in_bytes)
+        size_in_bytes = int(size_in_bytes)
 
     factor = 1000
     if binary_prefixes is True:

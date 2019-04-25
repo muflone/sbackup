@@ -23,7 +23,7 @@
 
 from gettext import gettext as _
 
-import gtk
+from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Pango
 import types
@@ -149,11 +149,11 @@ def show_errdialog(message_str, parent, headline_str = "", secmsg_str = ""):
                     headline_str = headline_str, secmsg_str = secmsg_str)
 
 def show_errdialog_threaded(message_str, parent, headline_str = "", secmsg_str = ""):
-    gtk.gdk.threads_enter()
+    Gdk.threads_enter()
     __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_ERROR,
                     parent = parent, boxtitle = "",
                     headline_str = headline_str, secmsg_str = secmsg_str)
-    gtk.gdk.threads_leave()
+    Gdk.threads_leave()
 
 def __show_msgdialog(message_str, msgtype, parent, boxtitle = "",
                     headline_str = "", secmsg_str = ""):
@@ -289,7 +289,7 @@ def get_statusbar_msg_mode(statusmessage):
 
 
 def set_watch_cursor(widget):
-    watch = gtk.gdk.Cursor(gtk.gdk.WATCH)
+    watch = Gdk.Cursor(Gdk.CursorType.WATCH)
     try:
         widget.window.set_cursor(watch)
     except AttributeError:

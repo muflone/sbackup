@@ -24,6 +24,7 @@
 from gettext import gettext as _
 import os.path
 
+from gi.repository import Gdk
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
@@ -182,7 +183,7 @@ class GladeWindow(object):
         @attention: gtk.MessageDialog is not fully thread-safe so it is
                     put in a critical section, here!
         """
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         dialog = gtk.MessageDialog(
                     flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                     type = msgtype,
@@ -205,7 +206,7 @@ class GladeWindow(object):
         # show the message box and destroy it afterwards
         dialog.run()
         dialog.destroy()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
     def _show_destination_error(self, error):
         _sec_msg = _("Please make sure the missing directory exists (e.g. by mounting an external disk) or change the specified target.")

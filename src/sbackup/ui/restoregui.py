@@ -36,8 +36,8 @@ import traceback
 import sys
 import time
 
-import gtk
 from gi.repository import GLib
+from gi.repository import Gdk
 
 
 from .GladeWindow import GladeWindow
@@ -70,7 +70,7 @@ system.launch_dbus_if_required()
 
 
 # initialize threading before running a main loop
-gtk.gdk.threads_init()
+Gdk.threads_init()
 
 
 class SBRestoreGTK(GladeWindow, ProgressbarMixin):

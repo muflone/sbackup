@@ -39,6 +39,7 @@ try:
     import gtk
 
     from gi.repository import Gtk
+    from gi.repository import Gdk
 except ImportError:
     print("Failed to load Python GTK/Gnome bindings. Please check your Gnome installation.")
     sys.exit(1)
@@ -204,7 +205,7 @@ class SRestoreGTK:
         self.sel.set_mode( gtk.SELECTION_SINGLE )
         self.load_tree(self.default_target)
 
-        gtk.gdk.threads_init()
+        Gdk.threads_init()
         # Start the main loop
         gtk.main()
 

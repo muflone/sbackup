@@ -25,7 +25,7 @@ from gettext import gettext as _
 
 import gtk
 from gi.repository import GLib
-import pango
+from gi.repository import Pango
 import types
 import traceback
 
@@ -111,15 +111,15 @@ def _label_size_allocate(widget, allocation):
     layout = widget.get_layout()
     lw_old, lh_old = layout.get_size()
     # fixed width labels
-    if lw_old / pango.SCALE == allocation.width:
+    if lw_old / Pango.SCALE == allocation.width:
         return
-    # set wrap width to the pango.Layout of the labels
-    layout.set_width(allocation.width * pango.SCALE)
+    # set wrap width to the Pango.Layout of the labels
+    layout.set_width(allocation.width * Pango.SCALE)
 
     # law is unused.
     law, lah = layout.get_size() #IGNORE:W0612
     if lh_old != lah:
-        widget.set_size_request(-1, lah / pango.SCALE)
+        widget.set_size_request(-1, lah / Pango.SCALE)
 
 def show_infodialog(message_str, parent, headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is

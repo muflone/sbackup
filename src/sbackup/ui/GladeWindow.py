@@ -24,7 +24,7 @@
 from gettext import gettext as _
 import os.path
 
-import gtk.glade
+from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 
@@ -78,17 +78,17 @@ class GladeWindow(object):
             search_path = './'
 
         fname = search_file(gladefile, search_path)
-        self.xml = gtk.glade.XML(fname, root = root, domain = 'sbackup')
+        self.builder = Gtk.Builder(fname, root = root, domain = 'sbackup')
 
         # connect callbacks
         self.cb_dict = {}
         for f in handlers:
             self.cb_dict[f] = getattr(self, f)
-        self.xml.signal_autoconnect(self.cb_dict)
+        self.builder.signal_autoconnect(self.cb_dict)
 
         self.widgets = {}
         for widget in widget_list:
-            self.widgets[widget] = self.xml.get_widget(widget)
+            self.widgets[widget] = self.builder.get_object(widget)
 
         if pull_down_dict is not None:
             for widget, lst in pull_down_dict.items():

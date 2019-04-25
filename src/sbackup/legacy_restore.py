@@ -39,7 +39,8 @@ try:
     import pygtk
     pygtk.require("2.0")
     import gtk
-    import gtk.glade
+
+    from gi.repository import Gtk
 except ImportError:
     print("Failed to load Python GTK/Gnome bindings. Please check your Gnome installation.")
     sys.exit(1)
@@ -179,7 +180,6 @@ class SRestoreGTK:
         """
 
         # Setup glade and signals
-        gtk.glade.textdomain("sbackup")
         self.signals = {"gtk_main_quit": gtk.main_quit,
                 "on_customsrc_toggled": self.enable_custom,
                 "on_treeview1_row_expanded": self.on_expand_row,
@@ -191,14 +191,14 @@ class SRestoreGTK:
                 "on_customFolderButton_clicked": self.on_customFolderButton_clicked
                 }
 
-        self.widgets = gtk.glade.XML(_LEGACY_RESTOREGUI_GLADE)
+        self.builder = Gtk.Builder(_LEGACY_RESTOREGUI_GLADE)
 
-        self.widgets.signal_autoconnect(self.signals)
+        self.builder.signal_autoconnect(self.signals)
 
         # Get handle to window
-        self.window = self.widgets.get_widget("restore")
+        self.window = self.builder.get_object("restore")
 
-        self.widgets.get_widget("labelDefaultSource").set_text(self.default_target)
+        self.builder.get_object("labelDefaultSource").set_text(self.default_target)
 
         # Load the backup tree from the default location
         self.init_tree()
@@ -215,7 +215,7 @@ class SRestoreGTK:
         Initalizes the tree structure
         """
 
-        self.flist_widget = self.widgets.get_widget("treeview1")
+        self.flist_widget = self.builder.get_object("treeview1")
         self.treestore = gtk.TreeStore( str )
 
         self.flist_widget.set_model( self.treestore )
@@ -223,7 +223,7 @@ class SRestoreGTK:
         acolumn = gtk.TreeViewColumn( "Path", gtk.CellRendererText(), text=0 )
         self.flist_widget.append_column( acolumn )
 
-        blist_widget = self.widgets.get_widget( "combobox1" )
+        blist_widget = self.builder.get_object( "combobox1" )
         self.blist = gtk.ListStore(str)
         blist_widget.set_model( self.blist )
         cell = gtk.CellRendererText()
@@ -317,7 +317,7 @@ class SRestoreGTK:
         dialog.set_default_response(gtk.RESPONSE_OK)
         dialog.set_local_only(False)
         if dialog.run() == gtk.RESPONSE_OK:
-            self.widgets.get_widget("entry1").set_text(dialog.get_uri())
+            self.builder.get_object("entry1").set_text(dialog.get_uri())
         dialog.destroy()
 
     def enable_custom(self, *args):
@@ -325,16 +325,16 @@ class SRestoreGTK:
         Enables/Disables input box for the custom backup dir
         Reloads default dir on disabling
         """
-        if self.widgets.get_widget("radiobutton2").get_active():
-            self.widgets.get_widget("entry1").set_sensitive(True)
-            self.widgets.get_widget("customFolderButton").set_sensitive(True)
-            self.widgets.get_widget("button7").set_sensitive(True)
-            self.widgets.get_widget("labelDefaultSource").set_sensitive(False)
+        if self.builder.get_object("radiobutton2").get_active():
+            self.builder.get_object("entry1").set_sensitive(True)
+            self.builder.get_object("customFolderButton").set_sensitive(True)
+            self.builder.get_object("button7").set_sensitive(True)
+            self.builder.get_object("labelDefaultSource").set_sensitive(False)
         else:
-            self.widgets.get_widget("entry1").set_sensitive(False)
-            self.widgets.get_widget("customFolderButton").set_sensitive(False)
-            self.widgets.get_widget("button7").set_sensitive(False)
-            self.widgets.get_widget("labelDefaultSource").set_sensitive(True)
+            self.builder.get_object("entry1").set_sensitive(False)
+            self.builder.get_object("customFolderButton").set_sensitive(False)
+            self.builder.get_object("button7").set_sensitive(False)
+            self.builder.get_object("labelDefaultSource").set_sensitive(True)
             self.load_tree(self.default_target)
 
     def on_backup_changed( self, combox ):
@@ -376,7 +376,7 @@ class SRestoreGTK:
 
         self.good = True
 
-        base = self.get_active_text(self.widgets.get_widget("combobox1"))
+        base = self.get_active_text(self.builder.get_object("combobox1"))
         list2 = []
         list3 = []
 
@@ -410,7 +410,7 @@ class SRestoreGTK:
         Reload all backup info from a custom location
         """
 
-        self.load_tree(self.widgets.get_widget("entry1").get_text())
+        self.load_tree(self.builder.get_object("entry1").get_text())
 
     def on_selection_change(self, *args):
         """
@@ -418,17 +418,17 @@ class SRestoreGTK:
         """
         (model, aiter) = self.sel.get_selected()
         if aiter and self.good:
-            self.widgets.get_widget("button2").set_sensitive(True)
-            self.widgets.get_widget("button3").set_sensitive(True)
+            self.builder.get_object("button2").set_sensitive(True)
+            self.builder.get_object("button3").set_sensitive(True)
         else:
-            self.widgets.get_widget("button2").set_sensitive(False)
-            self.widgets.get_widget("button3").set_sensitive(False)
+            self.builder.get_object("button2").set_sensitive(False)
+            self.builder.get_object("button3").set_sensitive(False)
 
     def _restore_init( self, *args):
         """
         Internal function to prepare for restorin a file
         """
-        (store, aiter) = self.widgets.get_widget("treeview1").get_selection().get_selected()
+        (store, aiter) = self.builder.get_object("treeview1").get_selection().get_selected()
         self.src = self.path_to_dir( store.get_path( aiter ) )
         return aiter
 
@@ -442,14 +442,14 @@ class SRestoreGTK:
         if response == gtk.RESPONSE_YES:
             while gtk.events_pending():
                 gtk.main_iteration(False)
-            dialog = self.widgets.get_widget("restore_progress_dialog")
+            dialog = self.builder.get_object("restore_progress_dialog")
             dialog.show()
 
-            progressBar = self.widgets.get_widget("progressbar")
+            progressBar = self.builder.get_object("progressbar")
             progressThread = ProgressThread(dialog, progressBar)
             progressThread.setDaemon(True)
             progressThread.start()
-            tdir = self.target+"/"+self.get_active_text(self.widgets.get_widget("combobox1"))
+            tdir = self.target+"/"+self.get_active_text(self.builder.get_object("combobox1"))
             self.restoreThread = RestoreThread(tdir, src, dst, progressThread)
             self.restoreThread.setDaemon(True)
             self.restoreThread.start()

@@ -80,10 +80,6 @@ if __name__ == '__main__':
     gettext.bindtextdomain(application, locale_dir)
     gettext.textdomain(application)
 
-    import gtk.glade
-    gtk.glade.bindtextdomain(application, locale_dir)
-    gtk.glade.textdomain(application)
-
     try:
         import appindicator
         appindicator_avail = True

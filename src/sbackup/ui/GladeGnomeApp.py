@@ -21,9 +21,8 @@
 
 
 import os
-import gtk.glade
-import gnome
-import gnome.ui # required by GnomeAppBar
+
+from gi.repository import Gtk
 
 
 def search_file(filename, search_path):
@@ -85,10 +84,8 @@ class GladeGnomeApp(object):
         except:
             search_path = './'
 
-        gnome.program_init(app_name, app_version)
-
         fname = search_file(filename, search_path)
-        self.xml = gtk.glade.XML(fname, domain = 'sbackup')
+        self.builder = Gtk.Builder(fname, domain = 'sbackup')
 
         # prepare callbacks
         self.cb_dict = {}
@@ -97,14 +94,14 @@ class GladeGnomeApp(object):
 
         self.widgets = {}
         for w in self.widget_list:
-            self.widgets[w] = self.xml.get_widget(w)
+            self.widgets[w] = self.builder.get_object(w)
 
         if pull_down_dict is not None:
             for w, l in pull_down_dict.items():
                 self.widgets[w].set_popdown_strings(l)
 
         # set attribute for top_window so it can be accessed as self.top_window
-        self.top_window = self.xml.get_widget(top_window)
+        self.top_window = self.builder.get_object(top_window)
 
         # window to show when this one is hidden
         self.prev_window = None

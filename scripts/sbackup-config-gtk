@@ -34,13 +34,12 @@ if __name__ == '__main__':
     application = get_locale_domain()
     locale_dir = get_locale_dir()
 
+    # Load domain for translation
     import gettext
-    gettext.bindtextdomain(application, locale_dir)
-    gettext.textdomain(application)
-
-    import gtk, gtk.glade
-    gtk.glade.bindtextdomain(application, locale_dir)
-    gtk.glade.textdomain(application)
+    import locale
+    for module in (gettext, locale):
+        module.bindtextdomain(application, locale_dir)
+        module.textdomain(application)
 
     from sbackup.ui.configgui import main
     main(sys.argv)

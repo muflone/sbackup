@@ -46,8 +46,6 @@ from sbackup.util import constants
 from sbackup.util import system
 from sbackup.util import log
 
-
-
 #TODO: make these functions module functions? See article: Python is not Java
 
 PATHSEP = system.PATHSEP

@@ -30,6 +30,7 @@
 import os
 import time
 import types
+
 import dbus
 
 from sbackup import dbus_service

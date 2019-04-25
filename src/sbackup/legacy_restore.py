@@ -36,8 +36,6 @@ import sbackup.util as Util
 
 # Attempt to load GTK bindings
 try:
-    import pygtk
-    pygtk.require("2.0")
     import gtk
 
     from gi.repository import Gtk

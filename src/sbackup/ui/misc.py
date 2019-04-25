@@ -78,15 +78,7 @@ def open_uri(uri, timestamp = 0):
     """Convenience function for opening a given URI with the default
     application.
     """
-    # The function 'show_uri()' is available in PyGTK 2.14 and above.
-    if gtk.pygtk_version >= (2, 14, 0):
-        gtk.show_uri(gtk.gdk.screen_get_default(), uri, timestamp)
-    else:
-        try:
-            import gnome
-            gnome.url_show(uri)
-        except ImportError:
-            pass
+    gtk.show_uri(gtk.gdk.screen_get_default(), uri, timestamp)
 
 
 def label_set_autowrap(widget):

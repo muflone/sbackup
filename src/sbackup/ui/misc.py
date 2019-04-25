@@ -24,6 +24,7 @@
 from gettext import gettext as _
 
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import GLib
 from gi.repository import Pango
 import types
@@ -274,7 +275,7 @@ def show_about_dialog(set_transient_for = None):
     about.set_authors(Infos.AUTHORS)
     if not system.is_superuser():
         about.set_website(Infos.WEBSITE)
-    about.set_logo(gtk.gdk.pixbuf_new_from_file(_icon_file))
+    about.set_logo(GdkPixbuf.Pixbuf.new_from_file(_icon_file))
     about.set_icon_from_file(_icon_file)
     about.run()
     about.destroy()

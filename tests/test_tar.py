@@ -176,16 +176,16 @@ class TestSnapshotFile(unittest.TestCase):
     def testGetFirstItems(self):
         " Get the list of first items into a snarfile"
         psnpf = ProcSnapshotFile(self.snarSNPfile)
-        #print psnpf.getFirstItems()
+        #print(psnpf.getFirstItems())
         self.assertEqual(len(psnpf.getFirstItems()), 1)
         self.assertEqual(psnpf.getFirstItems(), ['/home/wattazoum/Images/camescope'])
 
         psnpf = ProcSnapshotFile(self.snarSNPfile2)
-        #print psnpf.getFirstItems()
+        #print(psnpf.getFirstItems())
         self.assertEqual(len(psnpf.getFirstItems()), 4)
 
         msnpf = MemSnapshotFile(self.snarSNPfile2)
-        #print msnpf.getFirstItems()
+        #print(msnpf.getFirstItems())
         self.assertEqual(len(msnpf.getFirstItems()), 4)
         self.assertEqual(msnpf.getFirstItems(), psnpf.getFirstItems())
 
@@ -359,7 +359,7 @@ class TestSnapshotFile(unittest.TestCase):
 
         del snpf
         # now re-read the created SNAR-file
-#        print "\n\n\nnow re-read the created SNAR-file"
+#        print("\n\n\nnow re-read the created SNAR-file")
 
         dir_file = []
         snpf = SnapshotFile(self.snarf_new)
@@ -369,7 +369,7 @@ class TestSnapshotFile(unittest.TestCase):
 
         entry1 = dir_file[0]
 
-#        print "ENTRY after addrecord:\n%s" % entry1
+#        print("ENTRY after addrecord:\n%s" % entry1)
 
         # evaluate the results
         self.assertEqual(dumpdir1_name, entry1[SnapshotFile.REC_DIRNAME])

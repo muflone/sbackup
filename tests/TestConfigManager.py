@@ -63,7 +63,7 @@ class TestConfigManager(unittest.TestCase):
         self.config = ConfigManager("test-datas/sbackup.conf.good")
         self.assertEqual(self.config.conffile, "test-datas/sbackup.conf.good")
 #        for s in self.config.sections():
-#            print str(s)
+#            print(str(s))
 #        self.assertEqual(len(self.config.sections()),3)
         self.assertEqual(len(self.config.options("dirconfig")), 10)
         self.assertEqual(len(self.config.options("general")), 4)

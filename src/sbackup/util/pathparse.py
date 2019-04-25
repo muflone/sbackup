@@ -175,18 +175,18 @@ class UriParser(object):
         self.__uri = splituri.geturl()  # gets normalized URI
         splituri = urllib.parse.urlsplit(self.__uri, scheme = "", allow_fragments = False)
 
-#        print "\nSplit uri:\n"
-#        print "url: %s" % splituri.geturl()
-#        print "scheme: %s" % splituri.scheme        #IGNORE:E1103
-#        print "netloc: %s" % splituri.netloc        #IGNORE:E1103
-#        print "path: %s" % splituri.path            #IGNORE:E1103
-#        print "query: %s" % splituri.query          #IGNORE:E1103
-#        print "fragment: %s" % splituri.fragment    #IGNORE:E1103
-#        print "username: %s" % splituri.username
-#        print "password: ????"
-#        print "hostname: %s" % splituri.hostname
-#        print "port: %s" % splituri.port
-#        print "-------------------------"
+#        print("\nSplit uri:\n")
+#        print("url: %s" % splituri.geturl())
+#        print("scheme: %s" % splituri.scheme)       #IGNORE:E1103
+#        print("netloc: %s" % splituri.netloc)       #IGNORE:E1103
+#        print("path: %s" % splituri.path)           #IGNORE:E1103
+#        print("query: %s" % splituri.query)         #IGNORE:E1103
+#        print("fragment: %s" % splituri.fragment)   #IGNORE:E1103
+#        print("username: %s" % splituri.username)
+#        print("password: ????")
+#        print("hostname: %s" % splituri.hostname)
+#        print("port: %s" % splituri.port)
+#        print("-------------------------")
 
         assert splituri.fragment == "" #IGNORE:E1103
         assert splituri.query == "" #IGNORE:E1103

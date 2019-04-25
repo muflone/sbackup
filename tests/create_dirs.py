@@ -137,7 +137,7 @@ class TestdataCreator(object):
                                     self.__options.get_max_number_of_files())
         for cnum in range(0, maxfilenum):
             fname = os.path.join(dirname, "f%s" % cnum)
-    #        print "create '%s'" % fname
+    #        print("create '%s'" % fname)
             fobj = open(fname, "wb")
             fobj.write(self.generate_content())
             fobj.close()
@@ -149,7 +149,7 @@ class TestdataCreator(object):
         self.make_dirs_recurs(self.__options.get_working_dir(), 0, mdepth)
 
     def make_dirs_recurs(self, curpath, curdepth, maxdepth):
-    #    print "MAKE_DIRS: curpath: %s; curdepth: %s; maxdepth: %s" % (curpath, curdepth, maxdepth)
+    #    print("MAKE_DIRS: curpath: %s; curdepth: %s; maxdepth: %s" % (curpath, curdepth, maxdepth))
         maxdirnum = random.randint(self.__options.get_min_number_of_dirs(),
                                    self.__options.get_max_number_of_dirs())
         for cdirnum in range(0, maxdirnum):
@@ -165,7 +165,7 @@ class TestdataCreator(object):
 
 def calc_sums(arg, dirname, filenames):
     for fname in filenames:
-#        print fname
+#        print(fname)
         fpath = os.path.join(dirname, fname)
         cmd = ["md5sum", fpath]
         output = subprocess.Popen(cmd, stdout = subprocess.PIPE).communicate()[0]

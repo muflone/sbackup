@@ -129,7 +129,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
         """
         self._logger.info(_("Terminating FUSE File Access Manager."))
         error = None
-#        print "Mount dirs: %s" % str(self.__mountedDirs)
+#        print("Mount dirs: %s" % str(self.__mountedDirs))
 
         if self._is_initialized is True:
             try:
@@ -165,7 +165,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
             self._terminate_callback(error)
 
         self._is_initialized = False
-#        print "End of fuse_fam.terminate"
+#        print("End of fuse_fam.terminate")
 
         self._is_initialized = False
 
@@ -188,7 +188,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 
                     if rsource != os.sep:   # remote
                         self.__mountedDirs[rsource] = mpoint
-#                        print "Mount dirs: %s" % str(self.__mountedDirs)
+#                        print("Mount dirs: %s" % str(self.__mountedDirs))
                         return os.sep.join([mpoint, pathinside])
                     else:
                         # The plugin used was localFuseFAM
@@ -232,7 +232,7 @@ class  FuseTargetHandler(interfaces.ITargetHandler):
 
         if error is None:
             self._is_initialized = True
-#        print "End of fuse_fam._mount_config_destination"
+#        print("End of fuse_fam._mount_config_destination")
 
 
     def _remove_mountdir(self, mountpoint):

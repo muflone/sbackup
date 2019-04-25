@@ -62,13 +62,13 @@ if __name__ == '__main__':
     _session_user = system.get_user_from_env()
 
     if system.is_superuser():
-        print "Indicator application was started as superuser (EUID=0).\n"\
-              "Now dropping privileges (to user '%s')." % _session_user
+        print("Indicator application was started as superuser (EUID=0).\n"\
+              "Now dropping privileges (to user '%s')." % _session_user)
         system.switch_user(uid_name = _session_user)
 
     if system.get_user_from_uid() != _session_user:
-        print "Unable to launch indicator application as current user.\n"\
-              "You must own current desktop session."
+        print("Unable to launch indicator application as current user.\n"\
+              "You must own current desktop session.")
         sys.exit(1)
 
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         if appindicator_avail:
             from sbackup.ui.indicator import main
         else:
-            print "Unable to use `libappindicator`. Falling back to legacy status icon."
+            print("Unable to use `libappindicator`. Falling back to legacy status icon.")
             from sbackup.ui.indicator_legacy import main
 
 

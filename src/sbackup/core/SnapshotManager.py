@@ -350,7 +350,7 @@ class SnapshotManager(object):
                         "SnapshotFileWrapper "\
                         "type! Got %s instead." % type(res_snpfinfo))
 
-#        print "Parent (base) snar file:\n%s" % src_snpfinfo
+#        print("Parent (base) snar file:\n%s" % src_snpfinfo)
         # list for storage of files that need to be extracted from merge source
         files_to_extract = []
 
@@ -361,7 +361,7 @@ class SnapshotManager(object):
             # get the content (dumpdir entries) for current directory
             _curcontent = target_snpfinfo.getContent(_curdir)
             for _dumpdir in _curcontent:
-#                print "\n  now processing dumpdir: %s" % _dumpdir
+#                print("\n  now processing dumpdir: %s" % _dumpdir)
                 _ctrl = _dumpdir.getControl()
                 _filen = _dumpdir.getFilename()
                 _ddir_final = None
@@ -369,7 +369,7 @@ class SnapshotManager(object):
                 if _ctrl == Dumpdir.UNCHANGED:
                     # Item was explicitly excluded and is therefore not included in child
 #                    _filenfull = os.path.join(_curdir, _filen)
-#                    print "Full path: %s" % (_filenfull)
+#                    print("Full path: %s" % (_filenfull))
                     if self._fop.joinpath(_curdir, _filen) in target_excludes:
                         self.logger.debug("Path '%s' was excluded. Not merged." % _filen)
                         _was_excluded = True

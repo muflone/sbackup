@@ -229,7 +229,7 @@ class _DBusConnection(object):
                     else:
                         self._logger.warning("Unable to unregister connection (failed).")
 #            else:
-#                print "WARN: Unable to unregister connection (no client id)."
+#                print("WARN: Unable to unregister connection (no client id).")
 # avoid warning when calling this method as singleton
         self.__clear()
         return res

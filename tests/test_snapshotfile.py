@@ -43,7 +43,7 @@ class TestSnapshotfile(unittest.TestCase):
 
     def test_constructor(self):
         snar = tar.SnapshotFile(self.__file)
-#        print str(snar)
+#        print(str(snar))
         _time = snar.get_time_of_backup()
         print("Time of backup: %s sec" % (_time))
 
@@ -56,7 +56,7 @@ class TestSnapshotfile(unittest.TestCase):
 #        mb = _size / (1000*1000)
 #        kb = ( _size % (1000*1000) ) / 1000
 #        b = ( _size % (1000*1000) ) % 1000
-#        print "Size: %s MB %s kB %s" % (mb, kb, b)
+#        print("Size: %s MB %s kB %s" % (mb, kb, b))
 
 
 def suite():

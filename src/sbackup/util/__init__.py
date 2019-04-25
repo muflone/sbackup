@@ -61,7 +61,7 @@ def __get_resource(resource_name, is_file = False):
     @note: The resources file is required to be located in the
             root directory of the sbackup package.
     """
-#    print "Debug: Looking for '%s' (isFile=%s)" % (resourceName, isFile)
+#    print("Debug: Looking for '%s' (isFile=%s)" % (resourceName, isFile))
     tmp = inspect.getabsfile(sbackup)
     resfile = open(os.path.join(os.path.dirname(tmp), constants.RSRC_FILE), "r")
     resfilelines = resfile.readlines()
@@ -69,26 +69,26 @@ def __get_resource(resource_name, is_file = False):
 
     for _dir in resfilelines:
         _dir = _dir.strip()
-#        print "Debug: Searching in directory '%s'" % _dir
+#        print("Debug: Searching in directory '%s'" % _dir)
         if os.path.exists(_dir) and os.path.isdir(_dir):
             # only directories stored in resource file are considered
             if _dir.endswith(resource_name):
                 if not is_file:
-#                    print "Debug: Directory found in '%s'" % _dir
+#                    print("Debug: Directory found in '%s'" % _dir)
                     return _dir
 
             _flist = os.listdir(_dir)
-#            print "Debug: directory listing is :" + str(_flist)
+#            print("Debug: directory listing is :" + str(_flist))
             for _item in _flist:
                 _path = os.path.join(_dir, resource_name)
                 if os.path.exists(_path) and _path.endswith(resource_name):
                     if os.path.isdir(_path):
                         if not is_file:
-#                            print "Debug: Directory found in '%s'" % _path
+#                            print("Debug: Directory found in '%s'" % _path)
                             return _path
                     else:
                         if is_file:
-#                            print "Debug: File found in '%s'" % _path
+#                            print("Debug: File found in '%s'" % _path)
                             return _path
 
     raise exceptions.ResourceFileNotFoundError("Unable to find `%s` in the resources list" % resource_name)

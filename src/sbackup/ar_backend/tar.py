@@ -554,11 +554,11 @@ def get_dumpdir_from_list(lst_dumpdirs, filename):
 
     @raise SBExcetion: if filename couldn't be found in list
     """
-#    print ">>> get_dumpdir_from_list"
-#    print "  Looking for: %s" % filename
-#    print "  List of dumpdirs:"
+#    print(">>> get_dumpdir_from_list")
+#    print("  Looking for: %s" % filename)
+#    print("  List of dumpdirs:")
 #    for _ddir in lst_dumpdirs:
-#        print "    %s" % _ddir
+#        print("    %s" % _ddir)
     _res = None
 
     if not isinstance(lst_dumpdirs, list):
@@ -1192,7 +1192,7 @@ class SnapshotFile(object):
 #        _snardict = {}
 #
 #        for _record in self.parseFormat2():
-##            print _record
+##            print(_record)
 #            _dirname = _record[self.REC_DIRNAME]
 #            _content = _record[self.REC_CONTENT]
 ##            if _dirname in _dirdict:
@@ -1202,15 +1202,15 @@ class SnapshotFile(object):
 #            _snardict[_dirname] = Dumpdir.DIRECTORY
 #
 #            for _entry in _content:
-##                print "Type: %s name: '%s' control: '%s'" %(type(_entry),
+##                print("Type: %s name: '%s' control: '%s'" %(type(_entry),
 ##                                                        _entry.getFilename(),
-##                                                        _entry.getControl())
+##                                                        _entry.getControl()))
 #                _epath = fam.joinpath(_dirname, _entry.getFilename())
 #                _snardict[_epath] = _entry.getControl()
 #
 #
-##        print "Dir dictionary:\n%s" % _dirdict
-##        print "Snar dictionary:\n%s" % _snardict
+##        print("Dir dictionary:\n%s" % _dirdict)
+##        print("Snar dictionary:\n%s" % _snardict)
 #        return _snardict
 
 

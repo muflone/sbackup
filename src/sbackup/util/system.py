@@ -154,14 +154,14 @@ def switch_user(uid_name):
     starting_uid = os.getuid()
 #    starting_gid = os.getgid()
 #    starting_uid_name = pwd.getpwuid(starting_uid)[0]
-#    print 'switch_user: started as %s/%s' % \
+#    print('switch_user: started as %s/%s' % \
 #    (pwd.getpwuid(starting_uid).pw_name,
-#    grp.getgrgid(starting_gid).gr_name)
-#    print "UID: %s  EUID: %s  GID: %s" % (os.getuid(), os.geteuid(), os.getgid())
+#    grp.getgrgid(starting_gid).gr_name))
+#    print("UID: %s  EUID: %s  GID: %s" % (os.getuid(), os.geteuid(), os.getgid()))
 
     if os.getuid() != 0:
         # We're not root so, like, whatever dude
-#        print "switch_user: already running as '%s'" % starting_uid_name
+#        print("switch_user: already running as '%s'" % starting_uid_name)
         return
 
     # If we started as root, drop privs and become the specified user/group
@@ -189,8 +189,8 @@ def switch_user(uid_name):
     # Ensure a very convervative umask
     new_umask = 0o077
     old_umask = os.umask(new_umask)
-#    print 'drop_privileges: Old umask: %s, new umask: %s' % \
-    (oct(old_umask), oct(new_umask))
+#    print('drop_privileges: Old umask: %s, new umask: %s' % \
+#    (oct(old_umask), oct(new_umask)))
 
     final_uid = os.getuid()
     final_gid = os.getgid()
@@ -296,7 +296,7 @@ def set_gio_env_from_session():
     #        _nvalue = _env.get(key_kr)
     #        if _nvalue is not None:
     #            _nvalue = "%s/ssh" % _nvalue
-    #            print "Updating %s to: %s" % (key_ssh, _nvalue)
+    #            print("Updating %s to: %s" % (key_ssh, _nvalue))
     #            os.environ[key_ssh] = _nvalue
     #===========================================================================
 
@@ -389,7 +389,7 @@ def _get_session_env(session, _session_pid=None):
     if _session_pid is None:
         print("Session `%s` not found" % session)
     else:
-#        print "Session `%s` PID: %s" % (session, _session_pid)
+#        print("Session `%s` PID: %s" % (session, _session_pid))
         _mod_env = get_clean_environment()
         _session_env = get_process_environment(pid = _session_pid)
         if _session_env is None:
@@ -454,7 +454,7 @@ def grep_pid(processname, withuid=False):
     try:
         _pid = int(output)
     except ValueError:
-#        print "Unable to get PID of process '%s'." % processname
+#        print("Unable to get PID of process '%s'." % processname)
         _pid = None
     return _pid
 

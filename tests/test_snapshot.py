@@ -110,7 +110,7 @@ class TestSnapshot(unittest.TestCase):
     def __clean_dir(self):
         for val_name in self.__get_all_valid_names():
             tdir = os.path.join(_TestSnapshotPaths.get_snp_path(), val_name)
-#            print "VAL: %s" % tdir
+#            print("VAL: %s" % tdir)
             rmcmd = ["rm", "-rf", tdir]
             subprocess.call(rmcmd)
 
@@ -120,7 +120,7 @@ class TestSnapshot(unittest.TestCase):
         val_names = self.__get_all_valid_names()
         for val_name in val_names:
             tdir = os.path.join(_TestSnapshotPaths.get_snp_path(), val_name)
-#            print "VAL: %s" % tdir
+#            print("VAL: %s" % tdir)
             snp = snapshot.Snapshot(tdir)
 
             # evaluate test
@@ -133,7 +133,7 @@ class TestSnapshot(unittest.TestCase):
         """
         for ill_name in self.snp_invalid_names:
             tdir = os.path.join(_TestSnapshotPaths.get_snp_path(), ill_name)
-#            print "ILL: %s" % tdir
+#            print("ILL: %s" % tdir)
             self.assertRaises(NotValidSnapshotNameException,
                               snapshot.Snapshot, tdir)
 
@@ -227,10 +227,10 @@ class TestSnapshotFromDisk(unittest.TestCase):
 
         self.in_path_abs = _TestSnapshotPaths.get_docinput_path()
 
-#        print "ABSPATH TESTDIR: '%s'\nSNAPPATH FUL: '%s'\nSNAPPATH INC: '%s'"\
+#        print("ABSPATH TESTDIR: '%s'\nSNAPPATH FUL: '%s'\nSNAPPATH INC: '%s'"\
 #              "\nSNAPPATH NEW: '%s'"\
 #                % (self.abspath_testdir, self.snappath_ful,
-#                   self.snappath_inc, self.snappath_new)
+#                   self.snappath_inc, self.snappath_new))
 
         self.__clean_dir()
         self.__untar_snapshots()
@@ -372,7 +372,7 @@ class TestSnapshotCreateToDisk(unittest.TestCase):
 
         self.snappath_new = os.path.join(_TestSnapshotPaths.get_snp_path(), self.snp_new_name)
         self.in_path_abs = _TestSnapshotPaths.get_docinput_path()
-#        print "SNAPPATH NEW: '%s'"\ % (self.snappath_new)
+#        print("SNAPPATH NEW: '%s'"\ % (self.snappath_new))
         self.__clean_dir()
 
     def tearDown(self):

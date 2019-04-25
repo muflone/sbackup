@@ -303,7 +303,7 @@ def set_watch_cursor(widget):
         widget.window.set_cursor(watch)
     except AttributeError:
         pass
-#        print "Ignored error when setting cursor"
+#        print("Ignored error when setting cursor")
 
 
 def unset_cursor(widget):
@@ -311,7 +311,7 @@ def unset_cursor(widget):
         widget.window.set_cursor(None)
     except AttributeError:
         pass
-#        print "Ignored error when un-setting cursor"
+#        print("Ignored error when un-setting cursor")
 
 
 def _common_except_hook(etype, evalue, etb):

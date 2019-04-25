@@ -880,7 +880,7 @@ class SBconfigGTK(GladeGnomeApp):
 #        cmbbx = self.widgets['cmb_set_remote_service']
 #        model = cmbbx.get_model()
 #        label, value = model[cmbbx.get_active()]
-#        print "on_cmb_set_remote_service_changed - label: %s value: %s" % (label, value)
+#        print("on_cmb_set_remote_service_changed - label: %s value: %s" % (label, value))
 #        _user = self.widgets['entry_set_remote_user']
 #        _user_lab = self.widgets['label_set_remote_user']
 #        _pass = self.widgets['entry_set_remote_pass']
@@ -1164,7 +1164,7 @@ class SBconfigGTK(GladeGnomeApp):
 
     def on_txtfld_custom_cronline_changed(self, *args):
         _cronline = self.widgets['txtfld_custom_cronline'].get_text()
-#        print "WE MUST CHECK THE INPUT!"
+#        print("WE MUST CHECK THE INPUT!")
 #TODO: WE MUST CHECK THE INPUT!
         self.configman.setSchedule(1, _cronline)
         self.isConfigChanged()
@@ -1892,7 +1892,7 @@ class SBconfigGTK(GladeGnomeApp):
             confman.saveConf(prfConf)
             self.profiles.append([enable, prfName, prfConf])
 #        else:
-#            print "Adding of profile canceled."
+#            print("Adding of profile canceled.")
 
     def on_removeProfileButton_clicked(self, *args):
         tm, iter = self.profilestv.get_selection().get_selected()

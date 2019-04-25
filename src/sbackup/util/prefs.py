@@ -27,59 +27,38 @@
 
 """
 
+SECTION_OPTIONS = 'options'
+FS_BACKEND_GIO = 'gio'
+FS_BACKEND_FUSE = 'fuse'
 
-import glib
-import gconf
+PREFS_FS_BACKEND = 'fs_backend'
 
+import configparser
+import os.path
 
-from sbackup.util import structs
+from xdg import BaseDirectory
 
-
-FS_BACKEND_GIO = "gio"
-FS_BACKEND_FUSE = "fuse"
-
-PREFS_FS_BACKEND = "/apps/sbackup/global-preferences/fs_backend"
-
-
-_PREFS_DEFAULTS = { PREFS_FS_BACKEND : FS_BACKEND_GIO }
-_PREFS_TYPES = { PREFS_FS_BACKEND : gconf.VALUE_STRING }
+from . import structs
 
 
 class Preferences(object, metaclass=structs.Singleton):
     def __init__(self):
-        self._client = gconf.client_get_default ()
+        self._config = configparser.RawConfigParser()
+        self._config.read(os.path.join(
+            BaseDirectory.save_config_path('sbackup'), 'settings.conf'))
 
     def get(self, key):
-        _type = _PREFS_TYPES[key]
-
         _value = self._get_value(key)
-        if _value is None:
-            # return default and set default in database (if possible)
-            self._set_value(key, _PREFS_DEFAULTS[key])
-            _value = _PREFS_DEFAULTS[key]
-
         return _value
 
     def _get_value(self, key):
-        _type = _PREFS_TYPES[key]
         _value = None
-
-        if _type == gconf.VALUE_STRING:
-            try:
-                _value = self._client.get_string(key)
-                _value = _value.lower()
-            except glib.GError as error:
-                print("Error while getting gconf setting: %s\nDefault value is used." % error)
-            except AttributeError:
-                pass
+        if self._config.has_section(SECTION_OPTIONS) and \
+                self._config.has_option(SECTION_OPTIONS, key):
+            _value = self._config.get(SECTION_OPTIONS, key)
         return _value
 
     def _set_value(self, key, value):
-        _type = _PREFS_TYPES[key]
-
-        if _type == gconf.VALUE_STRING:
-            try:
-                if self._client.key_is_writable(key):
-                    self._client.set_string(key, value)
-            except glib.GError as error:
-                print("Error while setting gconf value: %s\nError can be safely ignored: setting is not being changed." % error)
+        if not self._config.has_section(SECTION_OPTIONS):
+            self._config.add_section(SECTION_OPTIONS)
+        self._config.set(SECTION_OPTIONS, key, value)

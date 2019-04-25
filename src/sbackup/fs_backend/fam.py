@@ -33,6 +33,9 @@ from sbackup.util import prefs
 
 _PREFS = prefs.Preferences()
 FS_BACKEND = _PREFS.get(key = prefs.PREFS_FS_BACKEND)
+if not FS_BACKEND:
+    FS_BACKEND = prefs.FS_BACKEND_GIO
+
 
 
 # factory methods

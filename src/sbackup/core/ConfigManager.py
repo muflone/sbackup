@@ -258,7 +258,7 @@ class ConfigManager(configparser.ConfigParser):
             self.logger.info(_("Profile settings are being set to default values. Configuration file is set to '%s'.")\
                             % self.conffile)
 
-    def __del__(self):
+    def __exit__(self):
         self.__cleanup_logfiles()
 
     def __str__(self):
@@ -526,7 +526,7 @@ class ConfigManager(configparser.ConfigParser):
             #fall back in parent behaviour
             return configparser.ConfigParser.has_option(self, section, option)
 
-    def get(self, section, option):
+    def get(self, section, option, raw = True, vars=None, fallback = ''):
         """Returns a given option value from this config.
         """
         # if we have (dirconfig,opt), if opt=remote
@@ -548,7 +548,8 @@ class ConfigManager(configparser.ConfigParser):
             return remotes
         else:
             #fall back in parent behaviour
-            return configparser.ConfigParser.get(self, section, option, True)
+            return configparser.ConfigParser.get(self, section, option,
+                raw=raw, fallback=fallback)
 
     def set(self, section, option, value):
         """Set an option just like a configParser but in case of

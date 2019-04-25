@@ -24,8 +24,7 @@
 from gettext import gettext as _
 
 import gtk
-import glib
-import gobject
+from gi.repository import GLib
 import pango
 import types
 import traceback
@@ -211,14 +210,14 @@ def msgdialog(message_str, msgtype, parent, boxtitle = "", buttons = gtk.BUTTONS
 
     _hdl = headline_str.strip(" \n\t")
     if _hdl != "":
-        _hdl = "<b>%s</b>\n\n" % glib.markup_escape_text(_hdl)
-    _msg = "%s%s" % (_hdl, glib.markup_escape_text(message_str))
+        _hdl = "<b>%s</b>\n\n" % GLib.markup_escape_text(_hdl)
+    _msg = "%s%s" % (_hdl, GLib.markup_escape_text(message_str))
     dialog.set_markup(_msg)
 
     # an optional secondary message is added
     _sec = secmsg_str.strip(" \n\t")
     if _sec != "":
-        _sec = "<small>%s</small>" % (glib.markup_escape_text(_sec))
+        _sec = "<small>%s</small>" % (GLib.markup_escape_text(_sec))
         dialog.format_secondary_markup(_sec)
     return dialog
 
@@ -336,6 +335,6 @@ def except_hook(etype, evalue, etb):
 
 def except_hook_threaded(etype, evalue, etb):
     _headline_str, _message_str, _secmsg_str = _common_except_hook(etype, evalue, etb)
-    gobject.idle_add(show_errdialog_threaded, _message_str,
+    GObject.idle_add(show_errdialog_threaded, _message_str,
                      None, _headline_str,
                      _secmsg_str)

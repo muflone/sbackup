@@ -26,8 +26,8 @@ import os
 import sys
 import types
 
-import gobject
-import glib
+from gi.repository import GObject
+from gi.repository import GLib
 import gtk
 
 from sbackup.util import log
@@ -102,7 +102,7 @@ class SBconfigGTK(GladeGnomeApp):
         else:
             self.configman = ConfigManager.ConfigManager()
             self.orig_configman = None
-            gobject.idle_add(_notify_new_default_profile_created)
+            GObject.idle_add(_notify_new_default_profile_created)
 
         self.logger = LogFactory.getLogger()
         self.__destination_uri_obj = None
@@ -291,7 +291,7 @@ class SBconfigGTK(GladeGnomeApp):
             self.isConfigChanged()
             _msg = _("Invalid or empty regular expressions found\nin configuration file:\n'%s'\n\nThese expressions are not used and were\nremoved from the configuration.")\
                 % (_invalid_regex.lstrip(","))
-            gobject.idle_add(misc.show_errdialog, _msg,
+            GObject.idle_add(misc.show_errdialog, _msg,
                              self.__get_application_widget())
 
     def __fill_max_filesize_widgets_from_config(self):
@@ -547,7 +547,7 @@ class SBconfigGTK(GladeGnomeApp):
                   "sure the missing directory exists and check your settings on the "\
                   "destination settings page.") % ctarget
                 _hdl = _("Unable to open backup destination")
-                gobject.idle_add(misc.show_errdialog, _msg,
+                GObject.idle_add(misc.show_errdialog, _msg,
                                   self.__get_application_widget(),
                                   _hdl, _sec)
         else:
@@ -597,7 +597,7 @@ class SBconfigGTK(GladeGnomeApp):
 
             self.__fill_statusbar_from_config()
         except exceptions.NonValidOptionException as error:
-            gobject.idle_add(self.__config_invalid_cb, error, probe_fs)
+            GObject.idle_add(self.__config_invalid_cb, error, probe_fs)
         else:
 #            self.__set_default_focus()
             self.isConfigChanged()
@@ -616,7 +616,7 @@ class SBconfigGTK(GladeGnomeApp):
         dialog.destroy()
         self.configman = ConfigManager.ConfigManager()
         self.orig_configman = None
-        gobject.idle_add(self._fill_widgets_from_config, probe_fs)
+        GObject.idle_add(self._fill_widgets_from_config, probe_fs)
 
 #    def __set_default_focus(self):
 #        self.widgets['label_general_page'].grab_focus()
@@ -1467,7 +1467,7 @@ class SBconfigGTK(GladeGnomeApp):
 
         self.logger.debug("Current destination: %s" % ctarget)
         self.widgets["dialog_browse_localdest"].set_current_folder(ctarget)
-        gobject.idle_add(self.__browse_localdest)
+        GObject.idle_add(self.__browse_localdest)
 
     def __browse_localdest(self):
         dialog = self.widgets["dialog_browse_localdest"]
@@ -1488,7 +1488,7 @@ class SBconfigGTK(GladeGnomeApp):
                   "`%s` does not exist or is not accessable.") % _target
                 _headline_str = \
                 _("Unable to access selected folder")
-                gobject.idle_add(misc.show_errdialog,
+                GObject.idle_add(misc.show_errdialog,
                                   _message_str,
                                   self.__get_application_widget(),
                                   _headline_str, _sec_msg)
@@ -1504,7 +1504,7 @@ class SBconfigGTK(GladeGnomeApp):
 
         else:
             self.logger.error(_("Unexpected dialog response: %s") % response)
-            gobject.idle_add(self.__browse_localdest)
+            GObject.idle_add(self.__browse_localdest)
 
     def on_checkbtn_show_password_toggled(self, *args): #IGNORE:W0613
         self.__set_entry_remote_pass_visibiliy()
@@ -1518,7 +1518,7 @@ class SBconfigGTK(GladeGnomeApp):
         dest_obj.set_and_parse_uri(uri = self.configman.get_destination_path())
         if dest_obj is not None:
             self.__destination_uri_obj = dest_obj
-        gobject.idle_add(self.__show_connect_remote_dialog)
+        GObject.idle_add(self.__show_connect_remote_dialog)
 
     def __show_connect_remote_dialog(self):
         dialog = self.widgets["dialog_connect_remote"]
@@ -1608,7 +1608,7 @@ class SBconfigGTK(GladeGnomeApp):
             self.__destination_hdl.set_destination(self.__destination_uri_obj.uri)
             self.__destination_failure = False
 
-            gobject.idle_add(self.__destination_hdl.initialize)
+            GObject.idle_add(self.__destination_hdl.initialize)
 
         elif response == gtk.RESPONSE_CANCEL or \
              response == gtk.RESPONSE_DELETE_EVENT:
@@ -1618,7 +1618,7 @@ class SBconfigGTK(GladeGnomeApp):
 
         else:
             self.logger.error(_("Unexpected dialog response: %s") % response)
-            gobject.idle_add(self.__show_connect_remote_dialog)
+            GObject.idle_add(self.__show_connect_remote_dialog)
 
     def _mount_done_cb(self, error):
         self.logger.debug("GUI._mount_done_cb: error: %s" % str(error))
@@ -1626,7 +1626,7 @@ class SBconfigGTK(GladeGnomeApp):
 
         if error is None:
             self.logger.info(_("Mount was sucessful (no errors)"))
-            gobject.idle_add(self._do_remote_tests)
+            GObject.idle_add(self._do_remote_tests)
         else:
             misc.unset_cursor(dialog)
 
@@ -1638,7 +1638,7 @@ class SBconfigGTK(GladeGnomeApp):
                 message_str = str(error),
                 headline_str = _("Unable to mount host"))
             self.__destination_failure = True
-            gobject.idle_add(self.__show_connect_remote_dialog)
+            GObject.idle_add(self.__show_connect_remote_dialog)
 
     def _umount_done_cb(self, error):
         self.logger.debug("GUI._umount_done_cb: error: %s" % str(error))
@@ -1657,7 +1657,7 @@ class SBconfigGTK(GladeGnomeApp):
                 message_str = str(error),
                 headline_str = _("Unable to unmount host"))
             self.__destination_failure = True
-        gobject.idle_add(self._umount_done)
+        GObject.idle_add(self._umount_done)
 
     def _umount_done(self):
         self.logger.debug("umount done - failures: %s" % self.__destination_failure)
@@ -1681,7 +1681,7 @@ class SBconfigGTK(GladeGnomeApp):
             _icon = self.widgets["dest_remote_light"]
             _icon.set_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
 
-            gobject.idle_add(self.__show_connect_remote_dialog)
+            GObject.idle_add(self.__show_connect_remote_dialog)
 
     def _do_remote_tests(self):
         error = None
@@ -1705,7 +1705,7 @@ class SBconfigGTK(GladeGnomeApp):
             self.logger.info(_("All tests passed"))
 
         self.__destination_hdl.set_terminate_callback(self._umount_done_cb)
-        gobject.idle_add(self.__destination_hdl.terminate)
+        GObject.idle_add(self.__destination_hdl.terminate)
 
 
     def on_logfilechooser_selection_changed(self, *args): #IGNORE:W0613
@@ -1905,7 +1905,7 @@ class SBconfigGTK(GladeGnomeApp):
         if prfName == ConfigManagerStaticData.get_default_profilename():
             _forbid_default_profile_removal()
         else:
-            warning = _("<b>Delete configuration profile?</b>\n\nYou are trying to remove a configuration profile. You will not be able to restore it. If you are not sure, use the 'enable|disable' functionality instead.\n\nDo you really want to delete the profile '%(name)s'?") % {'name': glib.markup_escape_text(prfName)}
+            warning = _("<b>Delete configuration profile?</b>\n\nYou are trying to remove a configuration profile. You will not be able to restore it. If you are not sure, use the 'enable|disable' functionality instead.\n\nDo you really want to delete the profile '%(name)s'?") % {'name': GLib.markup_escape_text(prfName)}
             dialog = gtk.MessageDialog(type = gtk.MESSAGE_WARNING, flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_YES_NO)
             dialog.set_markup(warning)
             response = dialog.run()
@@ -1978,7 +1978,7 @@ class SBconfigGTK(GladeGnomeApp):
         label = self.widgets["label_dialog_default_settings_content"]
         btn_cancel = self.widgets['btn_cancel_default_settings']
 
-        txt = _("<big><b>Set default values for current profile?</b></big>\nThis will restore the default values for the profile currently edited: '%s'.\n\nThese predefined settings are recommended for most users. Check whether they are appropriate for your use before saving the changed configuration.") % glib.markup_escape_text(self.configman.getProfileName())
+        txt = _("<big><b>Set default values for current profile?</b></big>\nThis will restore the default values for the profile currently edited: '%s'.\n\nThese predefined settings are recommended for most users. Check whether they are appropriate for your use before saving the changed configuration.") % GLib.markup_escape_text(self.configman.getProfileName())
 
         label.set_line_wrap(True)
         label.set_markup(txt)

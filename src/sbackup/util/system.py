@@ -29,7 +29,7 @@ import types
 import atexit
 import signal
 
-import glib
+from gi.repository import GLib
 
 
 PATHSEP = os.sep
@@ -114,12 +114,12 @@ def get_user_home_dir():
 
 
 def get_user_config_dir():
-    _confdir = glib.get_user_config_dir()
+    _confdir = GLib.get_user_config_dir()
     return _confdir
 
 
 def get_user_data_dir():
-    _datadir = glib.get_user_data_dir()
+    _datadir = GLib.get_user_data_dir()
     return _datadir
 
 

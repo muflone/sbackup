@@ -25,8 +25,8 @@ from gettext import gettext as _
 import os.path
 
 import gtk.glade
-import gobject
-import glib
+from gi.repository import GObject
+from gi.repository import GLib
 
 
 PROGRESSBAR_PULSE_INTERVAL = 150
@@ -192,14 +192,14 @@ class GladeWindow(object):
 
         _hdl = headline_str.strip(" \n\t")
         if _hdl != "":
-            _hdl = "<b>%s</b>\n\n" % (glib.markup_escape_text(_hdl))
-        _msg = "%s%s" % (_hdl, glib.markup_escape_text(message_str))
+            _hdl = "<b>%s</b>\n\n" % (GLib.markup_escape_text(_hdl))
+        _msg = "%s%s" % (_hdl, GLib.markup_escape_text(message_str))
         dialog.set_markup(_msg)
 
         # an optional secondary message is added
         _sec = secmsg_str.strip(" \n\t")
         if _sec != "":
-            _sec = "<small>%s</small>" % (glib.markup_escape_text(_sec))
+            _sec = "<small>%s</small>" % (GLib.markup_escape_text(_sec))
             dialog.format_secondary_markup(_sec)
 
         # show the message box and destroy it afterwards
@@ -256,13 +256,13 @@ class ProgressbarMixin(object):
         @return: None
         """
         if self.__pulsetimer_id is not None:
-            gobject.source_remove(self.__pulsetimer_id)
+            GObject.source_remove(self.__pulsetimer_id)
             self.__pulsetimer_id = None
         self._progressbar.set_text("")
         self._progressbar.set_fraction(0.0)
         if self.__hide_when_stopped:
             self._progressbar.show()
-        self.__pulsetimer_id = gobject.timeout_add(PROGRESSBAR_PULSE_INTERVAL, self.__pulse)
+        self.__pulsetimer_id = GObject.timeout_add(PROGRESSBAR_PULSE_INTERVAL, self.__pulse)
 
     def _stop_pulse(self):
         """Calling this method stops the progressbar.
@@ -271,7 +271,7 @@ class ProgressbarMixin(object):
         @rtype:  Boolean
         """
         if self.__pulsetimer_id is not None:
-            gobject.source_remove(self.__pulsetimer_id)
+            GObject.source_remove(self.__pulsetimer_id)
         self.__pulsetimer_id = None
         if self.__hide_when_stopped:
             self._progressbar.hide()

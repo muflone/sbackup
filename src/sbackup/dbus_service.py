@@ -35,7 +35,7 @@ import os
 import uuid
 import optparse
 
-import gobject
+from gi.repository import GObject
 
 import dbus.service
 import dbus.mainloop.glib
@@ -214,7 +214,7 @@ class SBackupDbusConnectionObject(dbus.service.Object):
         self._id = "%s:%s:%s" % (pid, oid, uid)
 
     def _initialize_timer(self):
-        gobject.timeout_add(constants.INTERVAL_UNREGISTER_DEAD_CONN,
+        GObject.timeout_add(constants.INTERVAL_UNREGISTER_DEAD_CONN,
                             self._unregister_dead_connections)
 
     def _unregister_dead_connections(self):
@@ -263,7 +263,7 @@ class SBackupDbusConnectionObject(dbus.service.Object):
                 self.__logger.info("But SBackupdDBusObject is kept alive.")
             else:
                 self.__logger.info("SBackupdDBusObject is being terminated.")
-                gobject.timeout_add(constants.DBUS_SERVICE_QUIT_PAUSE, self.quit)
+                GObject.timeout_add(constants.DBUS_SERVICE_QUIT_PAUSE, self.quit)
         return _res
 
     @dbus.service.method(constants.DBUS_INTERFACE,
@@ -301,7 +301,7 @@ class SBackupDBusService(object):
         self._keep_alive = keep_alive
 
     def _initialize_mainloop(self):
-        self._mainloop = gobject.MainLoop()
+        self._mainloop = GObject.MainLoop()
 
     def _initialize_dbus_service(self):
         if self._mainloop is None:

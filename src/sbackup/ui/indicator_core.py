@@ -24,8 +24,8 @@ import time
 
 from gettext import gettext as _
 
-import gobject
-import glib
+from gi.repository import GObject
+from gi.repository import GLib
 import dbus.mainloop.glib
 import gtk
 
@@ -144,7 +144,7 @@ class PyNotifyMixin(INotifyMixin):
                         except AttributeError: pass
                     self.__notif.set_urgency(self.__pynotif_mod.URGENCY_LOW)
                     self.__notif.show()
-                except gobject.GError as exc:
+                except GObject.GError as exc:
                     # Connection to notification-daemon failed
                     self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
 
@@ -193,7 +193,7 @@ class PyNotifyMixin(INotifyMixin):
                     else:
                         notif.set_urgency(self.__pynotif_mod.URGENCY_NORMAL)
                     notif.show()
-                except gobject.GError as exc:
+                except GObject.GError as exc:
                     # Connection to notification-daemon failed
                     self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
 
@@ -209,7 +209,7 @@ class PyNotifyMixin(INotifyMixin):
         :rtype: Notification or None
 
         :todo: Replace single '<' characters by '&lt;' in a more reliable way!\
-               See function `gobject.markup_escape_text` for this.
+               See function `GObject.markup_escape_text` for this.
         :todo: The header and the icon should be given as parameter to make
                this mix-in class more generic!
 
@@ -221,7 +221,7 @@ class PyNotifyMixin(INotifyMixin):
 
             try:
                 notif = self.__pynotif_mod.Notification(title, message, self.__iconfile)
-            except gobject.GError as exc:
+            except GObject.GError as exc:
                 # Connection to notification-daemon failed
                 self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
                 notif = None
@@ -243,7 +243,7 @@ class PyNotifyMixin(INotifyMixin):
 
             try:
                 self.__notif.update(title, message, self.__iconfile)
-            except gobject.GError as exc:
+            except GObject.GError as exc:
                 # Connection to notification-daemon failed
                 self.logger.warning(_("Connection to notification-daemon failed: %s") % str(exc))
                 self.__notif = None
@@ -264,7 +264,7 @@ class SBackupdIndicatorBase(INotifyMixin):
         INotifyMixin.__init__(self, logger = self.logger, iconfile = None, trayicon = None)
 
         self._indicator_hdl = indicator_hdl
-        self._mainloop = gobject.MainLoop()
+        self._mainloop = GObject.MainLoop()
 
         self._indicator = None
 
@@ -291,18 +291,18 @@ class SBackupdIndicatorBase(INotifyMixin):
 
     def _init_autoexitcheck_timer(self):
         if self._indicator_hdl.get_keep_alive() is False:
-            gobject.timeout_add_seconds(constants.AUTOEXIT_CHECK_INTERVAL_SECONDS,
+            GObject.timeout_add_seconds(constants.AUTOEXIT_CHECK_INTERVAL_SECONDS,
                                 self._autoexitcheck)
 
     def _init_autoexit_timer(self):
-        gobject.timeout_add_seconds(constants.AUTOEXIT_TIMEOUT_SECONDS,
+        GObject.timeout_add_seconds(constants.AUTOEXIT_TIMEOUT_SECONDS,
                             self._autoexit)
 
     def _init_dbus_check_timer(self):
-        gobject.timeout_add_seconds(constants.DBUS_CHECK_INTERVAL_SECONDS, self._dbus_check)
+        GObject.timeout_add_seconds(constants.DBUS_CHECK_INTERVAL_SECONDS, self._dbus_check)
 
     def _init_dbus_reconnect_timer(self):
-        gobject.timeout_add_seconds(constants.DBUS_RECONNECT_INTERVAL_SECONDS, self._dbus_reconnect)
+        GObject.timeout_add_seconds(constants.DBUS_RECONNECT_INTERVAL_SECONDS, self._dbus_reconnect)
 
 
     def _build_menu(self):
@@ -483,7 +483,7 @@ class SBackupdIndicatorBase(INotifyMixin):
                (not self._indicator_hdl.is_warning_present()):
                 self._notify_info(profilename = "",
                                   message = _("No backup in progress and connection to D-Bus service lost. Simple Backup Indicator is being terminated."))
-                gobject.idle_add(self._on_exit)
+                GObject.idle_add(self._on_exit)
             else:
                 _res = True
         else:
@@ -581,9 +581,9 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._targetnotfound_dialog.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                                  _("Try again"), gtk.RESPONSE_OK)
 
-        _ttimer = gobject.timeout_add_seconds(constants.TIMEOUT_RETRY_TARGET_CHECK_SECONDS,
+        _ttimer = GObject.timeout_add_seconds(constants.TIMEOUT_RETRY_TARGET_CHECK_SECONDS,
                                     self._targetnotfound_dialog_destroy)
-        _ctimer = gobject.timeout_add_seconds(constants.ONE_SECOND,
+        _ctimer = GObject.timeout_add_seconds(constants.ONE_SECOND,
                                     self._targetnotfound_timer, msg,
                                     constants.ONE_SECOND)
 
@@ -603,8 +603,8 @@ class SBackupdIndicatorBase(INotifyMixin):
         else:
             retry = constants.RETRY_FALSE
 
-        gobject.source_remove(_ttimer)
-        gobject.source_remove(_ctimer)
+        GObject.source_remove(_ttimer)
+        GObject.source_remove(_ctimer)
         self._indicator_hdl.finish_targetnotfound_handling(retry)
         self.set_status_to_normal()
 
@@ -671,7 +671,7 @@ class SBackupdIndicatorBase(INotifyMixin):
         """
         self._set_cancel_sensitive(sensitive = False)
         assert self._cancel_dialog is None
-        gobject.idle_add(self._cancel_handler)
+        GObject.idle_add(self._cancel_handler)
 
     def _cancel_handler(self):
         self._cancel_dialog = misc.msgdialog_standalone(message_str = \
@@ -723,7 +723,7 @@ class SBackupdIndicatorBase(INotifyMixin):
             self._exit = True
             if (not self._indicator_hdl.is_error_present()) and\
                (not self._indicator_hdl.is_warning_present()):
-                gobject.timeout_add_seconds(constants.TIMEOUT_INDICATOR_QUIT_SECONDS, self._terminate)
+                GObject.timeout_add_seconds(constants.TIMEOUT_INDICATOR_QUIT_SECONDS, self._terminate)
             else:
                 self.logger.debug("still errors present, not calling `__terminate`")
 
@@ -852,7 +852,7 @@ class SBackupdIndicatorHandler(object):
 
     def get_targetnotfound_error_msg(self):
         target = self._backup_dbus_obj.get_target()
-        msg = _("<b>Unable to find specified target directory</b>\n\nThe specified target directory '%s' was not found.\n\n") % (glib.markup_escape_text(target))
+        msg = _("<b>Unable to find specified target directory</b>\n\nThe specified target directory '%s' was not found.\n\n") % (GLib.markup_escape_text(target))
         msg = msg + _("You can try to use the specified target again or cancel the profile execution. The specified destination is automatically used in %s seconds.")
         return msg
 

@@ -37,8 +37,7 @@ import sys
 import time
 
 import gtk
-import gobject
-import glib
+from gi.repository import GLib
 
 
 from .GladeWindow import GladeWindow
@@ -128,7 +127,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         self._apply_defaultradiob_state()
         self.widgets['defaultfolderlabel'].set_text(_("n.a."))
         self._defaultdest_active = True
-        gobject.idle_add(self.__set_destination, self.__default_destination_path)
+        GObject.idle_add(self.__set_destination, self.__default_destination_path)
 
         self.__restore_dialog = RestoreDialog(parent = self)
 
@@ -193,25 +192,25 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.__fam_target_hdl.set_initialize_callback(self.__set_destination_done_cb)
             self.__fam_target_hdl.initialize()
         except exceptions.FileAccessException as error:
-            gobject.idle_add(self._make_topwin_busy, False)
+            GObject.idle_add(self._make_topwin_busy, False)
             self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error
             self._show_destination_error(error)
 
     def __set_destination_done_cb(self, error):
         if error is not None:
-            gobject.idle_add(self._make_topwin_busy, False)
+            GObject.idle_add(self._make_topwin_busy, False)
             self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error
             self._show_destination_error(error)
         else:
-            gobject.idle_add(self.__set_destination_done)
+            GObject.idle_add(self.__set_destination_done)
 
     def __set_destination_done(self):
         self.target = self.__fam_target_hdl.query_mount_uri()
         if self.__fam_target_hdl.dest_path_exists() is False: # no errors so far
             self.widgets['customradiob'].set_active(True)   # fall back to custom destination in case of error
-            gobject.idle_add(self._show_destination_error, _("Specified path does not exist"))
+            GObject.idle_add(self._show_destination_error, _("Specified path does not exist"))
             self.__fam_target_hdl.set_terminate_callback(self._set_dest_failed_cb)
-            gobject.idle_add(self.__fam_target_hdl.terminate)
+            GObject.idle_add(self.__fam_target_hdl.terminate)
         else:
             if self._defaultdest_active:
                 self.widgets['defaultfolderlabel'].set_text(self.__fam_target_hdl.query_dest_display_name())
@@ -225,14 +224,14 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.widgets["calendar"].select_day(today[2])
             self.on_calendar_day_selected()
 
-        gobject.idle_add(self._make_topwin_busy, False)
+        GObject.idle_add(self._make_topwin_busy, False)
 
     def _set_dest_failed_cb(self, error):
         self._make_topwin_busy(False)
         if error is not None:
             self._show_destination_error(error)
 
-        gobject.idle_add(self._on_set_dest_failed)
+        GObject.idle_add(self._on_set_dest_failed)
 
     def _on_set_dest_failed(self):
         pass
@@ -242,11 +241,11 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         if error is not None:
             self._show_destination_error(error)
 
-        gobject.idle_add(self._on_term_fam_done)
+        GObject.idle_add(self._on_term_fam_done)
 
     def _on_term_fam_done(self):
         self.config = None
-        gobject.idle_add(gtk.main_quit)
+        GObject.idle_add(gtk.main_quit)
 
     def __init_statusbar(self):
         """Initializes the statusbar, i.e. gets the context (here
@@ -356,20 +355,20 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self._show_destination_error(error)
 
         ltarget = self.widgets["customentry"].get_text()
-        gobject.idle_add(self.__set_destination, ltarget)
+        GObject.idle_add(self.__set_destination, ltarget)
 
     def _custom_fam_term_cb(self, error):
         if error is not None:
             self._show_destination_error(error)
 
-        gobject.idle_add(self.__set_destination, self.__default_destination_path)
+        GObject.idle_add(self.__set_destination, self.__default_destination_path)
 
     def on_customapply_clicked(self, *args): #IGNORE:W0613
         """Reload all backup info from a custom location
         """
         _ntarget = self.widgets["customentry"].get_text()
         if _ntarget == "":
-            gobject.idle_add(self._show_destination_error, _("No destination specified"))
+            GObject.idle_add(self._show_destination_error, _("No destination specified"))
 
         else:
             if self.__fam_target_hdl.is_initialized() and\
@@ -405,7 +404,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
 
             self._make_topwin_busy(True, _("Reading snapshots..."))
             _date = self.widgets['calendar'].get_date()
-            gobject.idle_add(self.load_snapshotslist, _date)
+            GObject.idle_add(self.load_snapshotslist, _date)
 #            _task = tasks.WorkerThread(self.load_snapshotslist)
 #            _task.set_finish_callback(self._on_init_fam_done)
 #            _task.start(_date)
@@ -427,7 +426,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         if self.flisttreestore.iter_nth_child(self.flisttreesort.convert_iter_to_child_iter(None, iter), 1):
             return
         self._make_topwin_busy(True, _("Reading directory content..."))
-        gobject.idle_add(self.appendContent, self.path_to_dir(path),
+        GObject.idle_add(self.appendContent, self.path_to_dir(path),
                          self.flisttreesort.convert_iter_to_child_iter(None, iter))
 
     def path_to_dir(self, path):
@@ -538,7 +537,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.__clean_statusbar_msg(_statbar_msgid)
         self._stop_pulse()
         self._make_topwin_busy(True, _("Reading files from snapshot..."))
-        gobject.idle_add(self.__show_filestree, _items)
+        GObject.idle_add(self.__show_filestree, _items)
 
     def __show_filestree(self, items):
         """Shows the tree of files within the GUI.
@@ -577,7 +576,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         _statbar_msgid = self.__send_statusbar_msg(_("Reading backup snapshot..."))
         self._start_pulse()
         _task = tasks.WorkerThread(self.currSnpFilesInfos.getFirstItems)
-        _task.set_finish_callback(gobject.idle_add, self.__get_snpfileinfo_items_bg_done,
+        _task.set_finish_callback(GObject.idle_add, self.__get_snpfileinfo_items_bg_done,
                                    _statbar_msgid)
         _task.start()
 
@@ -593,14 +592,14 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         self.snplisttreestore.clear()
         self.flisttreestore.clear()
 
-        gobject.idle_add(self.widgets['snpdetails'].set_sensitive, True)
-        gobject.idle_add(self.widgets['buttonspool'].set_sensitive, False)
+        GObject.idle_add(self.widgets['snpdetails'].set_sensitive, True)
+        GObject.idle_add(self.widgets['buttonspool'].set_sensitive, False)
 
         if snplist == []:
             self.snplisttreestore.append(None, [_("No backups found for this day."), None])
-            gobject.idle_add(self.widgets['snplisttreeview'].set_sensitive, False)
+            GObject.idle_add(self.widgets['snplisttreeview'].set_sensitive, False)
         else:
-            gobject.idle_add(self.widgets['snplisttreeview'].set_sensitive, True)
+            GObject.idle_add(self.widgets['snplisttreeview'].set_sensitive, True)
             for snapshot in snplist:
                 self.snplisttreestore.append(None, [snapshot.getName(), snapshot.getVersion()])
 
@@ -719,7 +718,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         self.__restore_dialog.begin_restore()
 
         _task = tasks.WorkerThread(restore_callable)
-        _task.set_finish_callback(gobject.idle_add, self.__restore_finished,
+        _task.set_finish_callback(GObject.idle_add, self.__restore_finished,
                                    statbar_msgid)
 
         if dirname is None:
@@ -797,7 +796,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                                             % error
                         _boxtitle = _("Simple Backup error")
                         _headline_str = _("Unable to delete snapshot")
-                        gobject.idle_add(self._show_errmessage, _message_str, _boxtitle, _headline_str)
+                        GObject.idle_add(self._show_errmessage, _message_str, _boxtitle, _headline_str)
 
                     self.snpman.get_snapshots_allformats_ro(force_reload = True)
                     self.on_calendar_day_selected()
@@ -922,9 +921,9 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
         source = self.__source
         msgs = self.__messages[self.__mode]
         if dirname is None:
-            begin_msg = msgs["msg_progress"] % (glib.markup_escape_text(source))
+            begin_msg = msgs["msg_progress"] % (GLib.markup_escape_text(source))
         else:
-            begin_msg = msgs["msg_progress"] % {"source" : glib.markup_escape_text(source), "dirname" : glib.markup_escape_text(dirname)}
+            begin_msg = msgs["msg_progress"] % {"source" : GLib.markup_escape_text(source), "dirname" : GLib.markup_escape_text(dirname)}
 
         self.widgets['button_close'].set_sensitive(False)
         self.widgets['txt_title'].set_markup(msgs["msg_headline"])
@@ -941,9 +940,9 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
         source = self.__source
         msgs = self.__messages[self.__mode]
         if dirname is None:
-            msg_sucess = msgs["msg_sucess"] % (glib.markup_escape_text(source))
+            msg_sucess = msgs["msg_sucess"] % (GLib.markup_escape_text(source))
         else:
-            msg_sucess = msgs["msg_sucess"] % {"source" : glib.markup_escape_text(source), "dirname" : glib.markup_escape_text(dirname)}
+            msg_sucess = msgs["msg_sucess"] % {"source" : GLib.markup_escape_text(source), "dirname" : GLib.markup_escape_text(dirname)}
 
         self._stop_pulse()
         self.widgets['restore_progressbar'].hide()
@@ -963,9 +962,9 @@ class RestoreDialog(GladeWindow, ProgressbarMixin):
         source = self.__source
         msgs = self.__messages[self.__mode]
         if dirname is None:
-            msg_failure = msgs["msg_failure"] % (glib.markup_escape_text(source))
+            msg_failure = msgs["msg_failure"] % (GLib.markup_escape_text(source))
         else:
-            msg_failure = msgs["msg_failure"] % {"source" : glib.markup_escape_text(source), "dirname" : glib.markup_escape_text(dirname)}
+            msg_failure = msgs["msg_failure"] % {"source" : GLib.markup_escape_text(source), "dirname" : GLib.markup_escape_text(dirname)}
 
         msg_failure = "%s\n%s." % (msg_failure, str(failure))
 

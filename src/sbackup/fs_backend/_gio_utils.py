@@ -33,9 +33,8 @@ import time
 import uuid
 import pickle
 
-import glib
-import gio
-
+from gi.repository import GLib
+from gi.repository import Gio
 
 from sbackup.util import local_file_utils
 from sbackup.util import exceptions
@@ -47,49 +46,49 @@ from sbackup.util import system
 from sbackup.util import log
 
 errorcodes = {
-    gio.ERROR_ALREADY_MOUNTED : exceptions.ErrorDescription(gio.ERROR_ALREADY_MOUNTED,
+    Gio.IOErrorEnum.ALREADY_MOUNTED : exceptions.ErrorDescription(Gio.IOErrorEnum.ALREADY_MOUNTED,
                                                             "ERROR_ALREADY_MOUNTED",
                                                             "File is already mounted."),
-    gio.ERROR_BUSY : exceptions.ErrorDescription(gio.ERROR_BUSY, "ERROR_BUSY", "File is busy."),
-    gio.ERROR_CANCELLED : exceptions.ErrorDescription(gio.ERROR_CANCELLED, "ERROR_CANCELLED",
+    Gio.IOErrorEnum.BUSY : exceptions.ErrorDescription(Gio.IOErrorEnum.BUSY, "ERROR_BUSY", "File is busy."),
+    Gio.IOErrorEnum.CANCELLED : exceptions.ErrorDescription(Gio.IOErrorEnum.CANCELLED, "ERROR_CANCELLED",
                                                       "Operation was cancelled. See gio.Cancellable."),
-    gio.ERROR_CANT_CREATE_BACKUP : exceptions.ErrorDescription(gio.ERROR_CANT_CREATE_BACKUP,
+    Gio.IOErrorEnum.CANT_CREATE_BACKUP : exceptions.ErrorDescription(Gio.IOErrorEnum.CANT_CREATE_BACKUP,
                                                                "ERROR_CANT_CREATE_BACKUP",
                                                                "Backup couldn't be created."),
-    gio.ERROR_CLOSED : exceptions.ErrorDescription(gio.ERROR_CLOSED, "ERROR_CLOSED", "File was closed."),
-    gio.ERROR_EXISTS : exceptions.ErrorDescription(gio.ERROR_EXISTS, "ERROR_EXISTS",
+    Gio.IOErrorEnum.CLOSED : exceptions.ErrorDescription(Gio.IOErrorEnum.CLOSED, "ERROR_CLOSED", "File was closed."),
+    Gio.IOErrorEnum.EXISTS : exceptions.ErrorDescription(Gio.IOErrorEnum.EXISTS, "ERROR_EXISTS",
                                                    "File already exists error."),
-    gio.ERROR_FAILED : exceptions.ErrorDescription(gio.ERROR_FAILED, "ERROR_FAILED",
+    Gio.IOErrorEnum.FAILED : exceptions.ErrorDescription(Gio.IOErrorEnum.FAILED, "ERROR_FAILED",
                                                    "Generic error condition for when any operation fails."),
-    gio.ERROR_FAILED_HANDLED : exceptions.ErrorDescription(gio.ERROR_FAILED_HANDLED, "ERROR_FAILED_HANDLED",
+    Gio.IOErrorEnum.FAILED_HANDLED : exceptions.ErrorDescription(Gio.IOErrorEnum.FAILED_HANDLED, "ERROR_FAILED_HANDLED",
             "Operation failed and a helper program has already interacted with the user. Do not display any error dialog."),
-    gio.ERROR_FILENAME_TOO_LONG : exceptions.ErrorDescription(gio.ERROR_FILENAME_TOO_LONG,
+    Gio.IOErrorEnum.FILENAME_TOO_LONG : exceptions.ErrorDescription(Gio.IOErrorEnum.FILENAME_TOO_LONG,
                                                               "ERROR_FILENAME_TOO_LONG",
                                                               "Filename is too many characters."),
-    gio.ERROR_HOST_NOT_FOUND : exceptions.ErrorDescription(gio.ERROR_HOST_NOT_FOUND, "ERROR_HOST_NOT_FOUND",
+    Gio.IOErrorEnum.HOST_NOT_FOUND : exceptions.ErrorDescription(Gio.IOErrorEnum.HOST_NOT_FOUND, "ERROR_HOST_NOT_FOUND",
                                                            "Host couldn't be found (remote operations)."),
-    gio.ERROR_INVALID_ARGUMENT : exceptions.ErrorDescription(gio.ERROR_INVALID_ARGUMENT, "ERROR_INVALID_ARGUMENT", "Invalid argument."),
-    gio.ERROR_INVALID_FILENAME : exceptions.ErrorDescription(gio.ERROR_INVALID_FILENAME, "ERROR_INVALID_FILENAME", "Filename is invalid or contains invalid characters."),
-    gio.ERROR_IS_DIRECTORY : exceptions.ErrorDescription(gio.ERROR_IS_DIRECTORY, "ERROR_IS_DIRECTORY", "File is a directory error."),
-    gio.ERROR_NOT_DIRECTORY : exceptions.ErrorDescription(gio.ERROR_NOT_DIRECTORY, "ERROR_NOT_DIRECTORY", "File is not a directory."),
-    gio.ERROR_NOT_EMPTY : exceptions.ErrorDescription(gio.ERROR_NOT_EMPTY, "ERROR_NOT_EMPTY", "File is a directory that isn't empty."),
-    gio.ERROR_NOT_FOUND : exceptions.ErrorDescription(gio.ERROR_NOT_FOUND, "ERROR_NOT_FOUND", "File not found error."),
-    gio.ERROR_NOT_MOUNTABLE_FILE : exceptions.ErrorDescription(gio.ERROR_NOT_MOUNTABLE_FILE, "ERROR_NOT_MOUNTABLE_FILE", "File cannot be mounted."),
-    gio.ERROR_NOT_MOUNTED : exceptions.ErrorDescription(gio.ERROR_NOT_MOUNTED, "ERROR_NOT_MOUNTED", "File isn't mounted."),
-    gio.ERROR_NOT_REGULAR_FILE : exceptions.ErrorDescription(gio.ERROR_NOT_REGULAR_FILE, "ERROR_NOT_REGULAR_FILE", "File is not a regular file."),
-    gio.ERROR_NOT_SUPPORTED : exceptions.ErrorDescription(gio.ERROR_NOT_SUPPORTED, "ERROR_NOT_SUPPORTED", "Operation not supported for the current backend."),
-    gio.ERROR_NOT_SYMBOLIC_LINK : exceptions.ErrorDescription(gio.ERROR_NOT_SYMBOLIC_LINK, "ERROR_NOT_SYMBOLIC_LINK", "File is not a symbolic link."),
-    gio.ERROR_NO_SPACE : exceptions.ErrorDescription(gio.ERROR_NO_SPACE, "ERROR_NO_SPACE", "No space left on drive."),
-    gio.ERROR_PENDING : exceptions.ErrorDescription(gio.ERROR_PENDING, "ERROR_PENDING", "Operations are still pending."),
-    gio.ERROR_PERMISSION_DENIED : exceptions.ErrorDescription(gio.ERROR_PERMISSION_DENIED, "ERROR_PERMISSION_DENIED", "Permission denied."),
-    gio.ERROR_READ_ONLY : exceptions.ErrorDescription(gio.ERROR_READ_ONLY, "ERROR_READ_ONLY", "File is read only."),
-    gio.ERROR_TIMED_OUT : exceptions.ErrorDescription(gio.ERROR_TIMED_OUT, "ERROR_TIMED_OUT", "Operation timed out."),
-    gio.ERROR_TOO_MANY_LINKS : exceptions.ErrorDescription(gio.ERROR_TOO_MANY_LINKS, "ERROR_TOO_MANY_LINKS", "File contains too many symbolic links."),
-    gio.ERROR_TOO_MANY_OPEN_FILES : exceptions.ErrorDescription(gio.ERROR_TOO_MANY_OPEN_FILES, "ERROR_TOO_MANY_OPEN_FILES", "The current process has too many files open and can't open any more. Duplicate descriptors do count toward this limit. Since 2.20"),
-    gio.ERROR_WOULD_BLOCK : exceptions.ErrorDescription(gio.ERROR_WOULD_BLOCK, "ERROR_WOULD_BLOCK", "Operation would block."),
-    gio.ERROR_WOULD_MERGE : exceptions.ErrorDescription(gio.ERROR_WOULD_MERGE, "ERROR_WOULD_MERGE", "Operation would merge files."),
-    gio.ERROR_WOULD_RECURSE : exceptions.ErrorDescription(gio.ERROR_WOULD_RECURSE, "ERROR_WOULD_RECURSE", "Operation would be recursive."),
-    gio.ERROR_WRONG_ETAG : exceptions.ErrorDescription(gio.ERROR_WRONG_ETAG, "ERROR_WRONG_ETAG", "File's Entity Tag was incorrect.")
+    Gio.IOErrorEnum.INVALID_ARGUMENT : exceptions.ErrorDescription(Gio.IOErrorEnum.INVALID_ARGUMENT, "ERROR_INVALID_ARGUMENT", "Invalid argument."),
+    Gio.IOErrorEnum.INVALID_FILENAME : exceptions.ErrorDescription(Gio.IOErrorEnum.INVALID_FILENAME, "ERROR_INVALID_FILENAME", "Filename is invalid or contains invalid characters."),
+    Gio.IOErrorEnum.IS_DIRECTORY : exceptions.ErrorDescription(Gio.IOErrorEnum.IS_DIRECTORY, "ERROR_IS_DIRECTORY", "File is a directory error."),
+    Gio.IOErrorEnum.NOT_DIRECTORY : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_DIRECTORY, "ERROR_NOT_DIRECTORY", "File is not a directory."),
+    Gio.IOErrorEnum.NOT_EMPTY : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_EMPTY, "ERROR_NOT_EMPTY", "File is a directory that isn't empty."),
+    Gio.IOErrorEnum.NOT_FOUND : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_FOUND, "ERROR_NOT_FOUND", "File not found error."),
+    Gio.IOErrorEnum.NOT_MOUNTABLE_FILE : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_MOUNTABLE_FILE, "ERROR_NOT_MOUNTABLE_FILE", "File cannot be mounted."),
+    Gio.IOErrorEnum.NOT_MOUNTED : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_MOUNTED, "ERROR_NOT_MOUNTED", "File isn't mounted."),
+    Gio.IOErrorEnum.NOT_REGULAR_FILE : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_REGULAR_FILE, "ERROR_NOT_REGULAR_FILE", "File is not a regular file."),
+    Gio.IOErrorEnum.NOT_SUPPORTED : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_SUPPORTED, "ERROR_NOT_SUPPORTED", "Operation not supported for the current backend."),
+    Gio.IOErrorEnum.NOT_SYMBOLIC_LINK : exceptions.ErrorDescription(Gio.IOErrorEnum.NOT_SYMBOLIC_LINK, "ERROR_NOT_SYMBOLIC_LINK", "File is not a symbolic link."),
+    Gio.IOErrorEnum.NO_SPACE : exceptions.ErrorDescription(Gio.IOErrorEnum.NO_SPACE, "ERROR_NO_SPACE", "No space left on drive."),
+    Gio.IOErrorEnum.PENDING : exceptions.ErrorDescription(Gio.IOErrorEnum.PENDING, "ERROR_PENDING", "Operations are still pending."),
+    Gio.IOErrorEnum.PERMISSION_DENIED : exceptions.ErrorDescription(Gio.IOErrorEnum.PERMISSION_DENIED, "ERROR_PERMISSION_DENIED", "Permission denied."),
+    Gio.IOErrorEnum.READ_ONLY : exceptions.ErrorDescription(Gio.IOErrorEnum.READ_ONLY, "ERROR_READ_ONLY", "File is read only."),
+    Gio.IOErrorEnum.TIMED_OUT : exceptions.ErrorDescription(Gio.IOErrorEnum.TIMED_OUT, "ERROR_TIMED_OUT", "Operation timed out."),
+    Gio.IOErrorEnum.TOO_MANY_LINKS : exceptions.ErrorDescription(Gio.IOErrorEnum.TOO_MANY_LINKS, "ERROR_TOO_MANY_LINKS", "File contains too many symbolic links."),
+    Gio.IOErrorEnum.TOO_MANY_OPEN_FILES : exceptions.ErrorDescription(Gio.IOErrorEnum.TOO_MANY_OPEN_FILES, "ERROR_TOO_MANY_OPEN_FILES", "The current process has too many files open and can't open any more. Duplicate descriptors do count toward this limit. Since 2.20"),
+    Gio.IOErrorEnum.WOULD_BLOCK : exceptions.ErrorDescription(Gio.IOErrorEnum.WOULD_BLOCK, "ERROR_WOULD_BLOCK", "Operation would block."),
+    Gio.IOErrorEnum.WOULD_MERGE : exceptions.ErrorDescription(Gio.IOErrorEnum.WOULD_MERGE, "ERROR_WOULD_MERGE", "Operation would merge files."),
+    Gio.IOErrorEnum.WOULD_RECURSE : exceptions.ErrorDescription(Gio.IOErrorEnum.WOULD_RECURSE, "ERROR_WOULD_RECURSE", "Operation would be recursive."),
+    Gio.IOErrorEnum.WRONG_ETAG : exceptions.ErrorDescription(Gio.IOErrorEnum.WRONG_ETAG, "ERROR_WRONG_ETAG", "File's Entity Tag was incorrect.")
 }
 
 MSG_UNKNOWN_ERROR_CODE = _("Unknown error code:")
@@ -169,7 +168,7 @@ class GioMountHandler(object):
     def use_own_mainloop(self, use = True):
         if use is True:
             if self.__mainloop is None:
-                self.__mainloop = glib.MainLoop()
+                self.__mainloop = GLib.MainLoop()
         else:
             self.__mainloop = None
 
@@ -187,15 +186,15 @@ class GioMountHandler(object):
         _mount = None
         try:
             _mount = gfileobj.find_enclosing_mount(None)
-        except gio.Error as error:
+        except Gio.Error as error:
             _mount = None
-            if error.code == gio.ERROR_NOT_MOUNTED:
+            if error.code == Gio.IOErrorEnum.NOT_MOUNTED:
                 self.__logger.info(_("Unable to get mount: path is not mounted"))
-            elif error.code == gio.ERROR_NOT_FOUND:
+            elif error.code == Gio.IOErrorEnum.NOT_FOUND:
                 self.__logger.info(_("Unable to get mount: path not found when mounting (is probably local)"))
             else:
                 self.__logger.info(_("Unable to get mount: %s") % error)
-        except glib.GError as error:
+        except GLib.GError as error:
             _mount = None
             self.__logger.info(_("Unable to get mount: %s") % error)
 
@@ -231,10 +230,10 @@ class GioMountHandler(object):
             # don't set password if none is given (LP #701403)
             if self.__uri.password is not None:
                 mount_op.set_password(self.__uri.password)
-            mount_op.reply(gio.MOUNT_OPERATION_HANDLED)
+            mount_op.reply(Gio.MountOperationResult.HANDLED)
         else:
             self._error = exceptions.RemoteMountFailedError("Max. number of password inputs reached. Aborted.")
-            mount_op.reply(gio.MOUNT_OPERATION_ABORTED)
+            mount_op.reply(Gio.MountOperationResult.ABORTED)
 
     def _set_mount_flag(self, obj, required):
         if self.__uri is None:
@@ -256,7 +255,7 @@ class GioMountHandler(object):
             raise ValueError("No URI set")
         path = self.__uri.query_mount_uri()
         self.__logger.debug("Mount path: %s" % path)
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
 
         _local = self._is_local(_gfileobj)
         if _local:
@@ -272,7 +271,7 @@ class GioMountHandler(object):
             raise ValueError("No URI set")
         path = self.__uri.query_mount_uri()
         self.__logger.debug("Umount path: %s" % path)
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
 
         _local = self._is_local(_gfileobj)
         if _local:
@@ -297,17 +296,17 @@ class GioMountHandler(object):
                     self.__umount_finish_callback(error = None)
 
     def _do_mount(self, gfileobj):
-        op = gio.MountOperation()
+        op = Gio.MountOperation()
         self.__ask_password_cnt = 0
         op.connect('ask-password', self._ask_password_cb)
         try:
             gfileobj.mount_enclosing_volume(op, self._mount_done_cb)
             if self.__mainloop is not None:
                 self.__mainloop.run()
-        except gio.Error as error:
+        except Gio.Error as error:
             self.__logger.error(get_gio_errmsg(error, "Error in `_do_mount`"))
             raise exceptions.RemoteMountFailedError(str(error))
-        except glib.GError as error:
+        except GLib.GError as error:
             self.__logger.error(str(error))
             raise exceptions.RemoteMountFailedError(str(error))
 
@@ -325,8 +324,8 @@ class GioMountHandler(object):
 
         else:
             try:
-                _mount.unmount(self._umount_done_cb, gio.MOUNT_UNMOUNT_FORCE, None, gfileobj)
-    #            gobject.timeout_add(15000, self._umount_done_cb, _mount, None, gfileobj)
+                _mount.unmount(self._umount_done_cb, Gio.MountUnmountFlags.FORCE, None, gfileobj)
+    #            GObject.timeout_add(15000, self._umount_done_cb, _mount, None, gfileobj)
     # remaining issues:
     # * how to cancel a timeout if mount was successful?
     # * how to return False (quit timer) when calling callback function?
@@ -334,10 +333,10 @@ class GioMountHandler(object):
                 if self.__mainloop is not None:
                     self.__logger.debug("run loop")
                     self.__mainloop.run()
-            except gio.Error as error:
+            except Gio.Error as error:
                 self.__logger.error(get_gio_errmsg(error, "Error in `umount`"))
                 raise exceptions.RemoteUmountFailedError(str(error))
-            except glib.GError as error:
+            except GLib.GError as error:
                 self.__logger.error(str(error))
                 raise exceptions.RemoteUmountFailedError(str(error))
 
@@ -346,19 +345,19 @@ class GioMountHandler(object):
         try:
             obj.mount_enclosing_volume_finish(res)
             self._set_mount_flag(obj = obj, required = True)
-        except gio.Error as error:
+        except Gio.Error as error:
             self._set_mount_flag(obj = obj, required = False)
-            if error.code == gio.ERROR_ALREADY_MOUNTED:
+            if error.code == Gio.IOErrorEnum.ERROR_ALREADY_MOUNTED:
                 self.__logger.info(_("Path is already mounted."))
                 error = None
-            elif error.code == gio.ERROR_FAILED_HANDLED:
+            elif error.code == Gio.IOErrorEnum.ERROR_FAILED_HANDLED:
                 self.__logger.error(get_gio_errmsg(error, "Mount failed"))
                 if self._error is not None:
                     self.__logger.error(str(self._error))
                     error = self._error
             else:
                 self.__logger.error(get_gio_errmsg(error, "Error in `_do_mount`"))
-        except glib.GError as error:
+        except GLib.GError as error:
             self._set_mount_flag(obj = obj, required = False)
             self.__logger.error(str(error))
         finally:
@@ -375,13 +374,13 @@ class GioMountHandler(object):
         error = None
         try:
             obj.unmount_finish(res)
-        except gio.Error as error:
-            if error.code == gio.ERROR_NOT_MOUNTED:
+        except Gio.Error as error:
+            if error.code == Gio.IOErrorEnum.ERROR_NOT_MOUNTED:
                 self.__logger.info(_("Path is not mounted."))
                 error = None
             else:
                 self.__logger.error(get_gio_errmsg(error, "Error in `_umount_done_cb`"))
-        except glib.GError as error:
+        except GLib.GError as error:
             self.__logger.error(str(error))
         finally:
             if self.__mainloop is not None:
@@ -403,9 +402,9 @@ class GioMountHandler(object):
         _mpath = self.__uri.query_mount_uri()
 
         try:
-            _gmpath = gio.File(_mpath)
+            _gmpath = Gio.File.new_for_uri(_mpath)
             _effpath = _gmpath.get_path()
-        except (gio.Error, glib.GError) as error:
+        except (Gio.Error, GLib.GError) as error:
             raise exceptions.RemoteMountTestFailedError(str(error))
 
         dname = "%s-%s-%s.tmp" % ("sbackup-dir", time.time(), uuid.uuid4())
@@ -421,14 +420,14 @@ class GioMountHandler(object):
         _size = constants.SIZE_FILESYSTEM_UNKNOWN
         _free = constants.FREE_SPACE_UNKNOWN
 
-        _gfo = gio.File(_mpath)
+        _gfo = Gio.File.new_for_uri(_mpath)
         try:
             _gfoinfo = _gfo.query_filesystem_info("filesystem::*")
-        except gio.Error as error:
+        except Gio.Error as error:
             self.__logger.warning(get_gio_errmsg(error, "Error in `query_fs_info`"))
         else:
-            _size = _gfoinfo.get_attribute_uint64(gio.FILE_ATTRIBUTE_FILESYSTEM_SIZE)
-            _free = _gfoinfo.get_attribute_uint64(gio.FILE_ATTRIBUTE_FILESYSTEM_FREE)
+            _size = _gfoinfo.get_attribute_uint64(Gio.FILE_ATTRIBUTE_FILESYSTEM_SIZE)
+            _free = _gfoinfo.get_attribute_uint64(Gio.FILE_ATTRIBUTE_FILESYSTEM_FREE)
         self.__logger.debug("FS info - size: %s free: %s" % (_size, _free))
         return (_size, _free)
 
@@ -448,26 +447,26 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         # does not return required attributes from destination directories
         # over ftp to check whether it is actually existing and readable.
         # This caused a regression (LP #1190224) which let the backup fail.
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         _res = _gfileobj.query_exists()
         return _res
 
     @classmethod
     def openfile_for_write(cls, path):
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
 #FIXME: etag should be set to None though it doesn't work then!
         _ostr = _gfileobj.replace(etag = '', make_backup = False)
         return _ostr
 
     @classmethod
     def openfile_for_read(cls, path):
-        _gfile = gio.File(path)
+        _gfile = Gio.File.new_for_uri(path)
         _istr = _gfile.read()
         return _istr
 
     @classmethod
     def openfile_for_append(cls, path):
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         _ostr = _gfileobj.append_to()
         return _ostr
 
@@ -476,18 +475,18 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         """Copies given file and metadata (similar to `shutil.copy2`).
         Overwrites `dest` if it already exists
         """
-        _src = gio.File(src)
-        _dest = gio.File(dest)
+        _src = Gio.File.new_for_uri(src)
+        _dest = Gio.File.new_for_uri(dest)
 
         # the source must be a file and exist
         if not cls.path_exists(src):
             raise IOError("Given copy source `%s` does not exist" % _src.get_parse_name())
         if cls.__isfile(_src):
             _src, _dest = cls._prepare_copy(_src, _dest)
-            _src.copy(_dest, flags = gio.FILE_COPY_OVERWRITE)
+            _src.copy(_dest, flags = Gio.FILE_COPY_OVERWRITE)
             try:
                 _src.copy_attributes(_dest, flags = gio.FILE_COPY_ALL_METADATA)
-            except gio.Error:
+            except Gio.Error:
                 raise exceptions.CopyFileAttributesError(\
                             "Unable to copy file attributes (permissions etc.) of file `%s`."\
                             % _src.get_parse_name())
@@ -511,10 +510,10 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
         if cls.__isdir(dst_gfile):
             _dstu = cls.joinpath(_dst_uri, _src_file)
-            _dst = gio.File(_dstu)
+            _dst = Gio.File.new_for_uri(_dstu)
         elif _dst_uri.endswith(cls.pathsep):
             _dstu = cls.joinpath(_dst_uri, _src_file)
-            _dst = gio.File(_dstu)
+            _dst = Gio.File.new_for_uri(_dstu)
         else:
             _dst = dst_gfile
 
@@ -528,9 +527,9 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
     @classmethod
     def _copy_metadata(cls, src, dest):
-        _src = gio.File(src)
-        _dest = gio.File(dest)
-        _src.copy_attributes(_dest, flags = gio.FILE_COPY_ALL_METADATA)
+        _src = Gio.File.new_for_uri(src)
+        _dest = Gio.File.new_for_uri(dest)
+        _src.copy_attributes(_dest, flags = Gio.FILE_COPY_ALL_METADATA)
 
     @classmethod
     def delete(cls, uri):
@@ -547,9 +546,9 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         # if directory is read-only we cannot remove files inside even if these are
         # read/write
         try:
-            _gfile = gio.File(path)
+            _gfile = Gio.File.new_for_uri(path)
             _gfile.delete()
-        except gio.Error as error:
+        except Gio.Error as error:
             raise IOError(str(error))
 
     @classmethod
@@ -567,14 +566,14 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         """Sets write permissions for user, group, and others for
         given directory or file (recursive).
         """
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         try:
-            _ginfo = _gfileobj.query_info(attributes = gio.FILE_ATTRIBUTE_UNIX_MODE)
-            _fmode = _ginfo.get_attribute_uint32(gio.FILE_ATTRIBUTE_UNIX_MODE)
+            _ginfo = _gfileobj.query_info(attributes = Gio.FILE_ATTRIBUTE_UNIX_MODE)
+            _fmode = _ginfo.get_attribute_uint32(Gio.FILE_ATTRIBUTE_UNIX_MODE)
             _new_mode = _fmode | system.UNIX_PERM_ALL_WRITE
-            _ginfo.set_attribute_uint32(gio.FILE_ATTRIBUTE_UNIX_MODE, _new_mode)
+            _ginfo.set_attribute_uint32(Gio.FILE_ATTRIBUTE_UNIX_MODE, _new_mode)
             _gfileobj.set_attributes_from_info(_ginfo) # setting attributes directly seems broken
-        except gio.Error as error:
+        except Gio.Error as error:
             _msg = get_gio_errmsg(error, "Unable to set permissions")
             _logger = log.LogFactory.getLogger()
             _logger.warning(_msg)
@@ -592,14 +591,14 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         """Sets write permissions for user only for
         given directory or file (*not* recursive).
         """
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         try:
-            _ginfo = _gfileobj.query_info(attributes = gio.FILE_ATTRIBUTE_UNIX_MODE)
-            _fmode = _ginfo.get_attribute_uint32(gio.FILE_ATTRIBUTE_UNIX_MODE)
+            _ginfo = _gfileobj.query_info(attributes = Gio.FILE_ATTRIBUTE_UNIX_MODE)
+            _fmode = _ginfo.get_attribute_uint32(Gio.FILE_ATTRIBUTE_UNIX_MODE)
             _new_mode = _fmode & system.UNIX_PERM_GRPOTH_NORWX
-            _ginfo.set_attribute_uint32(gio.FILE_ATTRIBUTE_UNIX_MODE, _new_mode)
+            _ginfo.set_attribute_uint32(Gio.FILE_ATTRIBUTE_UNIX_MODE, _new_mode)
             _gfileobj.set_attributes_from_info(_ginfo) # setting attributes directly seems broken
-        except gio.Error as error:
+        except Gio.Error as error:
             _msg = get_gio_errmsg(error, "Unable to set permissions")
             _logger = log.LogFactory.getLogger()
             _logger.warning(_msg)
@@ -612,11 +611,11 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
     @classmethod
     def force_move(cls, src, dst):
-        _gsrc = gio.File(src)
-        _gdst = gio.File(dst)
+        _gsrc = Gio.File.new_for_uri(src)
+        _gdst = Gio.File.new_for_uri(dst)
         try:
-            _gsrc.move(_gdst, flags = gio.FILE_COPY_OVERWRITE)
-        except gio.Error:
+            _gsrc.move(_gdst, flags = Gio.FILE_COPY_OVERWRITE)
+        except Gio.Error:
             if cls.is_dir(src):
                 cls._copytree(src, dst)
                 cls.force_delete(src)
@@ -648,7 +647,7 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
                 cls._copytree(srcname, dstname)
             else:
                 cls.copyfile(srcname, dstname)
-#            except gio.Error as why:
+#            except Gio.Error as why:
 #                errors.append((srcname, dstname, str(why)))
 #            # catch the Error from the recursive copytree so that we can
 #            # continue with other files
@@ -666,41 +665,41 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
     @classmethod
     def is_link(cls, path):
         _res = False
-        _gfileobj = gio.File(path)
-#        _ftype = _gfileobj.query_file_type() #flags = gio.FILE_QUERY_INFO_NONE, cancellable = None)
+        _gfileobj = Gio.File.new_for_uri(path)
+#        _ftype = _gfileobj.query_file_type() #flags = Gio.FILE_QUERY_INFO_NONE, cancellable = None)
         _ftype = cls._query_file_type(_gfileobj)
-        if _ftype == gio.FILE_TYPE_SYMBOLIC_LINK:
+        if _ftype == Gio.FILE_TYPE_SYMBOLIC_LINK:
             _res = True
         return _res
 
     @classmethod
     def __isdir(cls, gfile):
-        """Private helper method that takes `gio.File` rather pathname.
+        """Private helper method that takes `Gio.File` rather pathname.
         """
         _res = False
         _ftype = cls._query_file_type(gfile)
-        if _ftype == gio.FILE_TYPE_DIRECTORY:
+        if _ftype == Gio.FILE_TYPE_DIRECTORY:
             _res = True
         return _res
 
     @classmethod
     def __isfile(cls, gfile):
-        """Private helper method that takes `gio.File` rather pathname.
+        """Private helper method that takes `Gio.File` rather pathname.
         """
         _res = False
         _ftype = cls._query_file_type(gfile)
-        if _ftype == gio.FILE_TYPE_REGULAR:
+        if _ftype == Gio.FILE_TYPE_REGULAR:
             _res = True
         return _res
 
     @classmethod
     def _query_file_type(cls, gfile):
         try:
-            _info = gfile.query_info(attributes = "standard::type", flags = gio.FILE_QUERY_INFO_NONE,
+            _info = gfile.query_info(attributes = "standard::type", flags = Gio.FILE_QUERY_INFO_NONE,
                                        cancellable = None)
             _ftype = _info.get_file_type()
-        except gio.Error as error:
-            if error.code == gio.ERROR_NOT_FOUND:
+        except Gio.Error as error:
+            if error.code == Gio.IOError.NOT_FOUND:
                 _ftype = None
             else:
                 raise
@@ -708,16 +707,16 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
     @classmethod
     def test_dir_access(cls, path):
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         try:
             _gfileobj.enumerate_children('standard::name')
-        except gio.Error as error:
+        except Gio.Error as error:
             raise exceptions.FileAccessException(get_gio_errmsg(error,
                                         "Unable to list directory content"))
 
     @classmethod
     def is_dir(cls, path):
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         _res = cls.__isdir(_gfileobj)
         return _res
 
@@ -726,28 +725,28 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         """List a directory. Returns basenames of entries.
         """
         listing = []
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         try:
             _infos = _gfileobj.enumerate_children('standard::name')
-        except gio.Error as error:
-            if error.code == gio.ERROR_NOT_DIRECTORY:
+        except Gio.Error as error:
+            if error.code == Gio.IOError.NOT_DIRECTORY:
                 _msg = get_gio_errmsg(error, "Unable to list directory content")
                 _logger = log.LogFactory.getLogger()
                 _logger.warning(_msg)
                 _ftype = cls._query_file_type(_gfileobj)
-                if _ftype == gio.FILE_TYPE_DIRECTORY:
+                if _ftype == Gio.FILE_TYPE_DIRECTORY:
                     _msg = "Directory"
-                elif _ftype == gio.FILE_TYPE_MOUNTABLE:
+                elif _ftype == Gio.FILE_TYPE_MOUNTABLE:
                     _msg = "Mountable"
-                elif _ftype == gio.FILE_TYPE_REGULAR:
+                elif _ftype == Gio.FILE_TYPE_REGULAR:
                     _msg = "Regular file"
-                elif _ftype == gio.FILE_TYPE_SHORTCUT:
+                elif _ftype == Gio.FILE_TYPE_SHORTCUT:
                     _msg = "Shortcut"
-                elif _ftype == gio.FILE_TYPE_SPECIAL:
+                elif _ftype == Gio.FILE_TYPE_SPECIAL:
                     _msg = "Special file"
-                elif _ftype == gio.FILE_TYPE_SYMBOLIC_LINK:
+                elif _ftype == Gio.FILE_TYPE_SYMBOLIC_LINK:
                     _msg = "Symbolic link"
-                elif _ftype == gio.FILE_TYPE_UNKNOWN:
+                elif _ftype == Gio.FILE_TYPE_UNKNOWN:
                     _msg = "unknown"
                 else:
                     _msg = "unknown (no match)"
@@ -771,13 +770,13 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
     @classmethod
     def makedir(cls, path):
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         _gfileobj.make_directory()
 
     @classmethod
     def makedirs(cls, path):
-        _gfileobj = gio.File(path)
-        _gfileobj.make_directory_with_parents(gio.Cancellable())
+        _gfileobj = Gio.File.new_for_uri(path)
+        _gfileobj.make_directory_with_parents(Gio.Cancellable())
 
     @classmethod
     def normpath(cls, *args):
@@ -794,14 +793,14 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
     def get_eff_path(cls, path):
         _logger = log.LogFactory.getLogger()
         _logger.debug("get effective path for URI: `%s`" % path)
-        _gfile = gio.File(path)
+        _gfile = Gio.File.new_for_uri(path)
         _eff_path = _gfile.get_path()
         _logger.debug("Effective path: `%s`" % _eff_path)
         return _eff_path
 
     @classmethod
     def get_dirname(cls, path):
-#        _gfileobj = gio.File(path)
+#        _gfileobj = Gio.File.new_for_uri(path)
 #        return _gfileobj.get_parent()
         return local_file_utils.get_dirname(path)
 
@@ -811,7 +810,7 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
     @classmethod
     def get_basename(cls, path):
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         return _gfileobj.get_basename()
 
     @classmethod
@@ -833,7 +832,7 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
 
     @classmethod
     def rename(cls, src, dst):
-        _gfileobj = gio.File(src)
+        _gfileobj = Gio.File.new_for_uri(src)
         _info = _gfileobj.query_info('standard::name')
         _dst = cls.get_basename(dst)
         _gfileobj.set_display_name(_dst)
@@ -843,7 +842,7 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
         """Returns content of file en bloc.
         :return: string
         """
-        _gfileobj = gio.File(path)
+        _gfileobj = Gio.File.new_for_uri(path)
         _cont_t = _gfileobj.load_contents()   # returns (content, length, etag)
         _cont = _cont_t[0]
         return _cont
@@ -858,8 +857,8 @@ class GioOperations(interfaces.IOperations, metaclass=structs.Singleton):
     def close_stream(cls, file_desc):
         try:
             file_desc.close()
-        except gio.Error as error:
-            if error.code == gio.ERROR_CLOSED:
+        except Gio.Error as error:
+            if error.code == Gio.IOError.CLOSED:
                 raise exceptions.FileAlreadyClosedError(_("Error while closing stream: %s") % error)
             else:
                 raise exceptions.FileAccessException(get_gio_errmsg(error, _("Error while closing stream")))
@@ -885,14 +884,14 @@ def _test_path(path, testdir_name, testfile_name):
     try:
         # test specified path
         __logger.debug(_("test specified path for existence using GIO"))
-        _gmpath = gio.File(_mpath)
+        _gmpath = Gio.File.new_for_uri(_mpath)
         _exists = _gmpath.query_exists()
         if bool(_exists) is False:
             raise exceptions.RemoteMountTestFailedError("Specified remote path does not exists.")
 
         # test directory
         __logger.debug("Test testdir: %s" % testdir)
-        _gtdir = gio.File(testdir)
+        _gtdir = Gio.File.new_for_uri(testdir)
         _exists = _gtdir.query_exists()
         if bool(_exists) is True:
             raise exceptions.RemoteMountTestFailedError("Unable to create directory for testing purpose: Directory already exists.")
@@ -903,7 +902,7 @@ def _test_path(path, testdir_name, testfile_name):
             raise exceptions.RemoteMountTestFailedError("Unable to create directory for testing purpose.")
 
         __logger.debug(_("Test testfile for existence"))
-        _gtfile = gio.File(testfile)
+        _gtfile = Gio.File.new_for_uri(testfile)
         _exists = _gtfile.query_exists()
         if bool(_exists) is True:
             raise exceptions.RemoteMountTestFailedError("Unable to create file for testing purpose: File already exists.")
@@ -917,7 +916,7 @@ def _test_path(path, testdir_name, testfile_name):
 
         # and re-read
         __logger.debug(_("Re-read test file"))
-        _gtfile = gio.File(testfile)
+        _gtfile = Gio.File.new_for_uri(testfile)
         _exists = _gtfile.query_exists()
         if bool(_exists) is False:
             raise exceptions.RemoteMountTestFailedError("Unable to open file for testing purpose: File does not exists.")
@@ -933,7 +932,7 @@ def _test_path(path, testdir_name, testfile_name):
         __logger.debug(_("Remove dir"))
         _gtdir.delete()
 
-    except (gio.Error, glib.GError) as error:
+    except (Gio.Error, GLib.GError) as error:
         raise exceptions.RemoteMountTestFailedError(str(error))
 
 

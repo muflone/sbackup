@@ -9,3 +9,6 @@
 /src/sbackup/metainfo.tmp
 /src/sbackup/resources
 /scripts/sbackup
+
+# Backup files
+*~

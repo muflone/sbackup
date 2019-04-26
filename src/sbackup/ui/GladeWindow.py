@@ -79,13 +79,15 @@ class GladeWindow(object):
             search_path = './'
 
         fname = search_file(gladefile, search_path)
-        self.builder = Gtk.Builder(fname, root = root, domain = 'sbackup')
+        self.builder = Gtk.Builder()
+        self.builder.set_translation_domain('sbackup')
+        self.builder.add_from_file(fname, root = root)
 
         # connect callbacks
         self.cb_dict = {}
         for f in handlers:
             self.cb_dict[f] = getattr(self, f)
-        self.builder.signal_autoconnect(self.cb_dict)
+        self.builder.connect_signals(self.cb_dict)
 
         self.widgets = {}
         for widget in widget_list:
@@ -146,9 +148,9 @@ class GladeWindow(object):
         if prev_window is not None:
             self.prev_window = prev_window
 #        if center:
-#            self.top_window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+#            self.top_window.set_position(Gtk.WIN_POS_CENTER_ALWAYS)
 #        else:
-#            self.top_window.set_position(gtk.WIN_POS_NONE)
+#            self.top_window.set_position(Gtk.WIN_POS_NONE)
 
         self.top_window.show()
 
@@ -166,28 +168,28 @@ class GladeWindow(object):
 #        if self.cb_func is not None:
 #            self.cb_func(*self.cb_args, **self.cb_kwargs)
         if self.prev_window is None:
-            gtk.main_quit()
+            Gtk.main_quit()
 
     def _show_infomessage(self, message_str, boxtitle = "",
                                headline_str = "", secmsg_str = ""):
-        self._show_message(gtk.MESSAGE_INFO, message_str, boxtitle, headline_str, secmsg_str)
+        self._show_message(Gtk.MessageType.INFO, message_str, boxtitle, headline_str, secmsg_str)
 
     def _show_errmessage(self, message_str, boxtitle = "",
                                headline_str = "", secmsg_str = ""):
-        self._show_message(gtk.MESSAGE_ERROR, message_str, boxtitle, headline_str, secmsg_str)
+        self._show_message(Gtk.MessageType.ERROR, message_str, boxtitle, headline_str, secmsg_str)
 
     def _show_message(self, msgtype, message_str, boxtitle = "",
                             headline_str = "", secmsg_str = ""):
         """Shows message box using markup.
 
-        @attention: gtk.MessageDialog is not fully thread-safe so it is
+        @attention: Gtk.MessageDialog is not fully thread-safe so it is
                     put in a critical section, here!
         """
         Gdk.threads_enter()
-        dialog = gtk.MessageDialog(
-                    flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+        dialog = Gtk.MessageDialog(
+                    flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     type = msgtype,
-                    buttons = gtk.BUTTONS_CLOSE)
+                    buttons = Gtk.ButtonsType.CLOSE)
         if boxtitle.strip() != "":
             dialog.set_title(boxtitle)
 

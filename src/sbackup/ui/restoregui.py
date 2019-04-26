@@ -90,7 +90,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                              parent = parent,
                              pull_down_dict = None)
         self.set_top_window(self.widgets[gtk_rsrc.RESTOREGUI_TOPWINDOW])
-        gtk.window_set_default_icon_from_file(Util.get_resource_file(constants.RESTORE_ICON_FILENAME))
+        Gtk.Window.set_default_icon_from_file(Util.get_resource_file(constants.RESTORE_ICON_FILENAME))
 
         # setup progress bar
         ProgressbarMixin.__init__(self, self.widgets['progressbar'])
@@ -110,10 +110,10 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         self.__fop = fam.get_file_operations_facade_instance()
 
         # tree stores
-        self.snplisttreestore = gtk.TreeStore(str, str)
-        self.flisttreestore = gtk.TreeStore(str, str)
-        self.flisttreesort = gtk.TreeModelSort(self.flisttreestore)
-        self.historylisttreestore = gtk.TreeStore(str)
+        self.snplisttreestore = Gtk.TreeStore(str, str)
+        self.flisttreestore = Gtk.TreeStore(str, str)
+        self.flisttreesort = Gtk.TreeModelSort(self.flisttreestore)
+        self.historylisttreestore = Gtk.TreeStore(str)
         self.__init_treeviews()
 
         self.widgets['snpdetails'].set_sensitive(False)
@@ -143,24 +143,24 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
 
     def __init_treeviews(self):
         self.widgets['snplisttreeview'].set_model(self.snplisttreestore)
-        acolumn = gtk.TreeViewColumn(_("Snapshots"), gtk.CellRendererText(), text = 0)
-        bcolumn = gtk.TreeViewColumn(_("Version"), gtk.CellRendererText(), text = 1)
+        acolumn = Gtk.TreeViewColumn(_("Snapshots"), Gtk.CellRendererText(), text = 0)
+        bcolumn = Gtk.TreeViewColumn(_("Version"), Gtk.CellRendererText(), text = 1)
         self.widgets['snplisttreeview'].append_column(acolumn)
         self.widgets['snplisttreeview'].append_column(bcolumn)
 
-        self.flisttreesort.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.flisttreesort.set_sort_column_id(0, Gtk.SORT_ASCENDING)
         self.widgets['filelisttreeview'].set_model(self.flisttreesort)
 
-        acolumn1 = gtk.TreeViewColumn(_("Path"), gtk.CellRendererText(), text = 0)
+        acolumn1 = Gtk.TreeViewColumn(_("Path"), Gtk.CellRendererText(), text = 0)
         self.widgets['filelisttreeview'].append_column(acolumn1)
         self.widgets['filelisttreeview'].set_search_column(0)
         acolumn1.set_sort_column_id(0)
 
-        acolumn2 = gtk.TreeViewColumn(_("State"), gtk.CellRendererText(), text = 1)
+        acolumn2 = Gtk.TreeViewColumn(_("State"), Gtk.CellRendererText(), text = 1)
         self.widgets['filelisttreeview'].append_column(acolumn2)
 
         self.widgets['historytv'].set_model(self.historylisttreestore)
-        acolumn3 = gtk.TreeViewColumn(_("Snapshots"), gtk.CellRendererText(), text = 0)
+        acolumn3 = Gtk.TreeViewColumn(_("Snapshots"), Gtk.CellRendererText(), text = 0)
         self.widgets['historytv'].append_column(acolumn3)
 
     def _set_topwin_widgets_sensitive(self, value):
@@ -245,7 +245,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
 
     def _on_term_fam_done(self):
         self.config = None
-        GObject.idle_add(gtk.main_quit)
+        GObject.idle_add(Gtk.main_quit)
 
     def __init_statusbar(self):
         """Initializes the statusbar, i.e. gets the context (here
@@ -385,10 +385,10 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             self.widgets['custominfos'].set_sensitive(True)
 
     def on_customchooser_clicked(self, *args): #IGNORE:W0613
-        dialog = gtk.FileChooserDialog(_("Choose a source folder"), None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
+        dialog = Gtk.FileChooserDialog(_("Choose a source folder"), None, Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL, Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
         dialog.set_local_only(False)
-        if dialog.run() == gtk.RESPONSE_OK:
+        if dialog.run() == Gtk.RESPONSE_OK:
             self.widgets["customentry"].set_text(dialog.get_current_folder())
         dialog.destroy()
 
@@ -613,7 +613,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                 if self.currentSnp.getVersion() != Infos.SNPCURVERSION:
                     message = _("Snapshot version is not supported (Only %(supportedversion)s is supported). Version '%(currentversion)s' found.") % {'supportedversion': Infos.SNPCURVERSION, 'currentversion':self.currentSnp.getVersion() }
                     self.logger.warning(message)
-                    dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = message)
+                    dialog = Gtk.MessageDialog(flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, buttons = Gtk.ButtonsType.CLOSE, message_format = message)
                     dialog.run()
                     dialog.destroy()
                     self.widgets["snpdetails"].set_sensitive(False)
@@ -626,11 +626,11 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         tstore, iter = self.widgets['filelisttreeview'].get_selection().get_selected()
         if iter is not None:
             src = self.path_to_dir(tstore.get_path(iter))
-            dialog = gtk.MessageDialog(parent = None, flags = 0, type = gtk.MESSAGE_QUESTION, buttons = gtk.BUTTONS_YES_NO, message_format = "Do you really want to restore backuped copy of '%s' ?" % src)
+            dialog = Gtk.MessageDialog(parent = None, flags = 0, type = Gtk.MessageType.QUESTION, buttons = Gtk.ButtonsType.YES_NO, message_format = "Do you really want to restore backuped copy of '%s' ?" % src)
 
             response = dialog.run()
             dialog.destroy()
-            if response == gtk.RESPONSE_YES:
+            if response == Gtk.RESPONSE_YES:
                 self.__restore_bg(mode = "restore",
                             restore_callable = self.restoreman.restore,
                             source = src, dirname = None)
@@ -640,17 +640,17 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         if iter is not None:
             src = self.path_to_dir(tstore.get_path(iter))
 
-            dialog = gtk.FileChooserDialog(title = _("Select restore location"), action = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+            dialog = Gtk.FileChooserDialog(title = _("Select restore location"), action = Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL, Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
             dialog.set_filename(src)
             result = dialog.run()
             dirname = dialog.get_filename()
             dialog.destroy()
 
-            if result == gtk.RESPONSE_OK:
-                dialog = gtk.MessageDialog(parent = None, flags = 0, type = gtk.MESSAGE_QUESTION, buttons = gtk.BUTTONS_YES_NO, message_format = "Do you really want to restore backuped copy of '%s' to '%s' ?" % (src, dirname))
+            if result == Gtk.RESPONSE_OK:
+                dialog = Gtk.MessageDialog(parent = None, flags = 0, type = Gtk.MessageType.QUESTION, buttons = Gtk.ButtonsType.YES_NO, message_format = "Do you really want to restore backuped copy of '%s' to '%s' ?" % (src, dirname))
                 response = dialog.run()
                 dialog.destroy()
-                if response == gtk.RESPONSE_YES:
+                if response == Gtk.RESPONSE_YES:
                     self.__restore_bg(mode = "restore_as",
                                 restore_callable = self.restoreman.restoreAs,
                                 source = src, dirname = dirname)
@@ -659,11 +659,11 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         tstore, iter = self.widgets['filelisttreeview'].get_selection().get_selected()
         if iter is not None:
             src = self.path_to_dir(tstore.get_path(iter))
-            dialog = gtk.MessageDialog(parent = None, flags = 0, type = gtk.MESSAGE_QUESTION, buttons = gtk.BUTTONS_YES_NO, message_format = _("Do you really want to revert '%s'?") % src)
+            dialog = Gtk.MessageDialog(parent = None, flags = 0, type = Gtk.MessageType.QUESTION, buttons = Gtk.ButtonsType.YES_NO, message_format = _("Do you really want to revert '%s'?") % src)
 
             response = dialog.run()
             dialog.destroy()
-            if response == gtk.RESPONSE_YES:
+            if response == Gtk.RESPONSE_YES:
                 self.__restore_bg(mode = "revert",
                             restore_callable = self.restoreman.revert,
                             source = src, dirname = None)
@@ -673,20 +673,20 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
         if iter is not None:
             src = self.path_to_dir(tstore.get_path(iter))
 
-            dialog = gtk.FileChooserDialog(title = _("Select revert location"), action = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+            dialog = Gtk.FileChooserDialog(title = _("Select revert location"), action = Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL, Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
             dialog.set_filename(src)
             result = dialog.run()
             dirname = dialog.get_filename()
             dialog.destroy()
 
-            if result == gtk.RESPONSE_OK:
-                dialog = gtk.MessageDialog(parent = None, flags = 0,
-                            type = gtk.MESSAGE_QUESTION, buttons = gtk.BUTTONS_YES_NO,
+            if result == Gtk.RESPONSE_OK:
+                dialog = Gtk.MessageDialog(parent = None, flags = 0,
+                            type = Gtk.MessageType.QUESTION, buttons = Gtk.ButtonsType.YES_NO,
                             message_format = _("Do you really want to revert '%(source)s' to '%(dir)s'?")\
                             % {'source' : src, 'dir' : dirname})
                 response = dialog.run()
                 dialog.destroy()
-                if response == gtk.RESPONSE_YES:
+                if response == Gtk.RESPONSE_YES:
                     self.__restore_bg(mode = "revert_as",
                                 restore_callable = self.restoreman.revertAs,
                                 source = src, dirname = dirname)
@@ -770,7 +770,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
                     self.widgets["deleteBox"].hide()
                     message = _("Snapshot version is not supported (Only %(supportedversion)s is supported). Version '%(currentversion)s' found.") % {'supportedversion': Infos.SNPCURVERSION, 'currentversion':self.currentSnp.getVersion() }
                     self.logger.warning(message)
-                    dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = message)
+                    dialog = Gtk.MessageDialog(flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, buttons = Gtk.ButtonsType.CLOSE, message_format = message)
                     dialog.run()
                     dialog.destroy()
             else:
@@ -781,12 +781,12 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             if self.snpman.is_standalone_snapshot(self.currentSnp):
                 message = _("Deleting the selected snapshot `%s` will remove your backup for this particular point in time. You cannot undo this operation.\n\nAre you sure that you want to remove the snapshot permanently?")\
                             % self.currentSnp
-                dialog = misc.msgdialog(message_str = message, msgtype = gtk.MESSAGE_QUESTION,
-                                        parent = self.top_window, buttons = gtk.BUTTONS_YES_NO,
+                dialog = misc.msgdialog(message_str = message, msgtype = Gtk.MessageType.QUESTION,
+                                        parent = self.top_window, buttons = Gtk.ButtonsType.YES_NO,
                                         headline_str = _("Do you really want to remove snapshot?"))
                 response = dialog.run()
                 dialog.destroy()
-                if response == gtk.RESPONSE_YES:
+                if response == Gtk.RESPONSE_YES:
                     try:
                         self.logger.debug("Trying to remove snapshot '%s'" % self.currentSnp.getName())
                         self.snpman.removeSnapshot(self.currentSnp)
@@ -819,7 +819,7 @@ class SBRestoreGTK(GladeWindow, ProgressbarMixin):
             pass
 
     def main(self):
-        gtk.main()
+        Gtk.main()
 
 
 class RestoreDialog(GladeWindow, ProgressbarMixin):

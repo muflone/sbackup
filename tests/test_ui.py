@@ -19,7 +19,8 @@
 
 
 import unittest
-import gtk
+
+from gi.repository import Gtk
 
 from sbackup.ui import misc
 
@@ -32,38 +33,38 @@ class TestMiscMessageDialog(unittest.TestCase):
 
     def test_simple_plain(self):
         _msg = "Test with content 'user xy.com'"
-        _mtype = gtk.MESSAGE_ERROR
+        _mtype = Gtk.MessageType.ERROR
         _par = None
         _dialog = misc.msgdialog(message_str = _msg, msgtype = _mtype, parent = _par)
-        self.assertTrue(isinstance(_dialog, gtk.MessageDialog))
+        self.assertTrue(isinstance(_dialog, Gtk.MessageDialog))
 
     def test_simple_commercial(self):
         _msg = "Test with commercial: 'user@xy.com'"
-        _mtype = gtk.MESSAGE_ERROR
+        _mtype = Gtk.MessageType.ERROR
         _par = None
         _dialog = misc.msgdialog(message_str = _msg, msgtype = _mtype, parent = _par)
-        self.assertTrue(isinstance(_dialog, gtk.MessageDialog))
+        self.assertTrue(isinstance(_dialog, Gtk.MessageDialog))
 
     def test_simple_ampersand(self):
         _msg = "Test with ampersand: 'user & xy.com'"
-        _mtype = gtk.MESSAGE_ERROR
+        _mtype = Gtk.MessageType.ERROR
         _par = None
         _dialog = misc.msgdialog(message_str = _msg, msgtype = _mtype, parent = _par)
-        self.assertTrue(isinstance(_dialog, gtk.MessageDialog))
+        self.assertTrue(isinstance(_dialog, Gtk.MessageDialog))
 
     def test_simple_greater(self):
         _msg = "Test with <content>: 'user xy.com'"
-        _mtype = gtk.MESSAGE_ERROR
+        _mtype = Gtk.MessageType.ERROR
         _par = None
         _dialog = misc.msgdialog(message_str = _msg, msgtype = _mtype, parent = _par)
-        self.assertTrue(isinstance(_dialog, gtk.MessageDialog))
+        self.assertTrue(isinstance(_dialog, Gtk.MessageDialog))
 
     def test_simple(self):
         _msg = "Test with <content>: 'user@xy.com' & 'another@ab.org'"
-        _mtype = gtk.MESSAGE_ERROR
+        _mtype = Gtk.MessageType.ERROR
         _par = None
         _dialog = misc.msgdialog(message_str = _msg, msgtype = _mtype, parent = _par)
-        self.assertTrue(isinstance(_dialog, gtk.MessageDialog))
+        self.assertTrue(isinstance(_dialog, Gtk.MessageDialog))
 
 def suite():
     _suite = unittest.TestSuite()

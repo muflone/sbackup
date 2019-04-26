@@ -28,7 +28,7 @@ import types
 
 from gi.repository import GObject
 from gi.repository import GLib
-import gtk
+from gi.repository import Gtk
 
 from sbackup.util import log
 from sbackup.util import system
@@ -117,7 +117,7 @@ class SBconfigGTK(GladeGnomeApp):
                                widget_list = gtk_rsrc.get_configgui_widgets(),
                                handlers = gtk_rsrc.get_configgui_handlers())
 
-        gtk.window_set_default_icon_from_file(Util.get_resource_file(constants.CONFIG_ICON_FILENAME))
+        Gtk.Window.set_default_icon_from_file(Util.get_resource_file(constants.CONFIG_ICON_FILENAME))
 
         # hide the schedule tab if not root
         if not system.is_superuser():
@@ -127,47 +127,47 @@ class SBconfigGTK(GladeGnomeApp):
 
         # Initiate all data structures
         # Paths to be included or excluded
-        self.include = gtk.ListStore(str)
+        self.include = Gtk.ListStore(str)
         self.includetv = self.widgets["includetv"]
         self.includetv.set_model(self.include)
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         cell.set_property('editable', True)
         cell.connect('edited', self.cell_edited_callback, (self.include, "dirconfig", 1))
-        column = gtk.TreeViewColumn(_('Name'), cell, text = 0)
+        column = Gtk.TreeViewColumn(_('Name'), cell, text = 0)
         self.includetv.append_column(column)
 
-        self.ex_paths = gtk.ListStore(str)
+        self.ex_paths = Gtk.ListStore(str)
         self.ex_pathstv = self.widgets["ex_pathstv"]
         self.ex_pathstv.set_model(self.ex_paths)
-        cell1 = gtk.CellRendererText()
+        cell1 = Gtk.CellRendererText()
         cell1.set_property('editable', True)
         cell1.connect('edited', self.cell_edited_callback, (self.ex_paths, "dirconfig", 0))
-        column1 = gtk.TreeViewColumn(_('Name'), cell1, text = 0)
+        column1 = Gtk.TreeViewColumn(_('Name'), cell1, text = 0)
         self.ex_pathstv.append_column(column1)
 
         # Excluded file types and general regular expressions
-        self.ex_ftype = gtk.ListStore(str, str)
+        self.ex_ftype = Gtk.ListStore(str, str)
         self.ex_ftypetv = self.widgets["ex_ftypetv"]
         self.ex_ftypetv.set_model(self.ex_ftype)
-        cell3 = gtk.CellRendererText()
-        column3 = gtk.TreeViewColumn(_('File Type'), cell3, text = 0)
-        cell2 = gtk.CellRendererText()
-        column2 = gtk.TreeViewColumn('Ext.', cell2, text = 1)
+        cell3 = Gtk.CellRendererText()
+        column3 = Gtk.TreeViewColumn(_('File Type'), cell3, text = 0)
+        cell2 = Gtk.CellRendererText()
+        column2 = Gtk.TreeViewColumn('Ext.', cell2, text = 1)
         self.ex_ftypetv.append_column(column3)
         self.ex_ftypetv.append_column(column2)
 
-        self.ex_regex = gtk.ListStore(str)
+        self.ex_regex = Gtk.ListStore(str)
         self.ex_regextv = self.widgets["ex_regextv"]
         self.ex_regextv.set_model(self.ex_regex)
-        cell4 = gtk.CellRendererText()
+        cell4 = Gtk.CellRendererText()
         cell4.set_property('editable', True)
         cell4.connect('edited', self.cell_regex_edited_callback)
-        column4 = gtk.TreeViewColumn('Name', cell4, text = 0)
+        column4 = Gtk.TreeViewColumn('Name', cell4, text = 0)
         self.ex_regextv.append_column(column4)
 
         # Profile Manager
         # [ enable , profilename, cfPath ]
-        self.profiles = gtk.ListStore(bool, str, str)
+        self.profiles = Gtk.ListStore(bool, str, str)
         # add the default profile and disable any modification to it
         self.profiles.append([True,
             ConfigManagerStaticData.get_default_profilename(),
@@ -177,12 +177,12 @@ class SBconfigGTK(GladeGnomeApp):
         self.profilestv = self.widgets['profilesListTreeView']
         self.profilestv.set_model(self.profiles)
 
-        cell8, cell9 = gtk.CellRendererToggle(), gtk.CellRendererText()
+        cell8, cell9 = Gtk.CellRendererToggle(), Gtk.CellRendererText()
         cell8.set_active(True)
         cell8.connect("toggled", self.on_prfEnableCB_toggled)
 
-        enableCBColumn = gtk.TreeViewColumn(_("Enable"), cell8, active = 0)
-        prfNameColumn = gtk.TreeViewColumn(_("Profile Name"), cell9, text = 1)
+        enableCBColumn = Gtk.TreeViewColumn(_("Enable"), cell8, active = 0)
+        prfNameColumn = Gtk.TreeViewColumn(_("Profile Name"), cell9, text = 1)
 
         self.profilestv.append_column(enableCBColumn)
         self.profilestv.append_column(prfNameColumn)
@@ -196,7 +196,7 @@ class SBconfigGTK(GladeGnomeApp):
 
         self._fill_widgets_from_config(probe_fs = True)
 
-        self.xml.signal_autoconnect(self.cb_dict)
+        self.builder.connect_signals(self.cb_dict)
 
 
     def isConfigChanged(self, force_the_change = False):
@@ -234,9 +234,9 @@ class SBconfigGTK(GladeGnomeApp):
             question.set_title("")
             response = question.run()
             question.hide()
-            if response == gtk.RESPONSE_YES:
+            if response == Gtk.RESPONSE_YES:
                 self.on_save_clicked()
-            elif response == gtk.RESPONSE_NO:
+            elif response == Gtk.RESPONSE_NO:
                 pass
             else:
                 cancelled = True
@@ -603,9 +603,9 @@ class SBconfigGTK(GladeGnomeApp):
             self.isConfigChanged()
 
     def __config_invalid_cb(self, error, probe_fs):
-        dialog = gtk.MessageDialog(type = gtk.MESSAGE_ERROR,
-                                   flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                                   buttons = gtk.BUTTONS_CLOSE,
+        dialog = Gtk.MessageDialog(type = Gtk.MessageType.ERROR,
+                                   flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                   buttons = Gtk.ButtonsType.CLOSE,
                                    message_format = _("%s\n\n"\
                                                       "A backup profile using default values was created. "\
                                                       "Save the new configuration in order to use it or "\
@@ -626,7 +626,7 @@ class SBconfigGTK(GladeGnomeApp):
         """
         stattxt = _("Current profile: %s") % self.configman.getProfileName()
         stattxt = misc.get_statusbar_msg_mode(stattxt)
-        self.widgets['statusBar'].push(stattxt)
+        self.widgets['statusBar'].push(0, stattxt)
 
     def __enable_splitsize_custom_option(self, enable = True):
         """Enables resp. disables widgets for setting a custom archive
@@ -690,7 +690,7 @@ class SBconfigGTK(GladeGnomeApp):
         for i, v in configlist:
             if v == "1" and i == toInclude:
                 # the chosen item match an included one
-                dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = _("Already included item !"))
+                dialog = Gtk.MessageDialog(flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, buttons = Gtk.ButtonsType.CLOSE, message_format = _("Already included item !"))
                 dialog.run()
                 dialog.destroy()
                 return True
@@ -705,7 +705,7 @@ class SBconfigGTK(GladeGnomeApp):
         for i, v in configlist:
             if v == "0" and i == toExclude:
                 # the chosen item match an included one
-                dialog = gtk.MessageDialog(flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_CLOSE, message_format = _("Already excluded item !"))
+                dialog = Gtk.MessageDialog(flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, buttons = Gtk.ButtonsType.CLOSE, message_format = _("Already excluded item !"))
                 dialog.run()
                 dialog.destroy()
                 return True
@@ -737,22 +737,22 @@ class SBconfigGTK(GladeGnomeApp):
     def cell_edited_callback(self, cell, path, new_text, data):
         # Check if new path is empty
         if (new_text == None) or (new_text == ""):
-            dialog = gtk.MessageDialog(type = gtk.MESSAGE_ERROR,
-                        flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        buttons = gtk.BUTTONS_CLOSE,
+            dialog = Gtk.MessageDialog(type = Gtk.MessageType.ERROR,
+                        flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        buttons = Gtk.ButtonsType.CLOSE,
                         message_format = _("Empty filename or path. Please enter a valid filename or path."))
             dialog.run()
             dialog.destroy()
             return
         # Check if new path exists and asks the user if path does not exists
         if not os.path.exists(new_text):
-            dialog = gtk.MessageDialog(type = gtk.MESSAGE_QUESTION,
-                        flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        buttons = gtk.BUTTONS_YES_NO,
+            dialog = Gtk.MessageDialog(type = Gtk.MessageType.QUESTION,
+                        flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        buttons = Gtk.ButtonsType.YES_NO,
                         message_format = _("It seems the path you entered does not exists. Do you want to add this incorrect path?"))
             response = dialog.run()
             dialog.destroy()
-            if response == gtk.RESPONSE_NO:
+            if response == Gtk.RESPONSE_NO:
                 return
 
         model, section, value = data
@@ -778,16 +778,16 @@ class SBconfigGTK(GladeGnomeApp):
         self.on_save_clicked()
 
     def on_save_as_activate(self, *args): #IGNORE:W0613
-        dialog = gtk.FileChooserDialog(title = _("Save configuration as..."),
+        dialog = Gtk.FileChooserDialog(title = _("Save configuration as..."),
                                 parent = self.__get_application_widget(),
-                                action = gtk.FILE_CHOOSER_ACTION_SAVE,
-                                buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                          gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
+                                action = Gtk.FILE_CHOOSER_ACTION_SAVE,
+                                buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                          Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
         response = dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             self.configman.saveConf(dialog.get_filename())
-        elif response == gtk.RESPONSE_CANCEL:
+        elif response == Gtk.RESPONSE_CANCEL:
             pass
         dialog.destroy()
 
@@ -832,7 +832,7 @@ class SBconfigGTK(GladeGnomeApp):
             _full_bak = chkbtn_full_bak.get_active()
             dialog.hide()
 
-            if response == gtk.RESPONSE_APPLY:
+            if response == Gtk.RESPONSE_APPLY:
                 _path_to_app = Util.get_resource_file(constants.BACKUP_COMMAND)
                 _cmd = [_path_to_app]
 
@@ -845,8 +845,8 @@ class SBconfigGTK(GladeGnomeApp):
                 system.exec_command_async(args = _cmd, env = _env)
                 misc.show_infodialog(message_str = _("A backup process is now executed in the background.\n\nYou can monitor the progress of the backup by means of the status indicator displayed in the notification area."),
                                      parent = self.top_window, headline_str = _("Backup process started"))
-            elif response == gtk.RESPONSE_CANCEL or \
-                 response == gtk.RESPONSE_DELETE_EVENT:
+            elif response == Gtk.RESPONSE_CANCEL or \
+                 response == Gtk.RESPONSE_DELETE_EVENT:
                 pass
             else:
                 self.logger.error(_("Unexpected dialog response: %s") % response)
@@ -923,19 +923,19 @@ class SBconfigGTK(GladeGnomeApp):
 
     def on_inc_addfile_clicked(self, *args): #IGNORE:W0613
         self.__check_for_section("dirconfig")
-        dialog = gtk.FileChooserDialog(title = _("Include file..."),
+        dialog = Gtk.FileChooserDialog(title = _("Include file..."),
                                 parent = self.__get_application_widget(),
-                                action = gtk.FILE_CHOOSER_ACTION_OPEN,
-                                buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                          gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
-        filter = gtk.FileFilter()
+                                action = Gtk.FILE_CHOOSER_ACTION_OPEN,
+                                buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                          Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
+        filter = Gtk.FileFilter()
         filter.set_name(_("All files"))
         filter.add_pattern("*")
         dialog.add_filter(filter)
 
         response = dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             _file = _prepare_filename(dialog.get_filename())
             _enc_file = _escape_path(_file)
             if not self.already_inc(self.configman.items("dirconfig", raw = True), _enc_file):
@@ -950,15 +950,15 @@ class SBconfigGTK(GladeGnomeApp):
 
     def on_inc_adddir_clicked(self, *args): #IGNORE:W0613
         self.__check_for_section("dirconfig")
-        dialog = gtk.FileChooserDialog(title = _("Include folder..."),
+        dialog = Gtk.FileChooserDialog(title = _("Include folder..."),
                                 parent = self.__get_application_widget(),
-                                action = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                          gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
+                                action = Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                          Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
 
         response = dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             _dir = _prepare_dirname(dialog.get_filename())
             _enc_dir = _escape_path(_dir)
             if not self.already_inc(self.configman.items("dirconfig", raw = True), _enc_dir):
@@ -978,19 +978,19 @@ class SBconfigGTK(GladeGnomeApp):
 
     def on_ex_addfile_clicked(self, *args):
         self.__check_for_section("dirconfig")
-        dialog = gtk.FileChooserDialog(title = _("Exclude file..."),
+        dialog = Gtk.FileChooserDialog(title = _("Exclude file..."),
                                 parent = self.__get_application_widget(),
-                                action = gtk.FILE_CHOOSER_ACTION_OPEN,
-                                buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
-        filter = gtk.FileFilter()
+                                action = Gtk.FILE_CHOOSER_ACTION_OPEN,
+                                buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                         Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
+        filter = Gtk.FileFilter()
         filter.set_name(_("All files"))
         filter.add_pattern("*")
         dialog.add_filter(filter)
 
         response = dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             _file = _prepare_filename(dialog.get_filename())
             _enc_file = _escape_path(_file)
             if not self.already_inc(self.configman.items("dirconfig", raw = True), _enc_file):
@@ -1001,15 +1001,15 @@ class SBconfigGTK(GladeGnomeApp):
 
     def on_ex_adddir_clicked(self, *args):
         self.__check_for_section("dirconfig")
-        dialog = gtk.FileChooserDialog(title = _("Exclude folder..."),
+        dialog = Gtk.FileChooserDialog(title = _("Exclude folder..."),
                                 parent = self.__get_application_widget(),
-                                action = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
+                                action = Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                buttons = (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                         Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
 
         response = dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             _dir = _prepare_dirname(dialog.get_filename())
             _enc_dir = _escape_path(_dir)
             if not self.already_ex(self.configman.items("dirconfig", raw = True), _enc_dir):
@@ -1321,7 +1321,7 @@ class SBconfigGTK(GladeGnomeApp):
         dialog = self.widgets["ftypedialog"]
         response = dialog.run()
         dialog.hide()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             if self.widgets["ftype_st"].get_active():
                 ftype = self.widgets["ftype_box"].get_model()\
                                     [self.widgets["ftype_box"].get_active()][0]
@@ -1374,7 +1374,7 @@ class SBconfigGTK(GladeGnomeApp):
         dialog = self.widgets["regexdialog"]
         response = dialog.run()
         dialog.hide()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             regex = self.widgets["regex_box"].get_text()
             _sep = ","
             if _sep in regex:
@@ -1416,19 +1416,19 @@ class SBconfigGTK(GladeGnomeApp):
             store.remove(iter)
 
     def on_includetv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete:
+        if event.keyval == Gtk.keysyms.Delete:
             self.on_inc_del_clicked()
 
     def on_ex_pathstv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete:
+        if event.keyval == Gtk.keysyms.Delete:
             self.on_ex_delpath_clicked()
 
     def on_ex_ftypetv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete:
+        if event.keyval == Gtk.keysyms.Delete:
             self.on_ex_delftype_clicked()
 
     def on_ex_regextv_key_press_event(self, widget, event, *args): #IGNORE:W0613
-        if event.keyval == gtk.keysyms.Delete:
+        if event.keyval == Gtk.keysyms.Delete:
             self.on_ex_delregex_clicked()
 
     def on_ex_max_toggled(self, *args): #IGNORE:W0613
@@ -1474,7 +1474,7 @@ class SBconfigGTK(GladeGnomeApp):
         dialog.set_transient_for(self.__get_application_widget())
         response = dialog.run()
 
-        if response == gtk.RESPONSE_APPLY:
+        if response == Gtk.RESPONSE_APPLY:
             dialog.hide()
             _target = dialog.get_filename()
             if _target is None:  # LP #1174124 Catch invalid selections
@@ -1498,8 +1498,8 @@ class SBconfigGTK(GladeGnomeApp):
                 _dest = self.__dest_from_config_helper()
                 self.isConfigChanged()
 
-        elif response in (gtk.RESPONSE_NONE, gtk.RESPONSE_CANCEL,
-                          gtk.RESPONSE_DELETE_EVENT):
+        elif response in (Gtk.RESPONSE_NONE, Gtk.RESPONSE_CANCEL,
+                          Gtk.RESPONSE_DELETE_EVENT):
             dialog.hide()
 
         else:
@@ -1576,7 +1576,7 @@ class SBconfigGTK(GladeGnomeApp):
         dialog.set_sensitive(True)
         response = dialog.run()
 
-        if response == gtk.RESPONSE_APPLY:
+        if response == Gtk.RESPONSE_APPLY:
             self.logger.info(_("Connect to remote destination"))
 
             _sidx = _service_b.get_active()
@@ -1610,11 +1610,11 @@ class SBconfigGTK(GladeGnomeApp):
 
             GObject.idle_add(self.__destination_hdl.initialize)
 
-        elif response == gtk.RESPONSE_CANCEL or \
-             response == gtk.RESPONSE_DELETE_EVENT:
+        elif response == Gtk.RESPONSE_CANCEL or \
+             response == Gtk.RESPONSE_DELETE_EVENT:
             dialog.hide()
             _icon = self.widgets["dest_remote_light"]
-            _icon.set_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+            _icon.set_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.ICON_SIZE_MENU)
 
         else:
             self.logger.error(_("Unexpected dialog response: %s") % response)
@@ -1631,7 +1631,7 @@ class SBconfigGTK(GladeGnomeApp):
             misc.unset_cursor(dialog)
 
             _icon = self.widgets["dest_remote_light"]
-            _icon.set_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+            _icon.set_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.ICON_SIZE_MENU)
 
             misc.show_warndialog(
                 parent = self.__get_application_widget(),
@@ -1650,7 +1650,7 @@ class SBconfigGTK(GladeGnomeApp):
             misc.unset_cursor(dialog)
 
             _icon = self.widgets["dest_remote_light"]
-            _icon.set_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+            _icon.set_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.ICON_SIZE_MENU)
 
             misc.show_warndialog(
                 parent = self.__get_application_widget(),
@@ -1674,12 +1674,12 @@ class SBconfigGTK(GladeGnomeApp):
             self.widgets['dest_remote'].set_text(_displname)
 
             _icon = self.widgets["dest_remote_light"]
-            _icon.set_from_stock(gtk.STOCK_OK, gtk.ICON_SIZE_MENU)
+            _icon.set_from_stock(Gtk.STOCK_OK, Gtk.ICON_SIZE_MENU)
 
             self.isConfigChanged()
         else:
             _icon = self.widgets["dest_remote_light"]
-            _icon.set_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+            _icon.set_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.ICON_SIZE_MENU)
 
             GObject.idle_add(self.__show_connect_remote_dialog)
 
@@ -1693,7 +1693,7 @@ class SBconfigGTK(GladeGnomeApp):
             misc.unset_cursor(dialog)
 
             _icon = self.widgets["dest_remote_light"]
-            _icon.set_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+            _icon.set_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.ICON_SIZE_MENU)
 
             misc.show_warndialog(
                 parent = self.__get_application_widget(),
@@ -1812,7 +1812,7 @@ class SBconfigGTK(GladeGnomeApp):
     def __terminate_app(self):
         self.configman = None
         self.orig_configman = None
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def on_sbackupConfApp_destroy(self, *args):
         """Signal handler that is called when the window was destroyed.
@@ -1856,7 +1856,7 @@ class SBconfigGTK(GladeGnomeApp):
             response = dialog.run()
             dialog.hide()
 
-            if response == gtk.RESPONSE_OK:
+            if response == Gtk.RESPONSE_OK:
                 enable = self.widgets['enableNewPrfCB'].get_active()
                 prfName = self.widgets['newPrfNameEntry'].get_text()
                 prfName = prfName.strip()
@@ -1906,18 +1906,18 @@ class SBconfigGTK(GladeGnomeApp):
             _forbid_default_profile_removal()
         else:
             warning = _("<b>Delete configuration profile?</b>\n\nYou are trying to remove a configuration profile. You will not be able to restore it. If you are not sure, use the 'enable|disable' functionality instead.\n\nDo you really want to delete the profile '%(name)s'?") % {'name': GLib.markup_escape_text(prfName)}
-            dialog = gtk.MessageDialog(type = gtk.MESSAGE_WARNING, flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, buttons = gtk.BUTTONS_YES_NO)
+            dialog = Gtk.MessageDialog(type = Gtk.MessageType.WARNING, flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, buttons = Gtk.ButtonsType.YES_NO)
             dialog.set_markup(warning)
             response = dialog.run()
             dialog.destroy()
 
-            if response == gtk.RESPONSE_YES:
+            if response == Gtk.RESPONSE_YES:
                 self.logger.debug("Remove Profile '%s' configuration" % prfName)
                 if os.path.exists(prfConf):
                     os.remove(prfConf)
                 self.profiles.remove(iter)
 
-            elif response == gtk.RESPONSE_NO:
+            elif response == Gtk.RESPONSE_NO:
                 pass
 
     def on_editProfileButton_clicked(self, *args):
@@ -1987,11 +1987,11 @@ class SBconfigGTK(GladeGnomeApp):
 
         response = dialog.run()
         dialog.hide()
-        if response == gtk.RESPONSE_APPLY:
+        if response == Gtk.RESPONSE_APPLY:
             self.logger.info(_("Default settings are being applied."))
             self._set_default_settings()
-        elif response == gtk.RESPONSE_CANCEL or \
-             response == gtk.RESPONSE_DELETE_EVENT:
+        elif response == Gtk.RESPONSE_CANCEL or \
+             response == Gtk.RESPONSE_DELETE_EVENT:
             pass
         else:
             self.logger.error(_("Unexpected dialog response: %s") % response)
@@ -2015,9 +2015,9 @@ def _forbid_default_profile_removal():
     """
     info = _("<b>Unable to remove default profile</b>\n\nThe default profile cannot be removed. In the case you want to use just a single profile, please set up the default profile accordingly.")
 
-    dialog = gtk.MessageDialog(type = gtk.MESSAGE_INFO,
-                    flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    buttons = gtk.BUTTONS_CLOSE)
+    dialog = Gtk.MessageDialog(type = Gtk.MessageType.INFO,
+                    flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    buttons = Gtk.ButtonsType.CLOSE)
     dialog.set_markup(info)
     dialog.run()
     dialog.destroy()
@@ -2029,9 +2029,9 @@ def _forbid_default_profile_disable():
     """
     info = _("<b>Unable to remove default profile</b>\n\nThe default profile cannot be disabled. In the case you want to use just a single profile, please set up the default profile accordingly.")
 
-    dialog = gtk.MessageDialog(type = gtk.MESSAGE_INFO,
-                    flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    buttons = gtk.BUTTONS_CLOSE)
+    dialog = Gtk.MessageDialog(type = Gtk.MessageType.INFO,
+                    flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    buttons = Gtk.ButtonsType.CLOSE)
     dialog.set_markup(info)
     dialog.run()
     dialog.destroy()
@@ -2043,18 +2043,18 @@ def _notify_new_default_profile_created():
     """
     info = _("<b>No backup profile found.</b>\n\nNo default profile was found. You are probably running Simple Backup for the first time. A backup profile using default values was created.\n\nPlease modify the settings according to your needs and save the configuration in order to use it.")
 
-    dialog = gtk.MessageDialog(type = gtk.MESSAGE_INFO,
-                    flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    buttons = gtk.BUTTONS_CLOSE)
+    dialog = Gtk.MessageDialog(type = Gtk.MessageType.INFO,
+                    flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    buttons = Gtk.ButtonsType.CLOSE)
     dialog.set_markup(info)
     dialog.run()
     dialog.destroy()
 
 
 def _show_errmsg_no_profile_selected():
-    dialog = gtk.MessageDialog(type = gtk.MESSAGE_ERROR,
-                               flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                               buttons = gtk.BUTTONS_CLOSE, message_format = _("Please select a profile."))
+    dialog = Gtk.MessageDialog(type = Gtk.MessageType.ERROR,
+                               flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                               buttons = Gtk.ButtonsType.CLOSE, message_format = _("Please select a profile."))
     dialog.run()
     dialog.destroy()
 
@@ -2077,5 +2077,5 @@ def _escape_path(path):
 def main(argv):
     window = SBconfigGTK()
     window.show()
-    gtk.main()
+    Gtk.main()
     log.shutdown_logging()

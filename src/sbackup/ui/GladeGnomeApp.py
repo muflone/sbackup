@@ -85,7 +85,9 @@ class GladeGnomeApp(object):
             search_path = './'
 
         fname = search_file(filename, search_path)
-        self.builder = Gtk.Builder(fname, domain = 'sbackup')
+        self.builder = Gtk.Builder()
+        self.builder.set_translation_domain('sbackup')
+        self.builder.add_from_file(fname)
 
         # prepare callbacks
         self.cb_dict = {}
@@ -140,9 +142,9 @@ class GladeGnomeApp(object):
         if prev_window is not None:
             self.prev_window = prev_window
 #        if center:
-#            self.top_window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+#            self.top_window.set_position(Gtk.WIN_POS_CENTER_ALWAYS)
 #        else:
-#            self.top_window.set_position(gtk.WIN_POS_NONE)
+#            self.top_window.set_position(Gtk.WIN_POS_NONE)
         self.top_window.show()
 
     def hide(self):
@@ -160,4 +162,4 @@ class GladeGnomeApp(object):
 #        if self.cb_func is not None:
 #            self.cb_func(*self.cb_args, **self.cb_kwargs)
         if self.prev_window is None:
-            gtk.main_quit()
+            Gtk.main_quit()

@@ -26,8 +26,8 @@ from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import GLib
+from gi.repository import Gtk
 import dbus.mainloop.glib
-import gtk
 
 
 from sbackup.pkginfo import Infos
@@ -273,7 +273,7 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._targetnotfound_dialog = None
         self._cancel_dialog = None
         self._current_dialogs = []
-        self._menu = gtk.Menu()
+        self._menu = Gtk.Menu()
         self._menuitems = {}
 
         self._connect_dbus_signal_handlers()
@@ -364,7 +364,7 @@ class SBackupdIndicatorBase(INotifyMixin):
 
         for _item in _menuitems:
             if _item["type"] == "MenuItem":
-                _menuitem = gtk.MenuItem(_item["title"])
+                _menuitem = Gtk.MenuItem(_item["title"])
 
                 if _item["handler"] is not None:
                     for _signal in _item["handler"]:
@@ -375,7 +375,7 @@ class SBackupdIndicatorBase(INotifyMixin):
                 self._menuitems[_item["name"]] = _menuitem
 
             elif _item["type"] == "SeparatorMenuItem":
-                _sep = gtk.SeparatorMenuItem()
+                _sep = Gtk.SeparatorMenuItem()
                 self._menu.append(_sep)
                 self._menuitems[_item["name"]] = _sep
 
@@ -554,14 +554,14 @@ class SBackupdIndicatorBase(INotifyMixin):
         raise NotImplementedError
 
     def _add_dialog_to_showlist(self, dialog):
-        if not isinstance(dialog, gtk.Window):
+        if not isinstance(dialog, Gtk.Window):
             raise TypeError("GTK window expected.")
         if dialog not in self._current_dialogs:
             self._current_dialogs.append(dialog)
         self._show_showdialogs_menuitem()
 
     def _remove_dialog_from_showlist(self, dialog):
-        if not isinstance(dialog, gtk.Window):
+        if not isinstance(dialog, Gtk.Window):
             raise TypeError("GTK window expected.")
         if dialog in self._current_dialogs:
             self._current_dialogs.remove(dialog)
@@ -574,12 +574,12 @@ class SBackupdIndicatorBase(INotifyMixin):
 
         assert self._targetnotfound_dialog is None
         self._targetnotfound_dialog = misc.msgdialog_standalone(message_str = "",
-                                                                 msgtype = gtk.MESSAGE_ERROR,
+                                                                 msgtype = Gtk.MessageType.ERROR,
                                                                  boxtitle = Infos.NAME,
-                                                                 buttons = gtk.BUTTONS_NONE,
+                                                                 buttons = Gtk.ButtonsType.NONE,
                                                                  sticky = True)
-        self._targetnotfound_dialog.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                                 _("Try again"), gtk.RESPONSE_OK)
+        self._targetnotfound_dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                                 _("Try again"), Gtk.RESPONSE_OK)
 
         _ttimer = GObject.timeout_add_seconds(constants.TIMEOUT_RETRY_TARGET_CHECK_SECONDS,
                                     self._targetnotfound_dialog_destroy)
@@ -596,9 +596,9 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._remove_dialog_from_showlist(dialog = self._targetnotfound_dialog)
         self._targetnotfound_dialog = None
 
-        if result == gtk.RESPONSE_OK:
+        if result == Gtk.RESPONSE_OK:
             retry = constants.RETRY_TRUE
-        elif result == gtk.RESPONSE_NONE:
+        elif result == Gtk.RESPONSE_NONE:
             retry = constants.RETRY_TRUE
         else:
             retry = constants.RETRY_FALSE
@@ -677,8 +677,8 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._cancel_dialog = misc.msgdialog_standalone(message_str = \
                                     _("Do you really want to cancel the backup process of profile '%s'?") % \
                                     self._indicator_hdl.get_profilename(),
-                                    msgtype = gtk.MESSAGE_QUESTION, boxtitle = Infos.NAME,
-                                    buttons = gtk.BUTTONS_YES_NO,
+                                    msgtype = Gtk.MessageType.QUESTION, boxtitle = Infos.NAME,
+                                    buttons = Gtk.ButtonsType.YES_NO,
                                     headline_str = _("Cancel running backup process?"))
         self._add_dialog_to_showlist(self._cancel_dialog)
         result = self._cancel_dialog.run()
@@ -687,7 +687,7 @@ class SBackupdIndicatorBase(INotifyMixin):
         self._cancel_dialog = None
 
         res = True
-        if result == gtk.RESPONSE_YES:
+        if result == Gtk.RESPONSE_YES:
             res = self._indicator_hdl.cancel_backup()
             self._set_cancel_sensitive(sensitive = False)
         else:
@@ -1032,7 +1032,7 @@ def main(options, indicator_class):
     dbus.mainloop.glib.DBusGMainLoop(set_as_default = True)
     gtk_avail = True
     try:
-        gtk.init_check()
+        Gtk.init_check()
     except RuntimeError as error:
         gtk_avail = False
         print(_("Initialization of GTK+ failed: %s") % error)

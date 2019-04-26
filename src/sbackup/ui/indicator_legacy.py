@@ -20,8 +20,8 @@
 #
 
 import sys
-import gtk
 
+from gi.repository import Gtk
 
 from sbackup import util
 from sbackup.util.log import LogFactory
@@ -48,7 +48,7 @@ class SBackupdIndicatorLegacy(SBackupdIndicatorBase, PyNotifyMixin):
         SBackupdIndicatorBase.__init__(self, indicator_hdl)
 
         self.logger = LogFactory.getLogger()
-        self._indicator = gtk.StatusIcon()
+        self._indicator = Gtk.StatusIcon()
 
         PyNotifyMixin.__init__(self, logger = self.logger,
                                iconfile = util.get_resource_file(constants.NOTIFICATION_ICON_FILENAME),

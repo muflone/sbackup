@@ -36,12 +36,10 @@ import sbackup.util as Util
 
 # Attempt to load GTK bindings
 try:
-    import gtk
-
     from gi.repository import Gtk
     from gi.repository import Gdk
 except ImportError:
-    print("Failed to load Python GTK/Gnome bindings. Please check your Gnome installation.")
+    print("Failed to load Python GTK bindings. Please check your installation.")
     sys.exit(1)
 try:
     import gnomevfs
@@ -179,7 +177,7 @@ class SRestoreGTK:
         """
 
         # Setup glade and signals
-        self.signals = {"gtk_main_quit": gtk.main_quit,
+        self.signals = {"gtk_main_quit": Gtk.main_quit,
                 "on_customsrc_toggled": self.enable_custom,
                 "on_treeview1_row_expanded": self.on_expand_row,
                 "on_backup_changed": self.on_backup_changed,
@@ -190,9 +188,10 @@ class SRestoreGTK:
                 "on_customFolderButton_clicked": self.on_customFolderButton_clicked
                 }
 
-        self.builder = Gtk.Builder(_LEGACY_RESTOREGUI_GLADE)
+        self.builder = Gtk.Builder()
+        self.builder.add_from_file(_LEGACY_RESTOREGUI_GLADE)
 
-        self.builder.signal_autoconnect(self.signals)
+        self.builder.connect_signals(self.signals)
 
         # Get handle to window
         self.window = self.builder.get_object("restore")
@@ -202,12 +201,12 @@ class SRestoreGTK:
         # Load the backup tree from the default location
         self.init_tree()
         self.sel = self.flist_widget.get_selection()
-        self.sel.set_mode( gtk.SELECTION_SINGLE )
+        self.sel.set_mode(Gtk.SelectionMode.SINGLE)
         self.load_tree(self.default_target)
 
         Gdk.threads_init()
         # Start the main loop
-        gtk.main()
+        Gtk.main()
 
     def init_tree(self):
         """
@@ -215,17 +214,17 @@ class SRestoreGTK:
         """
 
         self.flist_widget = self.builder.get_object("treeview1")
-        self.treestore = gtk.TreeStore( str )
+        self.treestore = Gtk.TreeStore( str )
 
         self.flist_widget.set_model( self.treestore )
 
-        acolumn = gtk.TreeViewColumn( "Path", gtk.CellRendererText(), text=0 )
+        acolumn = Gtk.TreeViewColumn( "Path", Gtk.CellRendererText(), text=0 )
         self.flist_widget.append_column( acolumn )
 
         blist_widget = self.builder.get_object( "combobox1" )
-        self.blist = gtk.ListStore(str)
+        self.blist = Gtk.ListStore(str)
         blist_widget.set_model( self.blist )
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         blist_widget.pack_start( cell, True )
         blist_widget.add_attribute( cell, "text", 0)
 
@@ -312,10 +311,10 @@ class SRestoreGTK:
             self.treestore.append( None, ["Select any of the available backups to see list of files that can be restored."])
 
     def on_customFolderButton_clicked(self, *args):
-        dialog = gtk.FileChooserDialog("Choose a source folder", None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
+        dialog = Gtk.FileChooserDialog("Choose a source folder", None, Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL, Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
+        dialog.set_default_response(Gtk.RESPONSE_OK)
         dialog.set_local_only(False)
-        if dialog.run() == gtk.RESPONSE_OK:
+        if dialog.run() == Gtk.RESPONSE_OK:
             self.builder.get_object("entry1").set_text(dialog.get_uri())
         dialog.destroy()
 
@@ -433,14 +432,14 @@ class SRestoreGTK:
 
     def _do_restore( self, src, dst):
         """ Internal function to ask for confirmation and call the real restore library func"""
-        dialog = gtk.MessageDialog(parent=None, flags=0,
-                        type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO,
+        dialog = Gtk.MessageDialog(parent=None, flags=0,
+                        type=Gtk.MessageType.QUESTION, buttons=Gtk.ButtonsType.YES_NO,
                         message_format="Do you really want to restore backuped copy of '%s' to '%s' ?" % (src, dst))
         response = dialog.run()
         dialog.destroy()
-        if response == gtk.RESPONSE_YES:
-            while gtk.events_pending():
-                gtk.main_iteration(False)
+        if response == Gtk.RESPONSE_YES:
+            while Gtk.events_pending():
+                Gtk.main_iteration(False)
             dialog = self.builder.get_object("restore_progress_dialog")
             dialog.show()
 
@@ -463,29 +462,29 @@ class SRestoreGTK:
         aiter = self._restore_init()
         if self.treestore.iter_children( aiter ):
             # is a directory
-            dialog = gtk.FileChooserDialog(title="Select restore location",
-                                action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+            dialog = Gtk.FileChooserDialog(title="Select restore location",
+                                action=Gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                buttons=(Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                         Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
             dialog.set_filename( self.src )
             result = dialog.run()
             filename = dialog.get_filename()
             dialog.destroy()
 
-            if result == gtk.RESPONSE_OK:
+            if result == Gtk.RESPONSE_OK:
                 self._do_restore( self.src, filename )
         else:
-            dialog = gtk.FileChooserDialog(title="Select restore location",
-                                action=gtk.FILE_CHOOSER_ACTION_SAVE,
-                                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+            dialog = Gtk.FileChooserDialog(title="Select restore location",
+                                action=Gtk.FILE_CHOOSER_ACTION_SAVE,
+                                buttons=(Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                                         Gtk.STOCK_OPEN, Gtk.RESPONSE_OK))
             dialog.set_filename( self.src )
             dialog.set_current_name( self.src )
             result = dialog.run()
             filename = dialog.get_filename()
             dialog.destroy()
 
-            if result == gtk.RESPONSE_OK:
+            if result == Gtk.RESPONSE_OK:
                 self._do_restore( self.src, filename )
 
 

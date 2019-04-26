@@ -25,6 +25,7 @@ from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
+from gi.repository import Gtk
 from gi.repository import GLib
 from gi.repository import Pango
 import types
@@ -62,14 +63,14 @@ def set_model(widget, values):
         if not isinstance(values[_entry], _valtype):
             raise TypeError
 
-    _model = gtk.ListStore(_valtype, _keytype)
+    _model = Gtk.ListStore(_valtype, _keytype)
     _keys = sorted(values.keys())
 
     for _key in _keys:
         _model.append([values[_key], _key])
 
     widget.set_model(_model)
-    _cell = gtk.CellRendererText()
+    _cell = Gtk.CellRendererText()
     widget.pack_start(_cell, True)
     widget.add_attribute(_cell, 'text', MODEL_COLUMN_INDEX_VALUE)
     return _model
@@ -79,7 +80,7 @@ def open_uri(uri, timestamp = 0):
     """Convenience function for opening a given URI with the default
     application.
     """
-    gtk.show_uri(gtk.gdk.screen_get_default(), uri, timestamp)
+    Gtk.show_uri(None, uri, timestamp)
 
 
 def label_set_autowrap(widget):
@@ -89,11 +90,11 @@ def label_set_autowrap(widget):
 
     from http://stackoverflow.com/questions/1893748/pygtk-dynamic-label-wrapping
     """
-    if isinstance(widget, gtk.Container):
+    if isinstance(widget, Gtk.Container):
         children = widget.get_children()
         for i in range(len(children)):
             label_set_autowrap(children[i])
-    elif isinstance(widget, gtk.Label) and widget.get_line_wrap():
+    elif isinstance(widget, Gtk.Label) and widget.get_line_wrap():
         widget.connect_after("size-allocate", _label_size_allocate)
 
 def _label_size_allocate(widget, allocation):
@@ -122,7 +123,7 @@ def show_infodialog(message_str, parent, headline_str = "", secmsg_str = ""):
     @type message_format: String
 
     """
-    __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_INFO,
+    __show_msgdialog(message_str = message_str, msgtype = Gtk.MessageType.INFO,
                     parent = parent, boxtitle = "",
                     headline_str = headline_str, secmsg_str = secmsg_str)
 
@@ -134,7 +135,7 @@ def show_warndialog(message_str, parent, headline_str = "", secmsg_str = ""):
     @type message_format: String
 
     """
-    __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_WARNING,
+    __show_msgdialog(message_str = message_str, msgtype = Gtk.MessageType.WARNING,
                     parent = parent, boxtitle = "",
                     headline_str = headline_str, secmsg_str = secmsg_str)
 
@@ -145,13 +146,13 @@ def show_errdialog(message_str, parent, headline_str = "", secmsg_str = ""):
     @param message_format: error message to show
     @type message_format: String
     """
-    __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_ERROR,
+    __show_msgdialog(message_str = message_str, msgtype = Gtk.MessageType.ERROR,
                     parent = parent, boxtitle = "",
                     headline_str = headline_str, secmsg_str = secmsg_str)
 
 def show_errdialog_threaded(message_str, parent, headline_str = "", secmsg_str = ""):
     Gdk.threads_enter()
-    __show_msgdialog(message_str = message_str, msgtype = gtk.MESSAGE_ERROR,
+    __show_msgdialog(message_str = message_str, msgtype = Gtk.MessageType.ERROR,
                     parent = parent, boxtitle = "",
                     headline_str = headline_str, secmsg_str = secmsg_str)
     Gdk.threads_leave()
@@ -171,13 +172,13 @@ def __show_msgdialog(message_str, msgtype, parent, boxtitle = "",
     # in compliance with Gnome HIG a 'Close' button instead of 'OK' is used
 
     dialog = msgdialog(message_str = message_str, msgtype = msgtype, parent = parent, boxtitle = boxtitle,
-                         buttons = gtk.BUTTONS_CLOSE, headline_str = headline_str, secmsg_str = secmsg_str)
+                         buttons = Gtk.ButtonsType.CLOSE, headline_str = headline_str, secmsg_str = secmsg_str)
 
     # the message box is showed
     dialog.run()
     dialog.destroy()
 
-def msgdialog(message_str, msgtype, parent, boxtitle = "", buttons = gtk.BUTTONS_CLOSE,
+def msgdialog(message_str, msgtype, parent, boxtitle = "", buttons = Gtk.ButtonsType.CLOSE,
                     headline_str = "", secmsg_str = ""):
     """Creates und displays a modal dialog box. Main purpose is
     displaying of error messages.
@@ -191,8 +192,8 @@ def msgdialog(message_str, msgtype, parent, boxtitle = "", buttons = gtk.BUTTONS
     """
     # in compliance with Gnome HIG a 'Close' button instead of 'OK' is used
 
-    dialog = gtk.MessageDialog(parent = parent, type = msgtype,
-                flags = gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+    dialog = Gtk.MessageDialog(parent = parent, type = msgtype,
+                flags = Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                 buttons = buttons)
 
     icon_file = util.get_resource_file(constants.DEFAULT_ICON_FILENAME)
@@ -216,23 +217,23 @@ def msgdialog(message_str, msgtype, parent, boxtitle = "", buttons = gtk.BUTTONS
 
 
 def infodialog_standalone(message_str, boxtitle, headline_str = "", secmsg_str = "", sticky = True):
-    return msgdialog_standalone(message_str = message_str, msgtype = gtk.MESSAGE_INFO,
+    return msgdialog_standalone(message_str = message_str, msgtype = Gtk.MessageType.INFO,
                                   boxtitle = boxtitle, headline_str = headline_str, secmsg_str = secmsg_str,
                                   sticky = sticky)
 
 
 def warndialog_standalone(message_str, boxtitle, headline_str = "", secmsg_str = "", sticky = True):
-    return msgdialog_standalone(message_str = message_str, msgtype = gtk.MESSAGE_WARNING,
+    return msgdialog_standalone(message_str = message_str, msgtype = Gtk.MessageType.WARNING,
                                   boxtitle = boxtitle, headline_str = headline_str, secmsg_str = secmsg_str,
                                   sticky = sticky)
 
 
 def errdialog_standalone(message_str, boxtitle, headline_str = "", secmsg_str = "", sticky = True):
-    return msgdialog_standalone(message_str = message_str, msgtype = gtk.MESSAGE_ERROR, boxtitle = boxtitle,
+    return msgdialog_standalone(message_str = message_str, msgtype = Gtk.MessageType.ERROR, boxtitle = boxtitle,
                                   headline_str = headline_str, secmsg_str = secmsg_str, sticky = sticky)
 
 
-def msgdialog_standalone(message_str, msgtype, boxtitle, buttons = gtk.BUTTONS_CLOSE,
+def msgdialog_standalone(message_str, msgtype, boxtitle, buttons = Gtk.ButtonsType.CLOSE,
                     headline_str = "", secmsg_str = "", sticky = True):
     """Creates and displays a standalone dialog box. Main purpose is
     displaying of error messages within the indicator application.
@@ -264,7 +265,7 @@ def msgdialog_standalone(message_str, msgtype, boxtitle, buttons = gtk.BUTTONS_C
 
 def show_about_dialog(set_transient_for = None):
     _icon_file = util.get_resource_file(constants.DEFAULT_ICON_FILENAME)
-    about = gtk.AboutDialog()
+    about = Gtk.AboutDialog()
     about.set_name(Infos.NAME)
     about.set_version(Infos.VERSION)
     about.set_comments(Infos.DESCRIPTION)
